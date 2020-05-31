@@ -7,3 +7,11 @@
 #
 layout: home
 ---
+
+[c / c++ - Sammlungen](./articles/c_cpp.html)
+
+[tcl](./articles/tcl.html)
+
+[python](./articles/python.html)
+
+[misc](./articles/misc.html)

@@ -8,7 +8,7 @@
 layout: home
 ---
 
-[c / c++ - Sammlungen](./articles/c_cpp.html)
+[c / c++](./articles/c_cpp.html)
 
 [tcl](./articles/tcl.html)
 

@@ -6,6 +6,11 @@ layout: default
 
 &nbsp;
 
+# Misc
+---
+
+&nbsp;
+
 # Basics
 
 &nbsp;

@@ -6,6 +6,11 @@ layout: default
 
 &nbsp;
 
+# Python
+---
+
+&nbsp;
+
 # Basics
 
 &nbsp;

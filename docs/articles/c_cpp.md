@@ -4,7 +4,10 @@ layout: default
 
 [Back](../)
 
-&nbsp;
+---
+# C und C++
+---
+
 
 # Basics
 
@@ -40,8 +43,33 @@ Der ANSI-C Standard revidierte ursprüngliche Inkompatibilitäten von C und C++,
 &nbsp;
 
 ![01](../assets/pics/stammbaum.png)  
-C in der Verwandschaftstafel höherer Programmiersprachen
+C in der Verwandschaftstafel höherer Programmiersprachen  
+
 &nbsp;
+
+### Auswertungsreihenfolge  
+
+Wie in der Mathematik spielt es bei C eine wichtige Rolle, in welcher Reihenfolge ein Ausdruck berechnet wird.  
+
+1. Wie in der Mathematik werden als erstes **Teilausdrücke in Klammern** ausgewertet.  
+2. Dann werden **Ausdrücke mit unären Operatoren** ausgewertet.  
+   Unäre Operatoren werden von rechts nach links angewendet. Dies bedeutet, dass  
+      2.1 zuerst die **Postfix-Operatoren** auf ihre Operanden  
+      2.2 und dann die **Präfix-Operanden** auf ihre Operanden angewendet werden  
+3. Anschließend werden Teilausdrücke mit **mehrstelligen Operatoren** ausgewertet
+
+&nbsp;
+
+# Arrays  
+
+In C gibt es im Gegensatz zu anderen Sprachen **kein Schlüsselwort array**. Der C-Compiler erkennt ein Array an den eckigen Klammern, die bei der Definition die Anzahl der Elemente enthalten. Die **Anzahl der Elemente** muss immer eine positive ganze Zahl sein. Sie kann gegeben sein durch eine Konstante oder einen konstanten Ausdruck, **nicht aber durch eine Variable**. Dies bedeutet, dass die Größe nicht dynamisch zugeordnet werden kann. Dennoch können Arrays mit einer zur Laufzeit berechneten Größe mit Hilfe der Funktion `malloc()` oder `calloc()` konstruiert werden.  
+&nbsp;
+
+> Eine tückische Besonderheit von Arrays in C ist, dass beim Überschreiten des zulässigen Indexbereiches kein Kompilier- bzw. Laufzeitfehler erzeugt wird. So würde bei einem Array `int alpha[5]` die Anweisung `alpha[5] = 6` einfach die Speicherzelle direkt nach `alpha[4]` mit dem Wert 6 überschreiben.  
+
+
+> Auf jeden Fall sollte man es sich bei Arrays zur Gewohnheit machen, immer mit symbolischen Konstanten wie z.B. `#define MAX 40` und nie mit literalen Konstanten wie z.B. `int fahrenheit [40]` zu arbeiten. Soll nämlich der Wert in einer nächsten Version des Programms bis 100 Grad Celsius betragen, so müsste man doch  an vielen Stellen (z.B. in den Eingabeauforderungen und in den Kommentaren) Änderungen vornehmen, von denen leider gerne welche vergessen werden.
+
 
 
 &nbsp;

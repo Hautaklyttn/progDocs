@@ -2,4 +2,4 @@
 layout: page
 title: About
 ---
-Persönliche Sammlung von Textauszügen verschiedener Autoren.  
+Sammlung von Texten verschiedener Internetquellen und Buechern.  

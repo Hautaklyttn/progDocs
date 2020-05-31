@@ -4,10 +4,12 @@ layout: default
 
 [Back](../)
 
----
+&nbsp;
+
 # C und C++
 ---
 
+&nbsp;
 
 # Basics
 

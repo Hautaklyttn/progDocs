@@ -2,7 +2,7 @@
 layout: default
 ---
 
-[Back](./)
+[Back](../)
 
 &nbsp;
 
@@ -40,4 +40,4 @@ C in der Verwandschaftstafel höherer Programmiersprachen
 
 &nbsp;
 
-[Back](./)
+[Back](../)

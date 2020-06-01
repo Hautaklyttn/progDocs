@@ -176,7 +176,7 @@ int main (void)
 }
 ```
 
-<u>Ausgabe:</u> *Der Wert von a ist 10*
+Ausgabe: *Der Wert von a ist 10*
 
 > Beim Aufruf von `init (&a)` wird die lokale Variable `alpha` angelegt. Sie wird mit dem Wert des aktuellen Parameters initialisiert, also mit der Adresse von a. Man kann sich das als Kopiervorgang vorstellen:  
 `int * alpha = &a`  

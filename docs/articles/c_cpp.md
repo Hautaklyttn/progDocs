@@ -62,16 +62,19 @@ steht der Ausdruck auf der rechten Seite für einen Wert, während der Ausdruck 
 
 Steht ein L-Wert rechts neben dem Zuweisungsoperator, so wird dessen Namen bzw. Adresse benötigt, um an der entsprechenden Speicherstelle den Wert der Variablen abzuholen.  
 
+&nbsp;
+
 ````c  
 int i;
 int * ptr;
 ````
-&nbsp;
 
 ![02](../assets/pics/l_r_wert.png)  
 Beispiele für L- und R-Werte  
 
-> Bestimmte Operatoren können nur auf L-Werte angewandt werden. So kann man den Inkrementoperator ++ oder den Adressoperator & nur auf L-Werte anwenden.  
+&nbsp;
+
+> Bestimmte Operatoren können nur auf L-Werte angewandt werden. So kann man den Inkrementoperator **++** oder den Adressoperator **&** nur auf L-Werte anwenden.  
 
 
 
@@ -89,6 +92,50 @@ Wie in der Mathematik spielt es bei C eine wichtige Rolle, in welcher Reihenfolg
       2.1 zuerst die **Postfix-Operatoren** auf ihre Operanden  
       2.2 und dann die **Präfix-Operanden** auf ihre Operanden angewendet werden  
 3. Anschließend werden Teilausdrücke mit **mehrstelligen Operatoren** ausgewertet
+
+&nbsp;
+
+### Der Bedingungsoperator A ? B : C
+Eine echte Rarität  in der Programmiersprache C ist der Bedingungsoperator. Er ist  nämlich der einzige Operator, der drei Operanden verarbeitet. In einem **bedingten Ausdruck**  ``A ? B : C`` wird zuerst der Ausdruck A ausgewertet. Ist der Rückgabewert von Ausdruck A ungleich 0, also wahr, so wird der Ausdruck B ausgewertet. Das Ergebnis von B ist dann der Rückgabewert des Bedingungsoperators. Ist jedoch der Ausdruck von A gleich 0, also falsch, so wird der Ausdruck C ausgewertet.  
+
+````c  
+1 == 1 ? 0 : 1      /* Rückgabewert: 0 */
+0 ? 0 : 1           /* Rückgabewert: 1 */
+````  
+
+Der Ausdruck ist also gleichbedeutend mit
+````c  
+if (A) return B;
+else return C;
+````
+
+&nbsp;  
+
+### switch - case
+[...] Besonders schön lesbar wird der Code, wenn man die ganzzahligen Konstanten im *switch* durch symbolische Konstanten ersetzt, deren Bedeutung dem Leser sofort klar ist. Das Definieren der symboischen Konstanten kann durch *#define* oder noch besser durch *enum* realisiert werden.  
+
+```c
+#include <stdio.h>
+
+int main (void)
+{
+  enum color {RED, GREEN, BLUE};      // (1)
+  enum color col = GREEN;             // (2)
+  switch (col)
+  {
+    case RED:
+      ...
+    case GREEN:
+      ...
+    case BLUE:
+      ...
+    default:
+      ...
+  }  
+}
+```
+
+Das Programm nutzt zur Aufzählung von Konstanten den Datentyp *enum color*. Bei Kommentar *(1)* werden den Konstanten *RED, GREEN* und *BLUE* die Integerwerte 0, 1 und 2 zugewiesen. Nun wird bei *(2)* eine Variable  *col* vom Typ *enum color* angelegt und der Wert *GREEN* zugewiesen. Ausgeführt werden in der darauf folgenden switch-Anweisung die Anweisung bei *case: GREEN*.
 
 &nbsp;
 

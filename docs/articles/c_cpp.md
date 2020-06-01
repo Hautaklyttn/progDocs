@@ -49,6 +49,36 @@ C in der Verwandschaftstafel höherer Programmiersprachen
 
 &nbsp;
 
+### L- und R-Werte  
+
+Ausdrücke haben eine unterschiedliche Bedeutung, je nachdem, ob sie links oder rechts vom Zuweisungsoperator stehen. Im Beispiel  
+> a = b  
+
+steht der Ausdruck auf der rechten Seite für einen Wert, während der Ausdruck auf der linken Seite die Stelle angibt, an der der Wert zu speichern ist.
+
+> Ein **Ausdruck** stellt einen **L-Wert** (**lvalue** oder **left value**) dar, wenn er sich auf ein **Speicherobjekt** bezieht. Ein solcher Ausdruck kann links und rechts des Zuweisungsoperators stehen.  
+
+> Ein **Ausdruck** der keinen L-Wert darstellt, stellt einen **R-Wert** (**r-value** oder **right value**) dar. Er bezieht sich nicht auf ein **Speicherobjekt**. Er darf nur rechts des Zuweisungsoperators stehen. Einem R-Wert kann man also nichts zuweisen.  
+
+Steht ein L-Wert rechts neben dem Zuweisungsoperator, so wird dessen Namen bzw. Adresse benötigt, um an der entsprechenden Speicherstelle den Wert der Variablen abzuholen.  
+
+````c  
+int i;
+int * ptr;
+````
+&nbsp;
+
+![02](../assets/pics/l_r_wert.png)  
+Beispiele für L- und R-Werte  
+
+> Bestimmte Operatoren können nur auf L-Werte angewandt werden. So kann man den Inkrementoperator ++ oder den Adressoperator & nur auf L-Werte anwenden.  
+
+
+
+
+
+&nbsp;
+
 ### Auswertungsreihenfolge  
 
 Wie in der Mathematik spielt es bei C eine wichtige Rolle, in welcher Reihenfolge ein Ausdruck berechnet wird.  

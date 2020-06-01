@@ -149,6 +149,39 @@ In C gibt es im Gegensatz zu anderen Sprachen **kein Schlüsselwort array**. Der
 
 > Auf jeden Fall sollte man es sich bei Arrays zur Gewohnheit machen, immer mit symbolischen Konstanten wie z.B. `#define MAX 40` und nie mit literalen Konstanten wie z.B. `int fahrenheit [40]` zu arbeiten. Soll nämlich der Wert in einer nächsten Version des Programms bis 100 Grad Celsius betragen, so müsste man doch  an vielen Stellen (z.B. in den Eingabeauforderungen und in den Kommentaren) Änderungen vornehmen, von denen leider gerne welche vergessen werden.
 
+&nbsp;
+
+# Pointer  
+
+### Call-by-Reference Schnittstelle
+
+Manche Programmiersprachen wie z.B. C++ kennen außer der **call-by-value** Schnittstelle auch eine **call-by-reference** Schnittstelle. Eine call-by-reference Schnittstelle ermöglicht es, über Übergabeparameter nicht nur Werte in eine Funktion hinein, sondern auch aus ihr heraus zu bringen.
+
+In C ist eine call-by-reference Schnittstelle als Sprachmittel nicht vorgesehen. Man kann das Verhalten einer call-by-reference Schnittstelle, nämlich Werte über die Parameterliste an den Aufrufer zu übergeben, auch mit der call-by-value Schnittstelle erreichen, indem man einen Pointer auf den aktuellen Parameter mit call-by-value übergibt.  
+
+```c
+#include <stdio.c>
+
+void init (int * alpha)
+{
+  * alpha = 10;
+}
+
+int main (void)
+{
+  int a;
+  init (&a);
+  printf ("Der Wert von a ist %d", a);
+  return 0;
+}
+```
+
+<u>Ausgabe:</u> *Der Wert von a ist 10*
+
+> Beim Aufruf von `init (&a)` wird die lokale Variable `alpha` angelegt. Sie wird mit dem Wert des aktuellen Parameters initialisiert, also mit der Adresse von a. Man kann sich das als Kopiervorgang vorstellen:  
+`int * alpha = &a`  
+
+
 
 
 &nbsp;

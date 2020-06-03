@@ -144,6 +144,31 @@ Das Programm nutzt zur Aufzählung von Konstanten den Datentyp *enum color*. Bei
 In C gibt es im Gegensatz zu anderen Sprachen **kein Schlüsselwort array**. Der C-Compiler erkennt ein Array an den eckigen Klammern, die bei der Definition die Anzahl der Elemente enthalten. Die **Anzahl der Elemente** muss immer eine positive ganze Zahl sein. Sie kann gegeben sein durch eine Konstante oder einen konstanten Ausdruck, **nicht aber durch eine Variable**. Dies bedeutet, dass die Größe nicht dynamisch zugeordnet werden kann. Dennoch können Arrays mit einer zur Laufzeit berechneten Größe mit Hilfe der Funktion `malloc()` oder `calloc()` konstruiert werden.  
 &nbsp;
 
+Ein eindimensionaler Vektor (eindimensionales Array) wird folgendermaßen definiert:  
+```c
+int alpha[5];     //Definition des Arrays alpha mit Platz für 5 int-Zahlen
+```
+
+Eine einfache Möglichkeit, einen Pointer auf ein Arrayelement zeigen zu lassen, besteht darin, auf der rechten Seite des Zuweisungsoperators den **Adressoperator &** wie folgt zu verwenden:  
+```c
+int * pointer;          //Definition des Pointers pointer  
+pointer = &alpha[i-1]   // Pointer zeigt auf das i-te Arrayelement
+```
+
+Hat *i* den Wert 1, so zeigt der Pointer *pointer* auf das 1. Element des Arrays. Dieses hat den Index 0.  
+
+> Der Name eines Arrays kann als konstanter Zeiger auf das erste Element des Arrays verwendet werden.  
+
+![03](../assets/pics/pointer_array.png)  
+Pointer auf ein Array
+
+Damit gibt es für das erste Element zwei gleichwertige Schreibweisen:
+  - *alpha[0]*  
+  - oder, mit Verwendung des Dereferenzierungsoperators, \*alpha  
+
+Der Compiler rechnet intern nicht mit Indizes. Erhält er eine Array-Komponente, so rechnet er den Index sofort in einen Pointer um.  
+&nbsp;
+
 > Eine tückische Besonderheit von Arrays in C ist, dass beim Überschreiten des zulässigen Indexbereiches kein Kompilier- bzw. Laufzeitfehler erzeugt wird. So würde bei einem Array `int alpha[5]` die Anweisung `alpha[5] = 6` einfach die Speicherzelle direkt nach `alpha[4]` mit dem Wert 6 überschreiben.  
 
 
@@ -151,7 +176,56 @@ In C gibt es im Gegensatz zu anderen Sprachen **kein Schlüsselwort array**. Der
 
 &nbsp;
 
+### Übergabe von Arrays  
+
+Bei der Übergabe eines Arrays an eine Funktion wird als aktueller Parameter der Arrayname übergeben. Der Arrayname stellt dabei einen Pointer auf das erste Element des Arrays dar.  
+
+> Der formale Parameter für die Übergabe eines eindimensionalen Arrays kann ein offenes Array sein - oder wegen der Pointereigenschaft des Arraynamens - auch ein Pointer auf den Komponententyp des Arrays.  
+
+```c
+#include <stdio.h>
+#define GROESSE 3
+
+void init (int *, int);
+void ausgabe(int[], int);
+
+int main (void)
+{
+  int i [GROESSE];
+  init (i, GROESSE);
+  ausgabe (i, GROESSE);
+  return 0;  
+}
+
+void init (int *alpha, int dim)   // hier ist alpha ein Pointer
+{
+  ...
+}
+
+void ausgabe (int alpha[], int dim)   // hier ist alpha vom Typ eines offenen Arraynamens
+{
+  ...
+}
+```
+
+&nbsp;
+
+### Übergabe von Zeichenketten
+
+Da Zeichenketten vom Compiler intern als *char*-Arrays gespeichert werden, ist die Übergabe von Zeichenketten identisch mit der Übergabe von *char*-Arrays. Der formale Parameter einer Funktion, die eine Zeichenkette übergeben bekommt, kann vom Typ ``char*`` oder ``char[]`` sein.
+
+
+&nbsp;
+
 # Pointer  
+
+### Addition und Subtraktion  
+
+Wird ein Pointer vom Typ ``int *`` um 1 erhöht, so zeigt er um ein int-Objekt weiter. Wird ein Pointer  vom Typ `float *` um 1 erhöht, so zeigt er um ein float-Objekt weiter. Die Erhöhung um 1 bedeutet, dass der Pointer immer um ein Speicherobjekt vom Typ, auf den der Pointer zeigt, weiterläuft.
+
+![04](../assets/pics/var_alpha.png)  
+
+Nach der Variablen *alpha* in obigem Bild können Variablen eines anderen Typs liegen. Der Pointer lässt sich nicht beirren, er läuft im *int*-Raster weiter.
 
 ### Call-by-Value  
 
@@ -160,6 +234,8 @@ In vielen Programmiersprachen werden im Normalfall Parameter an Funktionen mithi
 ### Call-by-Reference
 
 Manche Programmiersprachen wie z.B. C++ kennen außer der **call-by-value** Schnittstelle auch eine **call-by-reference** Schnittstelle. Eine call-by-reference Schnittstelle ermöglicht es, über Übergabeparameter nicht nur Werte in eine Funktion hinein, sondern auch aus ihr heraus zu bringen.
+
+&nbsp;
 
 **[C]**
 
@@ -186,6 +262,7 @@ Ausgabe: *Der Wert von a ist 10*
 
 > Beim Aufruf von `init (&a)` wird die lokale Variable `alpha` angelegt. Sie wird mit dem Wert des aktuellen Parameters initialisiert, also mit der Adresse von a. Man kann sich das als Kopiervorgang vorstellen: `int * alpha = &a`  
 
+&nbsp;
 
 **[C++]**
 

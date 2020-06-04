@@ -325,11 +325,50 @@ Im Falle der Pointernotation ist eine Änderung der konstanten Zeichenkette nich
 
 > Bei einem *char*-Array *buffer* kann der in ihm  gespeicherte String verändert werden. *buffer* ist ein konstanter Pointer auf das erste Element des Arrays und kann auf keine andere Adresse zeigen.  
 
-> Zeigt eine Stringvariable  vom Typ char* auf eine konstante Zeichenkette, so führt der Compiler  die Speicherung der Zeichenkette selbst durch. Die Zeichenkette kann nicht verändert werden aber die Zeigervariable vom Typ char* kann eine neue Adresse zugewiesen werden.
+> Zeigt eine Stringvariable  vom Typ char* auf eine konstante Zeichenkette, so führt der Compiler  die Speicherung der Zeichenkette selbst durch. Die Zeichenkette kann nicht verändert werden aber die Zeigervariable vom Typ char* kann eine neue Adresse zugewiesen werden.  
+
+&nbsp;
 
 ### Das Schlüsselwort `const` bei Pointern und Arrays  
 
+Die mit *const* definierten Variablen besitzen - genau wie gewöhnliche Variablen - einen Wert, einen Typ, einen Namen und auch eine Adresse. Sie liegen also im adressierbaren Speicherbereich. Als Konstanten dürfen sie natürlich nicht auf der linken Seite der Zuweisung stehen.  
 
+Die Formulierung mit *const* hat gegenüber der Formulierung mit *#define* unter anderem den Vorteil, auch auf zusammengesetzte Datentypen anwendbar zu sein. So bedeutet  
+```c
+const int feld [] = {1, 2, 3};
+```
+
+dass alle Feldelemente *feld[0]*, *feld[1]* und *feld[2]* Konstanten sind.  
+
+Angenommen, ein *char*-Array sei definiert durch  
+```c
+char blick [] = "Er will es blicken";
+```
+
+Dann bedeutet  
+```c
+const char * text = blick;
+```
+
+nicht, dass der Pointer konstant ist, sondern dass der Pointer auf eine konstante Zeichenkette zeigt.   
+```c
+text[1] = 's';                          // Fehler! Nicht möglich.
+text = "Jetzt blicke auch ich durch";   // Ist hier möglich!
+```
+
+Soll ein konstante Pointer eingeführt werden, so muss *const* vor dem Pointernamen stehen:
+```c
+char lili [] = "Ich liebe Lili";
+char * const hugo = lili;
+
+hugo[13] = 'o';             // Ist jetzt möglich!
+hugo = "Ich liebe Susi";    // Fehler! Nicht mehr möglich.
+```
+
+Beim folgenden Beispiel bleibt *hugo* stets unzertrennlich mit *lili* verbunden, da zum einen der Pointer *hugo* konstant ist und auch die Zeichenkette als Konstante geschützt ist.  
+```c
+const char * const hugo = lili;
+```
 
 &nbsp;
 

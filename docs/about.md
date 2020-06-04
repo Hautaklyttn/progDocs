@@ -6,4 +6,4 @@ Wissenssammlung verschiedener Internetquellen und Buechern.
 
 &nbsp;
 
-[Back](../)
+[Back](./)

@@ -76,10 +76,6 @@ Beispiele für L- und R-Werte
 
 > Bestimmte Operatoren können nur auf L-Werte angewandt werden. So kann man den Inkrementoperator **++** oder den Adressoperator **&** nur auf L-Werte anwenden.  
 
-
-
-
-
 &nbsp;
 
 ### Auswertungsreihenfolge  
@@ -91,7 +87,7 @@ Wie in der Mathematik spielt es bei C eine wichtige Rolle, in welcher Reihenfolg
    Unäre Operatoren werden von rechts nach links angewendet. Dies bedeutet, dass  
       2.1 zuerst die **Postfix-Operatoren** auf ihre Operanden  
       2.2 und dann die **Präfix-Operanden** auf ihre Operanden angewendet werden  
-3. Anschließend werden Teilausdrücke mit **mehrstelligen Operatoren** ausgewertet
+3. Anschließend werden Teilausdrücke mit **mehrstelligen Operatoren** ausgewertet  
 
 &nbsp;
 
@@ -107,7 +103,7 @@ Der Ausdruck ist also gleichbedeutend mit
 ````c  
 if (A) return B;
 else return C;
-````
+````  
 
 &nbsp;  
 
@@ -135,7 +131,7 @@ int main (void)
 }
 ```
 
-Das Programm nutzt zur Aufzählung von Konstanten den Datentyp *enum color*. Bei Kommentar *(1)* werden den Konstanten *RED, GREEN* und *BLUE* die Integerwerte 0, 1 und 2 zugewiesen. Nun wird bei *(2)* eine Variable  *col* vom Typ *enum color* angelegt und der Wert *GREEN* zugewiesen. Ausgeführt werden in der darauf folgenden switch-Anweisung die Anweisung bei *case: GREEN*.
+Das Programm nutzt zur Aufzählung von Konstanten den Datentyp *enum color*. Bei Kommentar *(1)* werden den Konstanten *RED, GREEN* und *BLUE* die Integerwerte 0, 1 und 2 zugewiesen. Nun wird bei *(2)* eine Variable  *col* vom Typ *enum color* angelegt und der Wert *GREEN* zugewiesen. Ausgeführt werden in der darauf folgenden switch-Anweisung die Anweisung bei *case: GREEN*.  
 
 &nbsp;
 
@@ -159,8 +155,12 @@ Hat *i* den Wert 1, so zeigt der Pointer *pointer* auf das 1. Element des Arrays
 
 > Der Name eines Arrays kann als konstanter Zeiger auf das erste Element des Arrays verwendet werden.  
 
+&nbsp;
+
 ![03](../assets/pics/pointer_array.png)  
-Pointer auf ein Array
+Pointer auf ein Array  
+
+&nbsp;
 
 Damit gibt es für das erste Element zwei gleichwertige Schreibweisen:
   - *alpha[0]*  
@@ -172,7 +172,7 @@ Der Compiler rechnet intern nicht mit Indizes. Erhält er eine Array-Komponente,
 > Eine tückische Besonderheit von Arrays in C ist, dass beim Überschreiten des zulässigen Indexbereiches kein Kompilier- bzw. Laufzeitfehler erzeugt wird. So würde bei einem Array `int alpha[5]` die Anweisung `alpha[5] = 6` einfach die Speicherzelle direkt nach `alpha[4]` mit dem Wert 6 überschreiben.  
 
 
-> Auf jeden Fall sollte man es sich bei Arrays zur Gewohnheit machen, immer mit symbolischen Konstanten wie z.B. `#define MAX 40` und nie mit literalen Konstanten wie z.B. `int fahrenheit [40]` zu arbeiten. Soll nämlich der Wert in einer nächsten Version des Programms bis 100 Grad Celsius betragen, so müsste man doch  an vielen Stellen (z.B. in den Eingabeauforderungen und in den Kommentaren) Änderungen vornehmen, von denen leider gerne welche vergessen werden.
+> Auf jeden Fall sollte man es sich bei Arrays zur Gewohnheit machen, immer mit symbolischen Konstanten wie z.B. `#define MAX 40` und nie mit literalen Konstanten wie z.B. `int fahrenheit [40]` zu arbeiten. Soll nämlich der Wert in einer nächsten Version des Programms bis 100 Grad Celsius betragen, so müsste man doch  an vielen Stellen (z.B. in den Eingabeauforderungen und in den Kommentaren) Änderungen vornehmen, von denen leider gerne welche vergessen werden.  
 
 &nbsp;
 
@@ -212,8 +212,7 @@ void ausgabe (int alpha[], int dim)   // hier ist alpha vom Typ eines offenen Ar
 
 ### Übergabe von Zeichenketten
 
-Da Zeichenketten vom Compiler intern als *char*-Arrays gespeichert werden, ist die Übergabe von Zeichenketten identisch mit der Übergabe von *char*-Arrays. Der formale Parameter einer Funktion, die eine Zeichenkette übergeben bekommt, kann vom Typ ``char*`` oder ``char[]`` sein.
-
+Da Zeichenketten vom Compiler intern als *char*-Arrays gespeichert werden, ist die Übergabe von Zeichenketten identisch mit der Übergabe von *char*-Arrays. Der formale Parameter einer Funktion, die eine Zeichenkette übergeben bekommt, kann vom Typ ``char*`` oder ``char[]`` sein.  
 
 &nbsp;
 
@@ -221,9 +220,13 @@ Da Zeichenketten vom Compiler intern als *char*-Arrays gespeichert werden, ist d
 
 ### Addition und Subtraktion  
 
-Wird ein Pointer vom Typ ``int *`` um 1 erhöht, so zeigt er um ein int-Objekt weiter. Wird ein Pointer  vom Typ `float *` um 1 erhöht, so zeigt er um ein float-Objekt weiter. Die Erhöhung um 1 bedeutet, dass der Pointer immer um ein Speicherobjekt vom Typ, auf den der Pointer zeigt, weiterläuft.
+Wird ein Pointer vom Typ ``int *`` um 1 erhöht, so zeigt er um ein int-Objekt weiter. Wird ein Pointer  vom Typ `float *` um 1 erhöht, so zeigt er um ein float-Objekt weiter. Die Erhöhung um 1 bedeutet, dass der Pointer immer um ein Speicherobjekt vom Typ, auf den der Pointer zeigt, weiterläuft.  
+
+&nbsp;
 
 ![04](../assets/pics/var_alpha.png)  
+
+&nbsp;
 
 Nach der Variablen *alpha* in obigem Bild können Variablen eines anderen Typs liegen. Der Pointer lässt sich nicht beirren, er läuft im *int*-Raster weiter.
 
@@ -233,7 +236,7 @@ In vielen Programmiersprachen werden im Normalfall Parameter an Funktionen mithi
 
 ### Call-by-Reference
 
-Manche Programmiersprachen wie z.B. C++ kennen außer der **call-by-value** Schnittstelle auch eine **call-by-reference** Schnittstelle. Eine call-by-reference Schnittstelle ermöglicht es, über Übergabeparameter nicht nur Werte in eine Funktion hinein, sondern auch aus ihr heraus zu bringen.
+Manche Programmiersprachen wie z.B. C++ kennen außer der **call-by-value** Schnittstelle auch eine **call-by-reference** Schnittstelle. Eine call-by-reference Schnittstelle ermöglicht es, über Übergabeparameter nicht nur Werte in eine Funktion hinein, sondern auch aus ihr heraus zu bringen.  
 
 &nbsp;
 
@@ -260,7 +263,7 @@ int main (void)
 
 Ausgabe: *Der Wert von a ist 10*
 
-> Beim Aufruf von `init (&a)` wird die lokale Variable `alpha` angelegt. Sie wird mit dem Wert des aktuellen Parameters initialisiert, also mit der Adresse von a. Man kann sich das als Kopiervorgang vorstellen: `int * alpha = &a`  
+> Beim Aufruf von `init (&a)` wird die lokale Variable `alpha` angelegt. Sie wird mit dem Wert des aktuellen Parameters initialisiert, also mit der Adresse von a. Man kann sich das als Kopiervorgang vorstellen: `int * alpha = &a`   
 
 &nbsp;
 
@@ -289,6 +292,43 @@ int main () {
    return 0;
 }
 ````
+
+
+&nbsp;  
+
+# Pointer und Arrays  
+
+### Vergleich von char-Arrays und Pointern auf Zeichenketten
+
+Prinzipiell hat man zur Speicherung von konstanten Zeichenketten zwei Möglichkeiten. Zum einen kann man ein *char*-Array definieren und dort die konstante Zeichenkette ablegen wie im folgenden Beispiel:  
+```c
+char buffer [] = "hello";
+```
+
+Zum anderen kann man die Speicherung der konstanten Zeichenkette, die ja eine Konstante darstellt, dem Compiler überlassen und sich nur durch den Rückgabewert der Zeichenkette einen Pointer auf das erste Element der Zeichenkette geben lassen, z.B. durch  
+```c
+char *pointer = "hello";
+```
+
+Hier wird der Pointer auf das 'h' von "hello" dem Pointer *pointer* zugewiesen. An dieser Operation sind nur Pointer beteiligt.  
+
+Eine Stringvariable kann also durch die Pointernotation `char *pointer` oder als offenes Array `char buffer[]` bzew. als Array mit ausreichend festgelegter Größe definiert werden.  
+
+Im Falle der Pointernotation zeigt der Pointer *pointer* auf eine konstante Zeichenkette, einen R-Wert.  
+Die Komponenten des Arrays sind dagegen L-Werte! Im Falle des Arrays ist es damit möglich, Elemente des Arrays neu mit Werten zu belegen, z.B. durch  
+```c
+buffer [1] = 'a';
+```
+Dann lautet der gespeicherte String "hallo". Jedoch ist es nicht möglich, den Pointer *buffer*, der ein konstanter Pointer auf das erste Element des Arrays ist, woanders hinzeigen zu lassen.  
+
+Im Falle der Pointernotation ist eine Änderung der konstanten Zeichenkette nicht vorgesehen, d.h. nicht erlaubt. Wie der Name schon sagt, soll ein konstante Zeichenkette ja konstant sein. Dafür hat man im Falle der Pointernotation die Freiheit, seinen Pointer ganz woandershin zeigen zu lassen.  
+
+> Bei einem *char*-Array *buffer* kann der in ihm  gespeicherte String verändert werden. *buffer* ist ein konstanter Pointer auf das erste Element des Arrays und kann auf keine andere Adresse zeigen.  
+
+> Zeigt eine Stringvariable  vom Typ char* auf eine konstante Zeichenkette, so führt der Compiler  die Speicherung der Zeichenkette selbst durch. Die Zeichenkette kann nicht verändert werden aber die Zeigervariable vom Typ char* kann eine neue Adresse zugewiesen werden.
+
+### Das Schlüsselwort `const` bei Pointern und Arrays  
+
 
 
 &nbsp;

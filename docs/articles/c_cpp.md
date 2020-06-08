@@ -7,7 +7,9 @@ layout: default
 &nbsp;
 
 # C und C++
----
+---  
+
+&nbsp;
 
 ## Overview
 
@@ -33,6 +35,8 @@ layout: default
 ## 4. Pointer und Arrays   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten](#ch4-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [4.2 Das Schlüsselwort const bei Pointern und Arrays](#ch4-2)
+
+&nbsp;
 
 ---  
 

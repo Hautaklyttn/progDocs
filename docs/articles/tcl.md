@@ -17,7 +17,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.1 ...](#ch1-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.2 ...](#ch1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.3 Regular Expressions](#ch1-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.3 `scan` command](#ch1-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.4 `scan` command](#ch1-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.5 `binary scan` command](#ch1-5)  
 
 ### 2. Tcl - Tk
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.1 Fenster aufsetzen](#ch2-1)  
@@ -42,18 +43,18 @@ layout: default
 
 # Basics  
 
-### ...  
+### 1.1 ...  
 
-### ...  
+### 1.2 ...  
 
 <a name="ch1-3"></a>
-### Regular Expressions  
+### 1.3 Regular Expressions  
 
 ``^`` (called 'anchor') is used to search for pattern at the beginning of a string  
 ``$`` (called 'dollar') is used to search for pattern at the end of a string  
 
 To search for the exact pattern *\<pattern\>* in a string use the following command   
-```c
+```js
 regexp {^<pattern>$}
 ```
 If the string contains other characters, the return value is 0.
@@ -62,7 +63,7 @@ If the string contains other characters, the return value is 0.
 `+` symbol indicated the range specified in [] to occur 1 or more times  
 
 E.g. to look for small alphabetical characters in the string stored in variable e, type
-```c
+```js
 regexp {[a-z]+ $e}
 
 // Other search patterns
@@ -75,9 +76,9 @@ regexp {\S+} $e     // searches for not spaces
 &nbsp;
 
 <a name="ch1-4"></a>
-### `scan` command  
+### 1.4 `scan` command  
 
-```  
+```js  
 scan <string> <format> <varName> ?varName?  
 ```  
 
@@ -92,15 +93,26 @@ The following "conversion characters" are supported (and more):
 
 &nbsp;
 
+<a name="ch1-4"></a>
+### 1.5 `binary scan` command  
+
+```js  
+binary scan <string> <formatString> ?varName varName ...?  
+```  
+Extracts data from a binary string and returns it as ordinary Tcl string values. Return value is the number of conversions performed. *\<string\>* gives the input to be parsed and *\<formatString\>* indicates how to parse it. When a field is scanned from *\<string\>*, the result is assigned to the corresponding variable in *\<varName\>*.
+
+
+&nbsp;
+
 
 # Tcl - Tk
 <font size="+2">- Grafische Anwendungsprogrammierung -</font>  
 &nbsp;
 
 <a name="ch2-1"></a>
-### Fenster aufsetzen
+### 2.1 Fenster aufsetzen
 
-```c   
+```js   
 set w . <window_name>               // Aufsetzen des Fensters mit Bezeichner <window_name>
 toplevel $w   
 wm title $w "<name_title>"          // Name des Fensters in Titelzeile
@@ -112,7 +124,7 @@ wm resizable $w 0 0                 // feste Fenstergröße
 &nbsp;
 
 <a name="ch2-2"></a>
-### Funktionalität hinter Menüpunkt
+### 2.2 Funktionalität hinter Menüpunkt
 
 z.B `.mbar.rts.m entrycget 4 -command`  (am Beispiel IPG CarMaker)  
 liefert die Funktion die im DropDown-Menü "Realtime System" an vierter Stelle hinterlegt ist.  
@@ -120,7 +132,7 @@ liefert die Funktion die im DropDown-Menü "Realtime System" an vierter Stelle h
 &nbsp;  
 
 <a name="ch2-3"></a>
-### Unterdrückung des leeren `wish`-Fensters  
+### 2.3 Unterdrückung des leeren `wish`-Fensters  
 
 Starten des Skripts mit
 ```c
@@ -128,22 +140,18 @@ wm withdraw .
 ```
 schließt das leere 'wish'-Fenster.
 
-
-
-
-
 &nbsp;  
 
 
 # IPG CarMaker  
 
 <a name="ch3-1"></a>
-### Basics
+### 3.1 Basics
 
 &nbsp;
 
 <a name="ch3-2"></a>
-### XCP
+### 3.2 XCP
 
 1. Einstellungen unter `Realtime System` &rarr; `XCP Configuration`
 2. Dort werden benötigte ASAP's einer Gruppe ("Sample Group") zugeordnet. "Sample Rate" auf 10ms setzen und dahinter den Haken setzen, anschließend speichern.  
@@ -152,11 +160,11 @@ schließt das leere 'wish'-Fenster.
 &nbsp;
 
 <a name="ch3-3"></a>
-### CarMaker-interne Funktion verändern  
+### 3.3 CarMaker-interne Funktion verändern  
 
 Funktion/proc: `PatchProc`  
 
-```c
+```js
 PatchProc <CarMaker_Func> {<Code-Zeile aus CarMaker_Func>} {<eigener Code>}
                (1)                     (2)                      (3)
 ```
@@ -171,9 +179,9 @@ Der Aufruf der 'PatchProc'-Funktion steht dann in einem tcl-Skript, das mit 'sou
 # Incr Tcl  
 
 <a name="ch4-1"></a>
-### Fundamental Expressions  
+### 4.1 Fundamental Expressions  
 
-```
+```js
 itcl_class <class_name> {
   inherit <base_class> ?base_class?  
   constructor args body  

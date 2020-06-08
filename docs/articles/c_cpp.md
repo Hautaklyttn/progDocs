@@ -14,27 +14,27 @@ layout: default
 ## Overview
 
 ### 1. Basics    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.1 Eigenschaften von C](#ch1-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.2 C und C++](#ch1-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.3 L- und R-Werte](#ch1-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.4 Auswertungsreihenfolge](#ch1-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.5 Der Bedingungsoperator A ? B : C](#ch1-5)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.6 switch - case](#ch1-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 Eigenschaften von C</font>](#ch1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 C und C++</font>](#ch1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 L- und R-Werte</font>](#ch1-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Auswertungsreihenfolge</font>](#ch1-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Der Bedingungsoperator A ? B : C</font>](#ch1-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 switch - case</font>](#ch1-6)  
 
 ### 2. Arrays
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.1 Basics](#ch2-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.2 Übergabe von Arrays](#ch2-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.3 Übergabe von Zeichenketten](#ch2-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Übergabe von Arrays</font>](#ch2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Übergabe von Zeichenketten</font>](#ch2-3)  
 
 
 ### 3. Pointer
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.1 Addition und Subtraktion](#ch3-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.2 Call-by-Value](#ch3-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.3 Call-by-Reference](#ch3-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 Addition und Subtraktion</font>](#ch3-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 Call-by-Value</font>](#ch3-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 Call-by-Reference</font>](#ch3-3)  
 
 ### 4. Pointer und Arrays   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten](#ch4-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [4.2 Das Schlüsselwort const bei Pointern und Arrays](#ch4-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten</font>](#ch4-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Das Schlüsselwort const bei Pointern und Arrays</font>](#ch4-2)  
 
 &nbsp;
 

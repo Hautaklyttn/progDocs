@@ -4,23 +4,45 @@ layout: default
 
 [Back](../)  
 
-[[1]](#ch1) *Basics*  
-[[2]](#ch2) *Arrays*  
-[[3]](#ch3) *Pointer*
-[[4]](#ch4) *Pointer und Arrays*
-
 &nbsp;
 
 # C und C++
 ---
 
+## Overview
+
+### 1. Basics    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.1 Eigenschaften von C](#ch1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.2 C und C++](#ch1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.3 L- und R-Werte](#ch1-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.4 Auswertungsreihenfolge](#ch1-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.5 Der Bedingungsoperator A ? B : C](#ch1-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.6 switch - case](#ch1-6)  
+
+### 2. Arrays
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.1 Basics](#ch2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.2 Übergabe von Arrays](#ch2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.3 Übergabe von Zeichenketten](#ch2-3)  
+
+
+## 3. Pointer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.1 Addition und Subtraktion](#ch3-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.2 Call-by-Value](#ch3-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.3 Call-by-Reference](#ch3-3)  
+
+## 4. Pointer und Arrays   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten](#ch4-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [4.2 Das Schlüsselwort const bei Pointern und Arrays](#ch4-2)
+
+---  
+
 &nbsp;
 
-<a name="ch1"></a>
 # Basics
 
 &nbsp;
 
+<a name="ch1-1"></a>
 ### Eigenschaften von C
 
 C ist eine relativ "maschinennahe" Sprache. C arbeitet mit denselben Objekten wie der Prozessor, nämlich mit **Zahlen** und **Adressen**. Auch Zeichen  werden als Zahlen gesehen, boolesche Variablen gibt es nicht und die Aufzählungskonstanten von Aufzählungstypen entsprechen ganzen Zahlen. Letztlich arbeitet C mit  
@@ -38,6 +60,7 @@ C enthält die Elemente der **Strukturierten Programmierung**. C hat ein **Typko
 
 &nbsp;
 
+<a name="ch1-2"></a>
 ### C und C++
 
 C++ ist eine Weiterentwicklung von C. C++ wurde entworfen, um zusätzlich zum klassischen C-Programmierstil  
@@ -55,6 +78,7 @@ C in der Verwandschaftstafel höherer Programmiersprachen
 
 &nbsp;
 
+<a name="ch1-3"></a>
 ### L- und R-Werte  
 
 Ausdrücke haben eine unterschiedliche Bedeutung, je nachdem, ob sie links oder rechts vom Zuweisungsoperator stehen. Im Beispiel  
@@ -84,6 +108,7 @@ Beispiele für L- und R-Werte
 
 &nbsp;
 
+<a name="ch1-4"></a>
 ### Auswertungsreihenfolge  
 
 Wie in der Mathematik spielt es bei C eine wichtige Rolle, in welcher Reihenfolge ein Ausdruck berechnet wird.  
@@ -97,6 +122,7 @@ Wie in der Mathematik spielt es bei C eine wichtige Rolle, in welcher Reihenfolg
 
 &nbsp;
 
+<a name="ch1-5"></a>
 ### Der Bedingungsoperator A ? B : C
 Eine echte Rarität  in der Programmiersprache C ist der Bedingungsoperator. Er ist  nämlich der einzige Operator, der drei Operanden verarbeitet. In einem **bedingten Ausdruck**  ``A ? B : C`` wird zuerst der Ausdruck A ausgewertet. Ist der Rückgabewert von Ausdruck A ungleich 0, also wahr, so wird der Ausdruck B ausgewertet. Das Ergebnis von B ist dann der Rückgabewert des Bedingungsoperators. Ist jedoch der Ausdruck von A gleich 0, also falsch, so wird der Ausdruck C ausgewertet.  
 
@@ -113,6 +139,7 @@ else return C;
 
 &nbsp;  
 
+<a name="ch1-6"></a>
 ### switch - case
 [...] Besonders schön lesbar wird der Code, wenn man die ganzzahligen Konstanten im *switch* durch symbolische Konstanten ersetzt, deren Bedeutung dem Leser sofort klar ist. Das Definieren der symboischen Konstanten kann durch *#define* oder noch besser durch *enum* realisiert werden.  
 
@@ -143,8 +170,11 @@ Das Programm nutzt zur Aufzählung von Konstanten den Datentyp *enum color*. Bei
 
 &nbsp;
 
-<a name="ch2"></a>
+
 # Arrays  
+
+<a name="ch2-1"></a>
+### Basics  
 
 In C gibt es im Gegensatz zu anderen Sprachen **kein Schlüsselwort array**. Der C-Compiler erkennt ein Array an den eckigen Klammern, die bei der Definition die Anzahl der Elemente enthalten. Die **Anzahl der Elemente** muss immer eine positive ganze Zahl sein. Sie kann gegeben sein durch eine Konstante oder einen konstanten Ausdruck, **nicht aber durch eine Variable**. Dies bedeutet, dass die Größe nicht dynamisch zugeordnet werden kann. Dennoch können Arrays mit einer zur Laufzeit berechneten Größe mit Hilfe der Funktion `malloc()` oder `calloc()` konstruiert werden.  
 &nbsp;
@@ -185,6 +215,7 @@ Der Compiler rechnet intern nicht mit Indizes. Erhält er eine Array-Komponente,
 
 &nbsp;
 
+<a name="ch2-2"></a>
 ### Übergabe von Arrays  
 
 Bei der Übergabe eines Arrays an eine Funktion wird als aktueller Parameter der Arrayname übergeben. Der Arrayname stellt dabei einen Pointer auf das erste Element des Arrays dar.  
@@ -219,6 +250,7 @@ void ausgabe (int alpha[], int dim)   // hier ist alpha vom Typ eines offenen Ar
 
 &nbsp;
 
+<a name="ch2-3"></a>
 ### Übergabe von Zeichenketten
 
 Da Zeichenketten vom Compiler intern als *char*-Arrays gespeichert werden, ist die Übergabe von Zeichenketten identisch mit der Übergabe von *char*-Arrays. Der formale Parameter einer Funktion, die eine Zeichenkette übergeben bekommt, kann vom Typ ``char*`` oder ``char[]`` sein.  
@@ -227,9 +259,10 @@ Da Zeichenketten vom Compiler intern als *char*-Arrays gespeichert werden, ist d
 
 &nbsp;
 
-<a name="ch3"></a>
+
 # Pointer  
 
+<a name="ch3-1"></a>
 ### Addition und Subtraktion  
 
 Wird ein Pointer vom Typ ``int *`` um 1 erhöht, so zeigt er um ein int-Objekt weiter. Wird ein Pointer  vom Typ `float *` um 1 erhöht, so zeigt er um ein float-Objekt weiter. Die Erhöhung um 1 bedeutet, dass der Pointer immer um ein Speicherobjekt vom Typ, auf den der Pointer zeigt, weiterläuft.  
@@ -242,10 +275,12 @@ Wird ein Pointer vom Typ ``int *`` um 1 erhöht, so zeigt er um ein int-Objekt w
 
 Nach der Variablen *alpha* in obigem Bild können Variablen eines anderen Typs liegen. Der Pointer lässt sich nicht beirren, er läuft im *int*-Raster weiter.
 
+<a name="ch3-2"></a>
 ### Call-by-Value  
 
 In vielen Programmiersprachen werden im Normalfall Parameter an Funktionen mithilfe einer Kopie übergeben. Das wird als **call-by-value** bezeichnet. Das bedeutet, dass innerhalb der aufgerufenen Funktion mit der Kopie gearbeitet wird und sich Änderungen nicht auf den ursprünglichen Wert auswirken.
 
+<a name="ch3-3"></a>
 ### Call-by-Reference
 
 Manche Programmiersprachen wie z.B. C++ kennen außer der **call-by-value** Schnittstelle auch eine **call-by-reference** Schnittstelle. Eine call-by-reference Schnittstelle ermöglicht es, über Übergabeparameter nicht nur Werte in eine Funktion hinein, sondern auch aus ihr heraus zu bringen.  
@@ -310,9 +345,10 @@ int main () {
 
 &nbsp;
 
-<a name="ch4"></a>
+
 # Pointer und Arrays  
 
+<a name="ch4-1"></a>
 ### Vergleich von char-Arrays und Pointern auf Zeichenketten
 
 Prinzipiell hat man zur Speicherung von konstanten Zeichenketten zwei Möglichkeiten. Zum einen kann man ein *char*-Array definieren und dort die konstante Zeichenkette ablegen wie im folgenden Beispiel:  
@@ -344,6 +380,7 @@ Im Falle der Pointernotation ist eine Änderung der konstanten Zeichenkette nich
 
 &nbsp;
 
+<a name="ch4-2"></a>
 ### Das Schlüsselwort `const` bei Pointern und Arrays  
 
 Die mit *const* definierten Variablen besitzen - genau wie gewöhnliche Variablen - einen Wert, einen Typ, einen Namen und auch eine Adresse. Sie liegen also im adressierbaren Speicherbereich. Als Konstanten dürfen sie natürlich nicht auf der linken Seite der Zuweisung stehen.  

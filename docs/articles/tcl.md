@@ -15,16 +15,17 @@ layout: default
 
 ### 1. Basics    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.1 ...](#ch1-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.2 ...](#ch1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.2 Packages](#ch1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.3 Regular Expressions](#ch1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.4 `scan` command](#ch1-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.5 `binary scan` command](#ch1-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.6 `VARIANT` data type](#ch1-6)
 
 ### 2. Tcl - Tk
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.1 Fenster aufsetzen](#ch2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.2 Funktionalität hinter Menüpunkt](#ch2-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.3 Unterdrückung des leeren `wish`-Fensters](#ch2-3)  
-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.4 `grid` Layout Manager](#ch2-4)
 
 ### 3. IPG CarMaker
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.1 Basics](#ch3-1)  
@@ -45,7 +46,26 @@ layout: default
 
 ### 1.1 ...  
 
-### 1.2 ...  
+&nbsp;
+
+<a name="ch1-2"></a>
+### 1.2 Packages  
+**1.2.1 Einbinden eines Packages**  
+(1) Erstellen des Packages mit Zeile `package provide <package_name>`  
+(2) Hinzufügen des neuen Package in (neues oder bestehendes) "pkgIndex.tcl" File:  
+```js  
+package ifneeded <package_name> <version> [list source [file join $dir <directory>]]  
+```
+(3) Die globale Variable "auto_path" sammelt alle Pfade in denen sich die pkgIndex.tcl (und damit die Packages) befinden können.  
+(4) Nutzen eines Packages indem man im jeweiligen File die Zeile `package require <package_name> <version>` einfügt.  
+
+Nützliche Kommandos:  
+  a) ``package names``: Listet alle geladenen Packages auf  
+  b) ``Log $auto_path``: Gibt alle gelisteten Verzeichnisse aus  
+
+> 'tcllib' runterladen! Enthält zusätzliche Packages die nicht im Standard-Interpreter enthalten sind.  
+
+&nbsp;
 
 <a name="ch1-3"></a>
 ### 1.3 Regular Expressions  
@@ -78,7 +98,7 @@ regexp {\S+} $e     // searches for not spaces
 <a name="ch1-4"></a>
 ### 1.4 `scan` command  
 
-```js  
+```  
 scan <string> <format> <varName> ?varName?  
 ```  
 
@@ -93,14 +113,38 @@ The following "conversion characters" are supported (and more):
 
 &nbsp;
 
-<a name="ch1-4"></a>
+<a name="ch1-5"></a>
 ### 1.5 `binary scan` command  
 
-```js  
+```  
 binary scan <string> <formatString> ?varName varName ...?  
 ```  
-Extracts data from a binary string and returns it as ordinary Tcl string values. Return value is the number of conversions performed. *\<string\>* gives the input to be parsed and *\<formatString\>* indicates how to parse it. When a field is scanned from *\<string\>*, the result is assigned to the corresponding variable in *\<varName\>*.
+Extracts data from a binary string and returns it as ordinary Tcl string values. Return value is the number of conversions performed. *\<string\>* gives the input to be parsed and *\<formatString\>* indicates how to parse it. When a field is scanned from *\<string\>*, the result is assigned to the corresponding variable in *\<varName\>*.  
 
+```js
+binary scan \x01\x02\x03\x04 x2H* var1
+    // Rückgabewert: '1'
+    // var1 = '0304'
+```
+
+`x` - moves the cursor forward 'count' bytes in *\<string\>* (hier: 2). If 'count' is '\*' or is larger than the number of bytes after the current cursor position, then the cursor is positioned after the last byte in *\<string\>*. If 'count' is omitted, then the cursor is moved forward one byte.
+
+`H` - data is turned into a string of 'count' (hier: \*) hexadecimal digits in high-to-low order within each byte. The data bytes are scanned in first to last order. Any extra bits in the last byte are ignored. If 'count' is '\*', then all of the remaining hex digits in *\<string\>* will be scanned. If 'count' is omitted, then one hex digit will be scanned.  
+
+'count' := number after the indicator (x<u>2</u>H<u>\*</u>)
+
+&nbsp;
+
+<a name="ch1-5"></a>
+### 1.6 `VARIANT` data type  
+Variables in **VisualBasic (VBA)** tend to be of type "variant".  
+
+To construct a variable in Tcl of type "variant" (with subtype <type>) the following needs to be done:  
+```js
+::tcom ::variant <type> <data>
+```  
+*\<type\>* is: 'bstr', 'error', 'bool', 'variant', 'decimal', 'i1', 'ui1', 'ui2', 'ui4', 'i8', 'ui8', int, 'uint'  
+*\<data\>* is the data to be converted. 
 
 &nbsp;
 
@@ -138,7 +182,37 @@ Starten des Skripts mit
 ```c
 wm withdraw .
 ```
-schließt das leere 'wish'-Fenster.
+schließt das leere 'wish'-Fenster.  
+
+&nbsp;  
+
+<a name="ch2-4"></a>
+### 2.4 `grid` Layout Manager  
+'grid' geht von einem "Schachbrettmuster" aus auf dem die einzelnen "widgets" verteilt werden. Die Größe der Felder hängt von der Höhe/Breite der genutzten widgets ab.  
+
+Optionen:  
+`-column <n>  /  -row <n>`  
+Insert the widget in the n-th column/row (starting from 0)  
+
+`-columnspan <n>  /  -rowspan <n>`  
+Arrange for the widget to span n clumns/rows. Default is one column/row.  
+
+`padx <n>  / pady <n>`  
+Horizontal ('x') <u>external</u> padding and Vertical ('y') <u>external</u> padding  
+
+`ipadx <n>  / ipady <n>`  
+Horizontal ('x') <u>internal</u> padding and Vertical ('y') <u>internal</u> padding  
+
+`-sticky <side(s)>`  
+How the widget should be positioned and stretched within its cell. *\<side(s)\>* contains one or more of the character n,s,e or w. Each letter refers to the side to which the widget will stick.  
+
+`rowconfigure <master> <index> <option value>`  
+(&rarr; same for 'columnfigure')  
+Set the row properties of the <index> row in <master>. Valid option are:  
+   - `-pad <amount>`: Units in padding on the top and bottom of the tallest window in row  
+   - `-weight <int>`: Every row (and column) has a 'weight' grid option associated with it, which tells it how much it should grow if there is extra room in the <master> to fill. By default, the 'weight' of each column or row is '0' meaning don't expand to fill space.
+
+> "grid" and "place" lassen sich kombinieren!
 
 &nbsp;  
 

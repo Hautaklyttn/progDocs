@@ -14,12 +14,12 @@ layout: default
 ## Overview
 
 ### 1. Basics    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[1.1 System and Interpreter](#ch1-1)</font>  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[1.2 Packages](#ch1-2)</font>  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[1.3 Regular Expressions](#ch1-3)</font>  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[1.4 `scan` command](#ch1-4)</font>  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[1.5 `binary scan` command](#ch1-5)</font>  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[1.6 `VARIANT` data type](#ch1-6)</font>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 System and Interpreter</font>](#ch1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">[1.2 Packages</font>](#ch1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">[1.3 Regular Expressions</font>](#ch1-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">[1.4 `scan` command</font>](#ch1-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">[1.5 `binary scan` command</font>](#ch1-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">[1.6 `VARIANT` data type</font>](#ch1-6)  
 
 ### 2. Tcl - Tk
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[2.1 Fenster aufsetzen](#ch2-1)</font>  

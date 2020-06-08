@@ -20,12 +20,15 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 `scan` command</font>](#ch1-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 `binary scan` command</font>](#ch1-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 `VARIANT` data type</font>](#ch1-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Konsolenfenster manuell öffnen</font>](#ch1-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.8 Windows-Prozesse beenden</font>](#ch1-8)  
 
 ### 2. Tcl - Tk
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Fenster aufsetzen</font>](#ch2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Funktionalität hinter Menüpunkt</font>](#ch2-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Unterdrückung des leeren `wish`-Fensters</font>](#ch2-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 `grid` Layout Manager</font>](#ch2-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Darstellung dynamischer Daten (2D-Plot)</font>](#ch2-5)  
 
 ### 3. IPG CarMaker
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 Basics</font>](#ch3-1)  
@@ -66,6 +69,15 @@ This variable is maintained by Tcl as an array whose elements are the environmen
    If set, then it specifies the location of the directory containing library scripts (the value of this variable will be assigned to the 'tcl_library' variable and therefore returned by the command ``[info library]``)  
    - **env(TCLLIBPATH)**  
    If set, then it must contain a valid Tcl list giving directories to search during auto-load operations. Directories must be specified in Tcl format, using "/" as path seperator, regardless of platform. This variable is only used when initializing the "auto_path" variable.
+
+&nbsp;
+
+**1.1.2 Action-Oriented vs. Object-Oriented**  
+In Tcl there are two approaches when defining commands in an application.
+> In the action-oriented approach there is one command for each action that can be taken on an object, and the command takes an object name as an argument. For example Tcl's file commands are action-oriented: there are separate commands for opening files, reading, writing, closing, etc.  
+In the object-oriented approach there is one command for each object, and the name of the command is the name of the object. When the command is invoked its first argument specifies the operation to perform on the object. Tk's widget work this way: if there is a button widget .b, there is also a command named .b you can invoke: '.b flash' to flash the widget or '.b invoke' to evaluate its Tcl script.  
+The action-oriented approach works well when there are many objects or the objects are unpredictable or short-lived.  
+The object-oriented approach works well when the number of objects isn't too great and the objects are well defined and exist for at least moderate amounts of time. The object-oriented approach has the advantage that it doesn't pollute the command name space with lots of commands for individual actions.
 
 &nbsp;
 
@@ -165,7 +177,47 @@ To construct a variable in Tcl of type "variant" (with subtype <type>) the follo
 ::tcom ::variant <type> <data>
 ```  
 *\<type\>* is: 'bstr', 'error', 'bool', 'variant', 'decimal', 'i1', 'ui1', 'ui2', 'ui4', 'i8', 'ui8', int, 'uint'  
-*\<data\>* is the data to be converted.
+*\<data\>* is the data to be converted.  
+
+&nbsp;
+
+<a name="ch1-7"></a>
+### 1.7 Konsolenfenster manuell öffnen  
+```js
+catch {console show}
+```  
+Befehl öffnet ein eigenes Konsolenfenster in dem alle getätigten Ausgaben erscheinen (z.B. per "puts").
+
+&nbsp;
+
+<a name="ch1-8"></a>
+### 1.8 Windows-Prozesse beenden
+  - Liste aller aktiven COM-Objekte:
+    ```js
+    info commands ::tcom::handle*
+    ```
+  - Liste aller PID's (process Id's) in Windows (twapi package):
+    ```js
+    twapi::get_process_ids
+    ```  
+  - Abfragen, welches Programm zur jew. PID gehört:  
+    ```js
+    exec {*}[auto_execok tasklist] /fi "pid eq <pid_no>"      // <pid_no> ist Integer
+    ```    
+  - Prozesse beenden:
+    - über PID:
+      ```js
+      [exec [auto_execok taskkill] /PID $pid]
+      ```     
+    - über PID (twapi):
+      ```js
+      [twapi::end_process -force $pid]
+      ```       
+    - **Best Use:** über Name:
+      ```js
+      [exec {*}[auto_execok taskkill] /IM "Excel.exe" /T /F]
+      ```    
+      **/T** = kills child process, **/F** = forceful termination
 
 &nbsp;
 
@@ -234,6 +286,18 @@ Set the row properties of the <index> row in <master>. Valid option are:
    - `-weight <int>`: Every row (and column) has a 'weight' grid option associated with it, which tells it how much it should grow if there is extra room in the <master> to fill. By default, the 'weight' of each column or row is '0' meaning don't expand to fill space.
 
 > "grid" und "place" lassen sich kombinieren!
+
+&nbsp;  
+
+<a name="ch2-5"></a>
+### 2.5 Darstellung dynamischer Daten (2D-Plot)  
+
+1. Möglichkeit: `canvas` - widget  
+Funktion `xview scroll <number> <what>` gibt die Möglichkeit einer scrollenden Darstellungsfläche (z.B. ``.c xview scroll 1 unit``). Probleme bei sehr dynamischen Charts: Canvas erzeugt keine Linien mehr zwischen den Punkten (&rarr; Unbrauchbar).  
+
+2. Möglichkeit: `vector`/`strip-chart` in BLT  
+Veränderung in einer 'Vector'-Variable wird automatisch in einem Graph, der diese Werte enthält, übernommen. D.h. in die Lap muss nur die Neuberechnung der 'Vector'-Punkte, nicht das Zeichnen des 'strip-charts' selber,´.  
+'Strip-chart' hat bereits alle nötigen Features integriert (parametrierbares 2D-Chart, parametrierbare Axen, parametrierbare Legende, usw.). Ist in der Lage auch hochdynamische Daten dazustellen (über Vektoren).
 
 &nbsp;  
 

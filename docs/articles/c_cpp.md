@@ -27,12 +27,12 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.3 Übergabe von Zeichenketten](#ch2-3)  
 
 
-## 3. Pointer
+### 3. Pointer
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.1 Addition und Subtraktion](#ch3-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.2 Call-by-Value](#ch3-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.3 Call-by-Reference](#ch3-3)  
 
-## 4. Pointer und Arrays   
+### 4. Pointer und Arrays   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten](#ch4-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [4.2 Das Schlüsselwort const bei Pointern und Arrays](#ch4-2)
 

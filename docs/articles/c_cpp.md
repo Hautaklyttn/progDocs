@@ -2,7 +2,12 @@
 layout: default
 ---
 
-[Back](../)
+[Back](../)  
+
+[[1]](#ch1) *Basics*  
+[[2]](#ch2) *Arrays*  
+[[3]](#ch3) *Pointer*
+[[4]](#ch4) *Pointer und Arrays*
 
 &nbsp;
 
@@ -11,6 +16,7 @@ layout: default
 
 &nbsp;
 
+<a name="ch1"></a>
 # Basics
 
 &nbsp;
@@ -135,6 +141,9 @@ Das Programm nutzt zur Aufzählung von Konstanten den Datentyp *enum color*. Bei
 
 &nbsp;
 
+&nbsp;
+
+<a name="ch2"></a>
 # Arrays  
 
 In C gibt es im Gegensatz zu anderen Sprachen **kein Schlüsselwort array**. Der C-Compiler erkennt ein Array an den eckigen Klammern, die bei der Definition die Anzahl der Elemente enthalten. Die **Anzahl der Elemente** muss immer eine positive ganze Zahl sein. Sie kann gegeben sein durch eine Konstante oder einen konstanten Ausdruck, **nicht aber durch eine Variable**. Dies bedeutet, dass die Größe nicht dynamisch zugeordnet werden kann. Dennoch können Arrays mit einer zur Laufzeit berechneten Größe mit Hilfe der Funktion `malloc()` oder `calloc()` konstruiert werden.  
@@ -216,6 +225,9 @@ Da Zeichenketten vom Compiler intern als *char*-Arrays gespeichert werden, ist d
 
 &nbsp;
 
+&nbsp;
+
+<a name="ch3"></a>
 # Pointer  
 
 ### Addition und Subtraktion  
@@ -296,6 +308,9 @@ int main () {
 
 &nbsp;  
 
+&nbsp;
+
+<a name="ch4"></a>
 # Pointer und Arrays  
 
 ### Vergleich von char-Arrays und Pointern auf Zeichenketten

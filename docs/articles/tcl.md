@@ -15,26 +15,26 @@ layout: default
 
 ### 1. Basics    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 System and Interpreter</font>](#ch1-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">[1.2 Packages</font>](#ch1-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">[1.3 Regular Expressions</font>](#ch1-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">[1.4 `scan` command</font>](#ch1-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">[1.5 `binary scan` command</font>](#ch1-5)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">[1.6 `VARIANT` data type</font>](#ch1-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Packages</font>](#ch1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Regular Expressions</font>](#ch1-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 `scan` command</font>](#ch1-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 `binary scan` command</font>](#ch1-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 `VARIANT` data type</font>](#ch1-6)  
 
 ### 2. Tcl - Tk
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[2.1 Fenster aufsetzen](#ch2-1)</font>  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[2.2 Funktionalität hinter Menüpunkt](#ch2-2)</font>  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[2.3 Unterdrückung des leeren `wish`-Fensters](#ch2-3)</font>  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[2.4 `grid` Layout Manager](#ch2-4)</font>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Fenster aufsetzen</font>](#ch2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Funktionalität hinter Menüpunkt</font>](#ch2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Unterdrückung des leeren `wish`-Fensters</font>](#ch2-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 `grid` Layout Manager</font>](#ch2-4)  
 
 ### 3. IPG CarMaker
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[3.1 Basics](#ch3-1)</font>  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[3.2 XCP](#ch3-2)</font>  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[3.3 CarMaker-interne Funktion verändern](#ch3-3)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 Basics</font>](#ch3-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 XCP</font>](#ch3-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 CarMaker-interne Funktion verändern</font>](#ch3-3)  
 
 ### 4. Incr Tcl    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[4.1 Fundamental Expressions](#ch4-1)</font>  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[4.2 ...](#ch4-2)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Fundamental Expressions</font>](#ch4-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 ...</font>](#ch4-2)  
 
 &nbsp;
 

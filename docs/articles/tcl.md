@@ -14,27 +14,27 @@ layout: default
 ## Overview
 
 ### 1. Basics    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.1 ...](#ch1-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.2 Packages](#ch1-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.3 Regular Expressions](#ch1-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.4 `scan` command](#ch1-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.5 `binary scan` command](#ch1-5)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1.6 `VARIANT` data type](#ch1-6)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[1.1 System and Interpreter](#ch1-1)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[1.2 Packages](#ch1-2)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[1.3 Regular Expressions](#ch1-3)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[1.4 `scan` command](#ch1-4)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[1.5 `binary scan` command](#ch1-5)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[1.6 `VARIANT` data type](#ch1-6)</font>
 
 ### 2. Tcl - Tk
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.1 Fenster aufsetzen](#ch2-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.2 Funktionalität hinter Menüpunkt](#ch2-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.3 Unterdrückung des leeren `wish`-Fensters](#ch2-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.4 `grid` Layout Manager](#ch2-4)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[2.1 Fenster aufsetzen](#ch2-1)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[2.2 Funktionalität hinter Menüpunkt](#ch2-2)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[2.3 Unterdrückung des leeren `wish`-Fensters](#ch2-3)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[2.4 `grid` Layout Manager](#ch2-4)</font>
 
 ### 3. IPG CarMaker
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.1 Basics](#ch3-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.2 XCP](#ch3-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.3 CarMaker-interne Funktion verändern](#ch3-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[3.1 Basics](#ch3-1)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[3.2 XCP](#ch3-2)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[3.3 CarMaker-interne Funktion verändern](#ch3-3)</font>  
 
 ### 4. Incr Tcl    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [4.1 Fundamental Expressions](#ch4-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [4.2 ...](#ch4-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[4.1 Fundamental Expressions](#ch4-1)</font>  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font size="-1">[4.2 ...](#ch4-2)</font>  
 
 &nbsp;
 
@@ -44,7 +44,28 @@ layout: default
 
 # Basics  
 
-### 1.1 ...  
+<a name="ch1-1"></a>
+### 1.1 Tcl Interpreter  
+
+**1.1.1 System Startup / Interpreter Files**  
+1. `init.tcl` (in "lib/tcl8.6")  
+The main file sourced by a Tcl interpreter when starting up (during 'Tcl_init'). When Tcl starts up, it searches for a directory that contains its 'init.tcl' startup script. You can short-circuit the search by defining the 'TCL_LIBRARY' environment variable (not needed in Tcl 8.0.5 or later).  
+The primary thing defined by 'init.tcl' is the implementation of the 'unknown' procedure. It also initializes 'auto_path' to contain '$tcl_library' and the parent directory added to 'auto_path' depending on the compiled in value of 'tcl_pkgPath'.  
+
+2. `auto_path` variable  
+Contains a valid Tcl list giving directories to search during auto-load operations. Variable is initialized during startup. Additional locations to look for files and packages indices should normally be added to this variable using 'lappend'. 'auto_path' init settings are set in 'init.tcl'. To add initial paths, one can set the environment variable 'TCLLIBPATH'. The following code can be added therefore in 'init.tcl':  
+```js
+if {[info exists env(TCLLIBPATH)]} {set env(TCLLIBPATH) [list <path>]}
+```
+
+3. `env` variable  
+This variable is maintained by Tcl as an array whose elements are the environment variables for the process.  
+   - **env(HOME)**  
+   This environment variable, if set, gives the location of the directory considered to be the current user's home directory.  
+   - **env(TCL_LIBRARY)**  
+   If set, then it specifies the location of the directory containing library scripts (the value of this variable will be assigned to the 'tcl_library' variable and therefore returned by the command ``[info library]``)  
+   - **env(TCLLIBPATH)**  
+   If set, then it must contain a valid Tcl list giving directories to search during auto-load operations. Directories must be specified in Tcl format, using "/" as path seperator, regardless of platform. This variable is only used when initializing the "auto_path" variable.
 
 &nbsp;
 
@@ -135,7 +156,7 @@ binary scan \x01\x02\x03\x04 x2H* var1
 
 &nbsp;
 
-<a name="ch1-5"></a>
+<a name="ch1-6"></a>
 ### 1.6 `VARIANT` data type  
 Variables in **VisualBasic (VBA)** tend to be of type "variant".  
 
@@ -144,7 +165,7 @@ To construct a variable in Tcl of type "variant" (with subtype <type>) the follo
 ::tcom ::variant <type> <data>
 ```  
 *\<type\>* is: 'bstr', 'error', 'bool', 'variant', 'decimal', 'i1', 'ui1', 'ui2', 'ui4', 'i8', 'ui8', int, 'uint'  
-*\<data\>* is the data to be converted. 
+*\<data\>* is the data to be converted.
 
 &nbsp;
 
@@ -212,7 +233,7 @@ Set the row properties of the <index> row in <master>. Valid option are:
    - `-pad <amount>`: Units in padding on the top and bottom of the tallest window in row  
    - `-weight <int>`: Every row (and column) has a 'weight' grid option associated with it, which tells it how much it should grow if there is extra room in the <master> to fill. By default, the 'weight' of each column or row is '0' meaning don't expand to fill space.
 
-> "grid" and "place" lassen sich kombinieren!
+> "grid" und "place" lassen sich kombinieren!
 
 &nbsp;  
 

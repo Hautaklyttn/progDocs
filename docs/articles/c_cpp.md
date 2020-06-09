@@ -11,15 +11,13 @@ layout: default
 
 &nbsp;
 
-## Overview
-
 ### 1. Basics    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 Eigenschaften von C</font>](#ch1-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 C und C++</font>](#ch1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 L- und R-Werte</font>](#ch1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Auswertungsreihenfolge</font>](#ch1-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Der Bedingungsoperator A ? B : C</font>](#ch1-5)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 switch - case</font>](#ch1-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Headers und Libraries</font>](#ch1-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Die Funktion `main`</font>](#ch1-6)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -28,13 +26,18 @@ layout: default
 
 
 ### 3. Pointer
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 Addition und Subtraktion</font>](#ch3-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 Call-by-Value</font>](#ch3-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 Call-by-Reference</font>](#ch3-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 Referencing and Dereferencing</font>](#ch3-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 Addition und Subtraktion</font>](#ch3-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 Call-by-Value</font>](#ch3-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 Call-by-Reference</font>](#ch3-4)  
 
 ### 4. Pointer und Arrays   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten</font>](#ch4-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Das Schlüsselwort const bei Pointern und Arrays</font>](#ch4-2)  
+
+### 5. Programmsyntax und -semantik   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Der Bedingungsoperator `A ? B : C`</font>](#ch5-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2 `switch - case`</font>](#ch5-2)
 
 &nbsp;
 
@@ -79,6 +82,27 @@ Der ANSI-C Standard revidierte ursprüngliche Inkompatibilitäten von C und C++,
 
 ![01](../assets/pics/stammbaum.png)  
 C in der Verwandschaftstafel höherer Programmiersprachen  
+
+&nbsp;
+
+![011](../assets/pics/c_timeline.png)  
+Early C, UNIX und zugehörige Hardware
+
+&nbsp;
+
+![012](../assets/pics/later_c.png)  
+Later C and C++  
+
+&nbsp;
+
+Sprachen und ihr Einsatzbereich:  
+- `C` - systems programming, embedded systems
+- `Objective C` - programming apps, IOS/OSX  
+- `Ada` - real-time systems, aerospace, defense  
+- `Cobol` - business programming  
+- `Fortran` - scientific, parallel programming  
+- `C++` - game programming  
+- `Python` - scientific programming  
 
 &nbsp;
 
@@ -127,48 +151,58 @@ Wie in der Mathematik spielt es bei C eine wichtige Rolle, in welcher Reihenfolg
 &nbsp;
 
 <a name="ch1-5"></a>
-### 1.5 Der Bedingungsoperator A ? B : C
-Eine echte Rarität  in der Programmiersprache C ist der Bedingungsoperator. Er ist  nämlich der einzige Operator, der drei Operanden verarbeitet. In einem **bedingten Ausdruck**  ``A ? B : C`` wird zuerst der Ausdruck A ausgewertet. Ist der Rückgabewert von Ausdruck A ungleich 0, also wahr, so wird der Ausdruck B ausgewertet. Das Ergebnis von B ist dann der Rückgabewert des Bedingungsoperators. Ist jedoch der Ausdruck von A gleich 0, also falsch, so wird der Ausdruck C ausgewertet.  
+### 1.5 Headers and Libraries  
+Generally, a header file notifies the compiler of certain things (mostly their existence or declarations) so that the compiler can correctly build a single translation unit (such as a single C file).  
 
-````c  
-1 == 1 ? 0 : 1      /* Rückgabewert: 0 */
-0 ? 0 : 1           /* Rückgabewert: 1 */
-````  
+A library file is the actual executable code that does the work as specified in that header file. This is linked in by the linker to provide the actual functionality (the definitions rather than just the declarations).  
 
-Der Ausdruck ist also gleichbedeutend mit
-````c  
-if (A) return B;
-else return C;
-````  
+So, for example, you must have the line `#include <pthread.h>`  which tells the compiler all about the existence of the functions but doesn't actually provide the implementation of those things.  
 
-&nbsp;  
+In the Makefile, for this example, the `-lpthread` option tells the linker that it should locate a library based on the `pthread` name from which it can pull in the actual implementations, in order to form the final executable.  
+
+Similarly, while `stdio.h` holds information about the I/O stuff, the actual code for it will be in the runtime library (though you rarely have to link that library specifically since the compiler will try to take care of it for you). Because you usually link with the compiler (i.e. the compiler invokes the linker for you), it knows that you're probably going to need the C run-time library. If you were to use the linker directly (such as by using the `ld` command), that probably wouldn't happen and you'd have to be explicit.
+
+&nbsp;
 
 <a name="ch1-6"></a>
-### 1.6 switch - case
-[...] Besonders schön lesbar wird der Code, wenn man die ganzzahligen Konstanten im *switch* durch symbolische Konstanten ersetzt, deren Bedeutung dem Leser sofort klar ist. Das Definieren der symboischen Konstanten kann durch *#define* oder noch besser durch *enum* realisiert werden.  
-
+### 1.6 Die Funktion `main`  
+Es ist möglich der 'main'-Funktion eine Parameterliste zu übergeben.  
 ```c
-#include <stdio.h>
+// 'main' function header  
+int main (int argc, char *argv[])
+```
 
-int main (void)
-{
-  enum color {RED, GREEN, BLUE};      // (1)
-  enum color col = GREEN;             // (2)
-  switch (col)
-  {
-    case RED:
-      ...
-    case GREEN:
-      ...
-    case BLUE:
-      ...
-    default:
-      ...
-  }  
+`args` - speichert die Anzahl der Parameter ('argument count')  
+`argv` - speichert die Parameter an sich ('argument values')  
+
+Es besteht also die Möglichkeit, Argumente als Parameter an unser Programm (die spätere .exe) zu übergeben, ähnlich wie bei Funktionen. Hierfür benötigt man ein erweitertes Grundgerüst ('argc' und 'argv' in main-Parameterliste).  
+
+Nachdem man ein Programm kompiliert hat, kann man es über die Shell oder Eingabeauforderung mit Parametern starten. Folgendes Testprogramm gibt lediglich die Werte der Parameter 'argc' und 'argv' aus:  
+```c
+#include <stdio.h>  
+
+int main(int argc, char* argv[]) {
+  int i;
+  printf("argc: %d\n", argc);
+  for (i=0; i<argc; i++) {
+    printf("argv[%d]: %s\n", i, argv[i]);
+  }
+  return 0;
 }
 ```
 
-Das Programm nutzt zur Aufzählung von Konstanten den Datentyp *enum color*. Bei Kommentar *(1)* werden den Konstanten *RED, GREEN* und *BLUE* die Integerwerte 0, 1 und 2 zugewiesen. Nun wird bei *(2)* eine Variable  *col* vom Typ *enum color* angelegt und der Wert *GREEN* zugewiesen. Ausgeführt werden in der darauf folgenden switch-Anweisung die Anweisung bei *case: GREEN*.  
+In diesem Beispiel ist der Name der kompilierten Datei 'foo.exe'. ein Aufruf und die resultierende Ausgabe könnte wie folgt aussehen:  
+```c
+C:\> foo kurt hannes  
+argc: 3
+argv[0]: foo  
+argv[1]: kurt  
+argv[2]: hannes  
+```
+
+Der erste Wert des Parameter-Arrays 'argv' ist immer der Programmname selbst, in diesem Falle 'foo'. Dahinter folgen die wirklichen Parameter bzgl. des Programmaufrufs.
+
+
 
 &nbsp;
 
@@ -267,7 +301,33 @@ Da Zeichenketten vom Compiler intern als *char*-Arrays gespeichert werden, ist d
 # Pointer  
 
 <a name="ch3-1"></a>
-### 3.1 Addition und Subtraktion  
+### 3.1 Referencing and Dereferencing
+
+`Referencing` means taking the address of an existing variable (using `&`) to set a pointer variable. In order to be valid, a pointer has to be set to the address of a variable of the same type as the pointer, without the asterisk (`*`).  
+```c
+int c1;  
+int *p1;
+c1 = 5;  
+p1 = &c1;   // "p1 reference c1"
+```
+
+> `&` is the reference operator and can be read as `address of`.  
+
+&nbsp;
+
+``Dereferencing`` a pointer means using the `*` operator (*asterisk* character) to access the value stored at a pointer.  The value stored at the address of the pointer must be a vlue of the same type of variable the pointer 'points' to, but there is no guarantee this is the case unless the pointer was set correctly. The type of variable the pointer points to is the type less the outermost asterisk.  
+```c
+int n1;
+n1 = *p1;  // reading access, i.e. n1 is now 5
+*p1 = 7;   // writing access, i.e. c1 is now 7
+```
+
+> `*` is the dereference operator and can be read as `value pointed by`.
+
+&nbsp;
+
+<a name="ch3-2"></a>
+### 3.2 Addition und Subtraktion  
 
 Wird ein Pointer vom Typ ``int *`` um 1 erhöht, so zeigt er um ein int-Objekt weiter. Wird ein Pointer  vom Typ `float *` um 1 erhöht, so zeigt er um ein float-Objekt weiter. Die Erhöhung um 1 bedeutet, dass der Pointer immer um ein Speicherobjekt vom Typ, auf den der Pointer zeigt, weiterläuft.  
 
@@ -279,13 +339,13 @@ Wird ein Pointer vom Typ ``int *`` um 1 erhöht, so zeigt er um ein int-Objekt w
 
 Nach der Variablen *alpha* in obigem Bild können Variablen eines anderen Typs liegen. Der Pointer lässt sich nicht beirren, er läuft im *int*-Raster weiter.
 
-<a name="ch3-2"></a>
-### 3.2 Call-by-Value  
+<a name="ch3-3"></a>
+### 3.3 Call-by-Value  
 
 In vielen Programmiersprachen werden im Normalfall Parameter an Funktionen mithilfe einer Kopie übergeben. Das wird als **call-by-value** bezeichnet. Das bedeutet, dass innerhalb der aufgerufenen Funktion mit der Kopie gearbeitet wird und sich Änderungen nicht auf den ursprünglichen Wert auswirken.
 
-<a name="ch3-3"></a>
-### 3.3 Call-by-Reference
+<a name="ch3-4"></a>
+### 3.4 Call-by-Reference
 
 Manche Programmiersprachen wie z.B. C++ kennen außer der **call-by-value** Schnittstelle auch eine **call-by-reference** Schnittstelle. Eine call-by-reference Schnittstelle ermöglicht es, über Übergabeparameter nicht nur Werte in eine Funktion hinein, sondern auch aus ihr heraus zu bringen.  
 
@@ -425,6 +485,58 @@ Beim folgenden Beispiel bleibt *hugo* stets unzertrennlich mit *lili* verbunden,
 ```c
 const char * const hugo = lili;
 ```
+
+&nbsp;  
+
+&nbsp;
+
+
+# Programmsyntax und -semantik
+
+<a name="ch5-1"></a>
+### 5.1 Der Bedingungsoperator `A ? B : C`
+Eine echte Rarität  in der Programmiersprache C ist der Bedingungsoperator. Er ist  nämlich der einzige Operator, der drei Operanden verarbeitet. In einem **bedingten Ausdruck**  ``A ? B : C`` wird zuerst der Ausdruck A ausgewertet. Ist der Rückgabewert von Ausdruck A ungleich 0, also wahr, so wird der Ausdruck B ausgewertet. Das Ergebnis von B ist dann der Rückgabewert des Bedingungsoperators. Ist jedoch der Ausdruck von A gleich 0, also falsch, so wird der Ausdruck C ausgewertet.  
+
+````c  
+1 == 1 ? 0 : 1      /* Rückgabewert: 0 */
+0 ? 0 : 1           /* Rückgabewert: 1 */
+````  
+
+Der Ausdruck ist also gleichbedeutend mit
+````c  
+if (A) return B;
+else return C;
+````  
+
+&nbsp;  
+
+<a name="ch5-2"></a>
+### 5.2 `switch - case`
+[...] Besonders schön lesbar wird der Code, wenn man die ganzzahligen Konstanten im *switch* durch symbolische Konstanten ersetzt, deren Bedeutung dem Leser sofort klar ist. Das Definieren der symboischen Konstanten kann durch *#define* oder noch besser durch *enum* realisiert werden.  
+
+```c
+#include <stdio.h>
+
+int main (void)
+{
+  enum color {RED, GREEN, BLUE};      // (1)
+  enum color col = GREEN;             // (2)
+  switch (col)
+  {
+    case RED:
+      ...
+    case GREEN:
+      ...
+    case BLUE:
+      ...
+    default:
+      ...
+  }  
+}
+```
+
+Das Programm nutzt zur Aufzählung von Konstanten den Datentyp *enum color*. Bei Kommentar *(1)* werden den Konstanten *RED, GREEN* und *BLUE* die Integerwerte 0, 1 und 2 zugewiesen. Nun wird bei *(2)* eine Variable  *col* vom Typ *enum color* angelegt und der Wert *GREEN* zugewiesen. Ausgeführt werden in der darauf folgenden switch-Anweisung die Anweisung bei *case: GREEN*.  
+
 
 &nbsp;
 

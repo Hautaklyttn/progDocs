@@ -11,10 +11,8 @@ layout: default
 
 &nbsp;
 
-## Overview
-
 ### 1. Basics    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 System and Interpreter</font>](#ch1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 Tcl Interpreter</font>](#ch1-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Packages</font>](#ch1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Regular Expressions</font>](#ch1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 `scan` command</font>](#ch1-4)  
@@ -74,8 +72,8 @@ This variable is maintained by Tcl as an array whose elements are the environmen
 
 **1.1.2 Action-Oriented vs. Object-Oriented**  
 In Tcl there are two approaches when defining commands in an application.
-> In the action-oriented approach there is one command for each action that can be taken on an object, and the command takes an object name as an argument. For example Tcl's file commands are action-oriented: there are separate commands for opening files, reading, writing, closing, etc.  
-In the object-oriented approach there is one command for each object, and the name of the command is the name of the object. When the command is invoked its first argument specifies the operation to perform on the object. Tk's widget work this way: if there is a button widget .b, there is also a command named .b you can invoke: '.b flash' to flash the widget or '.b invoke' to evaluate its Tcl script.  
+> In the **action-oriented approach** there is one command for each action that can be taken on an object, and the command takes an object name as an argument. For example Tcl's file commands are action-oriented: there are separate commands for opening files, reading, writing, closing, etc.  
+In the **object-oriented approach** there is one command for each object, and the name of the command is the name of the object. When the command is invoked its first argument specifies the operation to perform on the object. Tk's widget work this way: if there is a button widget .b, there is also a command named .b you can invoke: '.b flash' to flash the widget or '.b invoke' to evaluate its Tcl script.  
 The action-oriented approach works well when there are many objects or the objects are unpredictable or short-lived.  
 The object-oriented approach works well when the number of objects isn't too great and the objects are well defined and exist for at least moderate amounts of time. The object-oriented approach has the advantage that it doesn't pollute the command name space with lots of commands for individual actions.
 
@@ -174,7 +172,7 @@ Variables in **VisualBasic (VBA)** tend to be of type "variant".
 
 To construct a variable in Tcl of type "variant" (with subtype <type>) the following needs to be done:  
 ```js
-::tcom ::variant <type> <data>
+::tcom::variant <type> <data>
 ```  
 *\<type\>* is: 'bstr', 'error', 'bool', 'variant', 'decimal', 'i1', 'ui1', 'ui2', 'ui4', 'i8', 'ui8', int, 'uint'  
 *\<data\>* is the data to be converted.  
@@ -207,15 +205,15 @@ Befehl öffnet ein eigenes Konsolenfenster in dem alle getätigten Ausgaben ersc
   - Prozesse beenden:
     - über PID:
       ```js
-      [exec [auto_execok taskkill] /PID $pid]
+      exec [auto_execok taskkill] /PID $pid
       ```     
     - über PID (twapi):
       ```js
-      [twapi::end_process -force $pid]
+      twapi::end_process -force $pid
       ```       
     - **Best Use:** über Name:
       ```js
-      [exec {*}[auto_execok taskkill] /IM "Excel.exe" /T /F]
+      exec {*}[auto_execok taskkill] /IM "Excel.exe" /T /F
       ```    
       **/T** = kills child process, **/F** = forceful termination
 
@@ -230,12 +228,12 @@ Befehl öffnet ein eigenes Konsolenfenster in dem alle getätigten Ausgaben ersc
 ### 2.1 Fenster aufsetzen
 
 ```js   
-set w . <window_name>               // Aufsetzen des Fensters mit Bezeichner <window_name>
+set w . <window_name>             // Aufsetzen Fenster (Name: <window_name>)
 toplevel $w   
-wm title $w "<name_title>"          // Name des Fensters in Titelzeile
-wm geometry $w 300x200+300+300      // Fenster-Größe und Fenster-Startposition
+wm title $w "<name_title>"        // Name des Fensters in Titelzeile
+wm geometry $w 300x200+300+300    // Fenster-Größe und Fenster-Startposition
 
-wm resizable $w 0 0                 // feste Fenstergröße
+wm resizable $w 0 0               // feste Fenstergröße
 ```
 
 &nbsp;
@@ -340,7 +338,7 @@ Der Aufruf der 'PatchProc'-Funktion steht dann in einem tcl-Skript, das mit 'sou
 <a name="ch4-1"></a>
 ### 4.1 Fundamental Expressions  
 
-```js
+```
 itcl_class <class_name> {
   inherit <base_class> ?base_class?  
   constructor args body  

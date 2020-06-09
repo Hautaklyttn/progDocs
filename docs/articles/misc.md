@@ -13,6 +13,12 @@ layout: default
 
 # Basics
 
+### Rechnerarchitektur
+![01](../assets/pics/architecture.png)  
+
+- `Kernel`: Interacts with hardware to perform memory management, task scheduling and file management  
+- `Shells`: Textual command line shells. Processes user requests - commands are translated by the shell into something the Kernel can understand
+
 &nbsp;
 
 [Back](../)

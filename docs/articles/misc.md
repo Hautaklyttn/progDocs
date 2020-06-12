@@ -16,7 +16,7 @@ layout: default
 ### Rechnerarchitektur
 ![01](../assets/pics/architecture.png)  
 
-- `Kernel`: Interacts with hardware to perform memory management, task scheduling and file management  
+- `Kernel`: Interacts with hardware to perform memory management, task scheduling and file management. Technically, the Kernel "is" the OS.  
 - `Shells`: Textual command line shells. Processes user requests - commands are translated by the shell into something the Kernel can understand
 
 &nbsp;

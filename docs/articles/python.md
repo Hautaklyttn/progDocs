@@ -11,6 +11,36 @@ layout: default
 
 &nbsp;
 
+### 1. Basics    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 Geschichte</font>](#ch1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Besonderheiten, Eigenheiten, etc.</font>](#ch1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.1 Der Interpreter, eine interaktive Shell</font>](#ch1-2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.2 Problem: 'Lack of Compile time checks'</font>](#ch1-2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Python Virtual Machine (PVM)</font>](#ch1-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Variablen in Python</font>](#ch1-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Strings</font>](#ch1-5)  
+
+### 2. Functions
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basic Functions</font>](#ch2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1.1 Funktion id()</font>](#ch2-1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1.2 Funktion dir()</font>](#ch2-1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1.3 Funktion help()</font>](#ch2-1-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 String Functions</font>](#ch2-2)  
+
+### 3. Listen
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 Basics</font>](#ch3-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 List Functions</font>](#ch3-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 ...</font>](#ch3-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 ...</font>](#ch3-4)  
+
+### 4. Dictionaries   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 ...</font>](#ch4-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 ...</font>](#ch4-2)  
+
+&nbsp;
+
+---  
+
 # Basics
 
 &nbsp;
@@ -24,7 +54,8 @@ Die Sprache wurde Anfang der 1990er Jahre von Guido van Rossum am Zentrum für M
 <a name="ch1-2"></a>
 ### 1.2 Besonderheiten, Eigenheiten, etc.  
 
-#### 1.2.2 Der Interpreter, eine interaktive Shell  
+<a name="ch1-2-1"></a>
+#### 1.2.1 Der Interpreter, eine interaktive Shell  
 Im Englischen steht das Wort "shell" für eine Schale, einen Panzer oder ganz allgemein eine Hülle oder Schutzhülle. "Shell" bezeichnet auch ein Schneckenhaus und das Gehäuse, das eine Muschel umschließt. Ebenso liegt eine Shell auch zwischen einem Betriebssystem und dem Benutzer. Wie eine Muschelschale schützt sie zum einen das Betriebssystem vor dem Benutzer und gleichzeitig erspart sie dem Benutzer die Benutzung der "primitiven" und schwer verständlichen Basisfunktionen, indem sie ihm komfortable Befehle zur Kommunikation mit dem Computer zur Verfügung stellt.  
 
 Auch die Programmiersprache Python bietet dem Anwender eine komfortable Kommandozeilen-Schnittstelle, die sogenannte Python-Shell, die man manchmal auch als interaktive Python-Shell bezeichnet. Man könnte meinen, dass es sich bei dem Begriff "interaktive Shell" um eine Tautologie handelt, da ja, so wie wir es oben beschrieben haben, Shells immer interaktiv sind. Dies ist jedoch nicht so: Es gibt auch vor allem im Umfeld von Linux und Unix Shells, die als Subshell aufgerufen werden und nicht interaktiv ausgeführt werden.  
@@ -41,7 +72,8 @@ Weitere Möglichkeit der interaktiven Arbeit ist der Online-Interpreter:
 
 &nbsp;
 
-#### 1.2.3 Problem: 'Lack of Compile time checks'  
+<a name="ch1-2-2"></a>
+#### 1.2.2 Problem: 'Lack of Compile time checks'  
 As Python code is not generally compiled prior to execution, there is no general mechanism in place to check the code for certain types of errors before executing the program. <u>This means that errors will only be detectable during runtime, requiring sophisticated and extensive testing strategies before publishing code.</u> However, it may well be impossible to test every single path through the code under all circumstances, in particular if user input is involved, potentially leaving an arbitrary number of undetected errors in the code. While this is true to some degree for compiled languages as well, a significant number of errors would already be detected at compile time, while all errors in Python code exclusively occur during runtime.
 
 &nbsp;
@@ -128,8 +160,8 @@ h
 
 ## 2.1 Basic Functions  
 
-<a name="ch2-1"></a>
-### 2.1 Funktion *id()*  
+<a name="ch2-1-1"></a>
+### 2.1.1 Funktion *id()*  
 Die Identität einer Instanz dient dazu, sie von allen anderen Instanzen zu unterscheiden. Die Identität ist eine Ganzzahl, und sie ist innerhalb eines Programmes eindeutig. Die ``Identitätsfunktion id()`` liefert die Identität. So kann man prüfen, ob es sich um eine bestimmte Instanz handelt und nicht nur um eine mit dem gleichen Wert und Typ.
 
 ```
@@ -147,7 +179,8 @@ Wir stellen fest, dass sich die Identität erst ändert, nachdem wir y einen neu
 
 &nbsp;
 
-### 2.2 Funktion *dir()*  
+<a name="ch2-1-2"></a>
+### 2.1.2 Funktion *dir()*  
 You can use the built-in 'dir()' function to list  the identifiers that a module defines. The identifiers are the functions, classes and variables defined in that module.  
 
 When you pass a module name to the *dir()* function, it returns  the list of the names defined in that module. When no argument is applied to it, it returns the list of names defined in the current module.  
@@ -160,7 +193,8 @@ When you pass a module name to the *dir()* function, it returns  the list of the
 
 &nbsp;
 
-### 2.3 Funktion *help()*  
+<a name="ch2-1-3"></a>
+### 2.1.3 Funktion *help()*  
 This function invoked the built-in help system.  
 If the argument is a string, then the string is looked up as the name of a module, function, class, method, keyword or documentation topic and a help page is printed on the console.  
 
@@ -193,6 +227,9 @@ This function is added to the built-in namespace by the *site* module.
 
 # Listen
 
+<a name="ch3-1"></a>
+## 3.1 Basics
+
 The list is a most versatile datatype available in Python which can be written as a list of comma-separated values (items) between square brackets. Important thing about a list is that items in a list need <u>not</u> be of the same type.  
 
 ```
@@ -210,7 +247,10 @@ list1[0]: physics
 list2[1:5]: [2,3,4,5]
 ```
 
-## 3.1 *List* Functions
+&nbsp;
+
+<a name="ch3-2"></a>
+## 3.2 *List* Functions
 
   - Delete list element  
      To remove a list element, you can use either the 'del' statement if you know exactly which element(s) you are deleting (by index) or the 'remove()' method if you do not know.  

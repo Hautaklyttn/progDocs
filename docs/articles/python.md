@@ -158,6 +158,7 @@ h
 
 &nbsp;
 
+<a name="ch2-1"></a>
 ## 2.1 Basic Functions  
 
 <a name="ch2-1-1"></a>
@@ -262,22 +263,22 @@ list2[1:5]: [2,3,4,5]
      &nbsp;  
      &nbsp;  
   - Basic list operations  
-     |Function   |Python expression   |Result   |
-     |---|---|---|
-     |Length   | **len([1,2,3])**  | 3  |
-     |Concatenation   | **[1,2,3]+[4,5,6]**   | [1,2,3,4,5,6]  |
-     |Repetition   | **['Hi!']*4**  | ['Hi!','Hi!','Hi!','Hi!']  |
-     |Membership   | **3 in [1,2,3]**  | True  |
-     |Iteration   | **for x in [1,2,3]: print x**  | 1,2,3  |  
+     |Function   |Python expression   |Result   |  
+     |---|---|---|  
+     |Length   | **len([1,2,3])**  | 3  |  
+     |Concatenation   | **[1,2,3]+[4,5,6]**   | [1,2,3,4,5,6]  |  
+     |Repetition   | **['Hi!']*4**  | ['Hi!','Hi!','Hi!','Hi!']  |  
+     |Membership   | **3 in [1,2,3]**  | True  |  
+     |Iteration   | **for x in [1,2,3]: print x**  | 1,2,3  |   
   - Further functions  
-     |Function   |description   |
-     |---|---|
-     |**max(list)**   | Returns item from list with max value  |
-     |**min(list)**   | Returns item from list with min value  |
-     |**list.append(obj)**   | Appends object 'obj' to list  |
-     |**list.count(obj)**   | Returns number of how many times 'obj' occurs in list  |
-     |**list.index(obj)**   | Returns the lowest index in list that 'obj' occurs  |
-     |**list.indert(index,obj)**   | Inserts object 'obj' into list at offset 'index'  |  
+     |Function   |description   |  
+     |---|---|  
+     |**max(list)**   | Returns item from list with max value  |  
+     |**min(list)**   | Returns item from list with min value  |  
+     |**list.append(obj)**   | Appends object 'obj' to list  |  
+     |**list.count(obj)**   | Returns number of how many times 'obj' occurs in list  |  
+     |**list.index(obj)**   | Returns the lowest index in list that 'obj' occurs  |  
+     |**list.indert(index,obj)**   | Inserts object 'obj' into list at offset 'index'  |   
   - Copy/Compare List  
      ```
      >>> a = [1,2,3]

@@ -13,7 +13,7 @@ layout: default
 
 ### 1. Basics    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 Geschichte</font>](#ch1-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Besonderheiten, Eigenheiten, etc.</font>](#ch1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Allgemeines</font>](#ch1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.1 Der Interpreter, eine interaktive Shell</font>](#ch1-2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.2 Problem: 'Lack of Compile time checks'</font>](#ch1-2-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Python Virtual Machine (PVM)</font>](#ch1-3)  
@@ -52,7 +52,7 @@ Die Sprache wurde Anfang der 1990er Jahre von Guido van Rossum am Zentrum für M
 &nbsp;
 
 <a name="ch1-2"></a>
-### 1.2 Besonderheiten, Eigenheiten, etc.  
+### 1.2 Allgemeines  
 
 <a name="ch1-2-1"></a>
 #### 1.2.1 Der Interpreter, eine interaktive Shell  
@@ -260,25 +260,26 @@ list2[1:5]: [2,3,4,5]
       >>> list1.remove(2000)  ;# also deletes the third item
      ```
      **(!)** 'remove()' only deletes the <u>first appearance</u> of the item in the brackets.
-     &nbsp;  
-     &nbsp;  
+
   - Basic list operations  
      |Function   |Python expression   |Result   |  
-     |---|---|---|  
+     |:---|:---|:---:|  
      |Length   | **len([1,2,3])**  | 3  |  
      |Concatenation   | **[1,2,3]+[4,5,6]**   | [1,2,3,4,5,6]  |  
      |Repetition   | **['Hi!']*4**  | ['Hi!','Hi!','Hi!','Hi!']  |  
      |Membership   | **3 in [1,2,3]**  | True  |  
      |Iteration   | **for x in [1,2,3]: print x**  | 1,2,3  |   
+
   - Further functions  
      |Function   |description   |  
-     |---|---|  
+     |:---|:---|  
      |**max(list)**   | Returns item from list with max value  |  
      |**min(list)**   | Returns item from list with min value  |  
      |**list.append(obj)**   | Appends object 'obj' to list  |  
      |**list.count(obj)**   | Returns number of how many times 'obj' occurs in list  |  
      |**list.index(obj)**   | Returns the lowest index in list that 'obj' occurs  |  
      |**list.indert(index,obj)**   | Inserts object 'obj' into list at offset 'index'  |   
+
   - Copy/Compare List  
      ```
      >>> a = [1,2,3]
@@ -287,11 +288,13 @@ list2[1:5]: [2,3,4,5]
      >>> a == b  
      True
      ```  
+
   - Looping through list
      ```
      for <var> in <list> :
           print <var>
      ```
+
   - Sorting list  
      ```
      >>> a = [1,4,3]
@@ -300,6 +303,7 @@ list2[1:5]: [2,3,4,5]
      >>> sorted(a, reverse=true)
      [4,3,1]
      ```  
+
   - String aus Liste / Liste aus String  
      ```
      >>> a = [1,2,3]

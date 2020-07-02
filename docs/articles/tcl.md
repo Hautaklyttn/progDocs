@@ -41,6 +41,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2 XCP</font>](#ch5-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.3 CarMaker-interne Funktion verändern</font>](#ch5-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.4 CM Namespace ::Appl</font>](#ch5-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.5 CM Namespace ::TestMgr</font>](#ch5-5)  
 
 ### 6. Incr Tcl    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Fundamental Expressions</font>](#ch6-1)  
@@ -274,7 +275,7 @@ binary scan \x01\x02\x03\x04 x2H* var1
 Gibt eine Liste aller Unter-Namespaces zurück  
 
 - `info proc <namespace>::*`  
-Gibt eine Liste aller proc's im \<namespace\> zurück  
+Gibt eine Liste aller proc's im <namespace> zurück  
 
 - `info body <namespace>::<proc>`  
 Gibt den proc-Körper (=Code) zurück  
@@ -283,7 +284,7 @@ Gibt den proc-Körper (=Code) zurück
 Gibt die Argumente von \<proc\> zurück  
 
 - `info vars <namespace>::*`  
-Gibt eine Liste aller Variablen im \<namespace\> zurück   
+Gibt eine Liste aller Variablen im <namespace> zurück   
 
 &nbsp;
 
@@ -401,6 +402,45 @@ Der Aufruf der 'PatchProc'-Funktion steht dann in einem tcl-Skript, das mit 'sou
 Appl::SilentConnect
 Appl::Terminate 1
 ```
+
+&nbsp;
+
+<a name="ch5-5"></a>
+### 5.5 CM Namespace ::TestMgr  
+
+#### 5.5.1 *proc* Übersicht  
+
+|proc|Beschreibung|  
+|:---|:---|
+|::GetResult|Liefert das aktuelle Test-Resultat zurück ('good', 'bad', etc).|  
+|::SetResult \<res\>|Setzt aktiv das Resultat des TestRuns auf \<res\>|  
+|::SkipToEnd \<kind\>|Macht es möglich ans Ende von \<kind\> zu springen (\<kind\> = TestSeries, Group, TestRunGroup oder TestRun)|  
+|::DoSetting \<name\> \<type\> \<val\>|Setzt Werte vom Typ \<type\> (z.B. KValue, NValue) mit Namen \<name\> und Wert \<val\>|  
+|::Save \<file\>|Speichert \<file\> im angegebenen Pfad|  
+|::Load \<file\>|Lädt \<file\> aus angegebenen Pfad|  
+|::ClearResults|Löscht alle Test-Resultate aus aktuellem TestManager file|  
+|::PopUp|Enthält den Code der das 'TestManager'-Fenster erstellt mit allen Inhalten|  
+|::Start|dem `Start` button hinterlegter Code|  
+|::Stop|dem `Stop` button hinterlegter Code|  
+|::New|dem `New` button hinterlegter Code|  
+|::ClearTS|Löscht den Inhalt des namespace ::TS|  
+
+#### 5.5.2 *var* Übersicht  
+
+|var|Beschreibung|  
+|:---|:---|
+|::FName|Gibt das aktuell geladene TS file zurück|  
+|::Data|Enthält den Inhalt des TS files als dictionary|  
+|::TestRunFName|Gibt den Namen des zuletzt gefahrenen TestRun zurück|  
+|::tc|Ist der String 'tm.tc' hinterlegt. Hieraus lassen sich Befehle erstellen, die direkt auf (aktuelle, dynamische) Inhalte des TestManagers zugreifen:|
+||**$TestMgr::tc selection get** : Gibt den aktuell ausgewählten, d.h. blau hinterlegten Punkt (als Zeilennummer) im TestManager Fenster zurück.|  
+||**$TestMgr::tc item text <zeilennummer>** : Gibt Infos zur \<zeilennummer\>-Zeile zurück (Text in Zeile, Zeilennummer, u.a.).|  
+||**$TestMgr::tc item parent <zeilennummer>** : Gibt die Zeilennummer des zu Zeile \<zeilennummer\> übergeordneten Elementes zurück.|  
+||**$TestMgr::tc selection clear** : Entfernt alle ausgewählten (d.h. blau hinterlegten) Punkte im 'Test-Manager'-Fenster.|  
+||**$TestMgr::tc selection add \<zeilennummer\>** : Fügt an der Stelle \<zeilennummer\> eine Auswahl hinzu (blau hinterlegter Punkt).|  
+|::Result|Enthält das letzte Resultat ('good', 'bad', etc.).|  
+|::LastChange|Gibt Datum/Uhrzeit/Nutzer bei letzter Änderung des TS files an.|  
+|::tw|Ist der String '.tm' hinterlegt (= handle für 'TestManager'-Fenster)|  
 
 &nbsp;
 

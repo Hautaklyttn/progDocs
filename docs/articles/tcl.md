@@ -15,11 +15,9 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 Tcl Interpreter</font>](#ch1-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Packages</font>](#ch1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Regular Expressions</font>](#ch1-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 `scan` command</font>](#ch1-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 `binary scan` command</font>](#ch1-5)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 `VARIANT` data type</font>](#ch1-6)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Konsolenfenster manuell öffnen</font>](#ch1-7)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.8 Windows-Prozesse beenden</font>](#ch1-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 `VARIANT` data type</font>](#ch1-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 ...</font>](#ch1-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 ...</font>](#ch1-8)  
 
 ### 2. Tcl - Tk
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Fenster aufsetzen</font>](#ch2-1)  
@@ -28,14 +26,25 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 `grid` Layout Manager</font>](#ch2-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Darstellung dynamischer Daten (2D-Plot)</font>](#ch2-5)  
 
-### 3. IPG CarMaker
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 Basics</font>](#ch3-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 XCP</font>](#ch3-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 CarMaker-interne Funktion verändern</font>](#ch3-3)  
+### 3. Functions  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 `scan` command</font>](#ch3-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 `binary scan` command</font>](#ch3-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 ...</font>](#ch3-3)  
 
-### 4. Incr Tcl    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Fundamental Expressions</font>](#ch4-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 ...</font>](#ch4-2)  
+### 4. HowTo's  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Konsolenfenster manuell öffnen</font>](#ch4-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Windows-Prozesse beenden</font>](#ch4-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.3 .zip compression</font>](#ch4-3)  
+
+### 5. IPG CarMaker
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Basics</font>](#ch5-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2 XCP</font>](#ch5-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.3 CarMaker-interne Funktion verändern</font>](#ch5-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.4 CM Namespace ::Appl</font>](#ch5-4)  
+
+### 6. Incr Tcl    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Fundamental Expressions</font>](#ch6-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.2 ...</font>](#ch6-2)  
 
 &nbsp;
 
@@ -123,51 +132,10 @@ regexp {\D+} $e     // searches for not digits
 regexp {\s+} $e     // searches for spaces
 regexp {\S+} $e     // searches for not spaces
 ```
-
 &nbsp;
 
 <a name="ch1-4"></a>
-### 1.4 `scan` command  
-
-```  
-scan <string> <format> <varName> ?varName?  
-```  
-
-This command parses substrings from an input string *\<string\>* in a fashion similar to the ANSI C **sscanf** procedure and returns a count of the number of conversions performed. *\<string\>* gives the input to be parsed and *\<format\>* indicates how to parse it, using ``%`` as a conversion specifier. Each *\<varName\>* gives the name of a variable; when a field is scanned from *\<string\>*, the result is converted back into a string and assigned to the corresponding variable.  
-When a '%' is encountered in *\<format\>*, it indicates the start of a conversion specifier. It converts the next input character according to the conversion specifier and stores the result in the variable given by the next argument to 'scan'.
-
-The following "conversion characters" are supported (and more):  
-`d` - The input field must be a decimal integer. It is read in and the value is stored in the variable as a decimal string.  
-`o` - The input field must be an octal integer. It is read in and the value is stored in the variable as a decimal string.  
-`x` - The input field must be a hexadecimal integer. Read in and stored in variable as a decimal string.  
-`c` - A single character is read in and its binary value is stored in the variable as a decimal string.  
-
-&nbsp;
-
-<a name="ch1-5"></a>
-### 1.5 `binary scan` command  
-
-```  
-binary scan <string> <formatString> ?varName varName ...?  
-```  
-Extracts data from a binary string and returns it as ordinary Tcl string values. Return value is the number of conversions performed. *\<string\>* gives the input to be parsed and *\<formatString\>* indicates how to parse it. When a field is scanned from *\<string\>*, the result is assigned to the corresponding variable in *\<varName\>*.  
-
-```js
-binary scan \x01\x02\x03\x04 x2H* var1
-    // Rückgabewert: '1'
-    // var1 = '0304'
-```
-
-`x` - moves the cursor forward 'count' bytes in *\<string\>* (hier: 2). If 'count' is '\*' or is larger than the number of bytes after the current cursor position, then the cursor is positioned after the last byte in *\<string\>*. If 'count' is omitted, then the cursor is moved forward one byte.
-
-`H` - data is turned into a string of 'count' (hier: \*) hexadecimal digits in high-to-low order within each byte. The data bytes are scanned in first to last order. Any extra bits in the last byte are ignored. If 'count' is '\*', then all of the remaining hex digits in *\<string\>* will be scanned. If 'count' is omitted, then one hex digit will be scanned.  
-
-'count' := number after the indicator (x<u>2</u>H<u>\*</u>)
-
-&nbsp;
-
-<a name="ch1-6"></a>
-### 1.6 `VARIANT` data type  
+### 1.4 `VARIANT` data type  
 Variables in **VisualBasic (VBA)** tend to be of type "variant".  
 
 To construct a variable in Tcl of type "variant" (with subtype <type>) the following needs to be done:  
@@ -178,47 +146,6 @@ To construct a variable in Tcl of type "variant" (with subtype <type>) the follo
 *\<data\>* is the data to be converted.  
 
 &nbsp;
-
-<a name="ch1-7"></a>
-### 1.7 Konsolenfenster manuell öffnen  
-```js
-catch {console show}
-```  
-Befehl öffnet ein eigenes Konsolenfenster in dem alle getätigten Ausgaben erscheinen (z.B. per "puts").
-
-&nbsp;
-
-<a name="ch1-8"></a>
-### 1.8 Windows-Prozesse beenden
-  - Liste aller aktiven COM-Objekte:
-    ```js
-    info commands ::tcom::handle*
-    ```
-  - Liste aller PID's (process Id's) in Windows (twapi package):
-    ```js
-    twapi::get_process_ids
-    ```  
-  - Abfragen, welches Programm zur jew. PID gehört:  
-    ```js
-    exec {*}[auto_execok tasklist] /fi "pid eq <pid_no>"      // <pid_no> ist Integer
-    ```    
-  - Prozesse beenden:
-    - über PID:
-      ```js
-      exec [auto_execok taskkill] /PID $pid
-      ```     
-    - über PID (twapi):
-      ```js
-      twapi::end_process -force $pid
-      ```       
-    - **Best Use:** über Name:
-      ```js
-      exec {*}[auto_execok taskkill] /IM "Excel.exe" /T /F
-      ```    
-      **/T** = kills child process, **/F** = forceful termination
-
-&nbsp;
-
 
 # Tcl - Tk
 <font size="+2">- Grafische Anwendungsprogrammierung -</font>  
@@ -299,16 +226,132 @@ Veränderung in einer 'Vector'-Variable wird automatisch in einem Graph, der die
 
 &nbsp;  
 
-
-# IPG CarMaker  
+# Functions  
 
 <a name="ch3-1"></a>
-### 3.1 Basics
+### 3.1 `scan` command  
+
+```  
+scan <string> <format> <varName> ?varName?  
+```  
+
+This command parses substrings from an input string *\<string\>* in a fashion similar to the ANSI C **sscanf** procedure and returns a count of the number of conversions performed. *\<string\>* gives the input to be parsed and *\<format\>* indicates how to parse it, using ``%`` as a conversion specifier. Each *\<varName\>* gives the name of a variable; when a field is scanned from *\<string\>*, the result is converted back into a string and assigned to the corresponding variable.  
+When a '%' is encountered in *\<format\>*, it indicates the start of a conversion specifier. It converts the next input character according to the conversion specifier and stores the result in the variable given by the next argument to 'scan'.
+
+The following "conversion characters" are supported (and more):  
+`d` - The input field must be a decimal integer. It is read in and the value is stored in the variable as a decimal string.  
+`o` - The input field must be an octal integer. It is read in and the value is stored in the variable as a decimal string.  
+`x` - The input field must be a hexadecimal integer. Read in and stored in variable as a decimal string.  
+`c` - A single character is read in and its binary value is stored in the variable as a decimal string.  
 
 &nbsp;
 
 <a name="ch3-2"></a>
-### 3.2 XCP
+### 3.2 `binary scan` command  
+
+```  
+binary scan <string> <formatString> ?varName varName ...?  
+```  
+Extracts data from a binary string and returns it as ordinary Tcl string values. Return value is the number of conversions performed. *\<string\>* gives the input to be parsed and *\<formatString\>* indicates how to parse it. When a field is scanned from *\<string\>*, the result is assigned to the corresponding variable in *\<varName\>*.  
+
+```js
+binary scan \x01\x02\x03\x04 x2H* var1
+    // Rückgabewert: '1'
+    // var1 = '0304'
+```
+
+`x` - moves the cursor forward 'count' bytes in *\<string\>* (hier: 2). If 'count' is '\*' or is larger than the number of bytes after the current cursor position, then the cursor is positioned after the last byte in *\<string\>*. If 'count' is omitted, then the cursor is moved forward one byte.
+
+`H` - data is turned into a string of 'count' (hier: \*) hexadecimal digits in high-to-low order within each byte. The data bytes are scanned in first to last order. Any extra bits in the last byte are ignored. If 'count' is '\*', then all of the remaining hex digits in *\<string\>* will be scanned. If 'count' is omitted, then one hex digit will be scanned.  
+
+'count' := number after the indicator (x<u>2</u>H<u>\*</u>)
+
+&nbsp;
+
+<a name="ch3-3"></a>
+### 3.3 Befehle für Tcl-Programm-Interna  
+- `namespace children <namespace>`  
+Gibt eine Liste aller Unter-Namespaces zurück  
+
+- `info proc <namespace>::*`  
+Gibt eine Liste aller proc's im <namespace> zurück  
+
+- `info body <namespace>::<proc>`  
+Gibt den proc-Körper (=Code) zurück  
+
+- `info args <namespace>::<proc>`  
+Gibt die Argumente von <proc> zurück  
+
+- `info vars <namespace>::*`  
+Gibt eine Liste aller Variablen im <namespace> zurück   
+
+&nbsp;
+
+# HowTo's  
+
+<a name="ch4-1"></a>
+### 4.1 Konsolenfenster manuell öffnen  
+```js
+catch {console show}
+```  
+Befehl öffnet ein eigenes Konsolenfenster in dem alle getätigten Ausgaben erscheinen (z.B. per "puts").
+
+&nbsp;
+
+<a name="ch4-2"></a>
+### 4.2 Windows-Prozesse beenden
+  - Liste aller aktiven COM-Objekte:
+    ```js
+    info commands ::tcom::handle*
+    ```
+  - Liste aller PID's (process Id's) in Windows (twapi package):
+    ```js
+    twapi::get_process_ids
+    ```  
+  - Abfragen, welches Programm zur jew. PID gehört:  
+    ```js
+    exec {*}[auto_execok tasklist] /fi "pid eq <pid_no>"      // <pid_no> ist Integer
+    ```    
+  - Prozesse beenden:
+    - über PID:
+      ```js
+      exec [auto_execok taskkill] /PID $pid
+      ```     
+    - über PID (twapi):
+      ```js
+      twapi::end_process -force $pid
+      ```       
+    - **Best Use:** über Name:
+      ```js
+      exec {*}[auto_execok taskkill] /IM "Excel.exe" /T /F
+      ```    
+      **/T** = kills child process, **/F** = forceful termination
+
+&nbsp;
+
+<a name="ch4-3"></a>
+### 4.3 .zip compression
+
+Simplest way to create a .zip-archive is to call the program "7-zip" with the command `eval exec`.  
+
+```
+eval exec -- <path/to/7z.exe> a -tzip <path/to/targetfile> <path/to/file2zip>
+```  
+
+**<path/to/targetfile>** : Path and file name (with .zip extension) to the target .zip file  
+**<path/to/file2zip>** : Path and file or directory which is supposed to be zipped
+
+&nbsp;
+
+# IPG CarMaker  
+
+<a name="ch5-1"></a>
+### 5.1 Basics
+
+&nbsp;
+
+<a name="ch5-2"></a>
+### 5.2 XCP
 
 1. Einstellungen unter `Realtime System` &rarr; `XCP Configuration`
 2. Dort werden benötigte ASAP's einer Gruppe ("Sample Group") zugeordnet. "Sample Rate" auf 10ms setzen und dahinter den Haken setzen, anschließend speichern.  
@@ -316,8 +359,8 @@ Veränderung in einer 'Vector'-Variable wird automatisch in einem Graph, der die
 
 &nbsp;
 
-<a name="ch3-3"></a>
-### 3.3 CarMaker-interne Funktion verändern  
+<a name="ch5-3"></a>
+### 5.3 CarMaker-interne Funktion verändern  
 
 Funktion/proc: `PatchProc`  
 
@@ -333,10 +376,38 @@ Der Aufruf der 'PatchProc'-Funktion steht dann in einem tcl-Skript, das mit 'sou
 
 &nbsp;
 
+<a name="ch5-4"></a>
+### 5.4 CM Namespace ::Appl  
+
+#### 5.4.1 *proc* Übersicht  
+
+|proc|Beschreibung|  
+|:---|:---|
+|::SelectExe|Abhängig vom Array 'Pgm()'-Inhalt, wird die richtige Exe (bei HiL: .xeno) für das System gewählt|  
+|::Disconnect|Trennt CM vom HiL (=> 'Disconnect' button)|  
+|::Reboot|Neu booten des HiL Systems (=> 'Reboot' button)|  
+|::Shutdown|Fährt das HiL-Sytem runter (=> 'Shutdown System' button)|  
+|::Popup|Code, der die GUI ``Application Configuration`` schreibt. (!) Gute Quelle für hinterlegtes Verhalten|  
+|::Terminate|Beendet laufendes Simulationsprogramm *²|  
+|::ArchStr|Gibt bei Aufruf einen String zurück, der das jeweilige System angibt (z.B. 'Office' für SiL, 'xeno' für HiL)|  
+|::Connect|Verbindet HiL mit CM (=> 'Connect' button)|  
+|::Update|Proc updatet den 'ApplicationStatus'-Tab im 'ApplicationConfiguration'-Fenster|  
+|::IPGRTHost|Gibt einen String zurück, der den jeweiligen HiL-Namen angibt ('SimX..')|  
+|::Start|Funktionalität hinter `Start&Connect`|  
+|::CMDir|Gibt den Pfad zurück, von wo aus die aktuelle HiL-Exe gestartet wurde|  
+
+\*² : Funktion hinter `Terminate Application` button:
+```
+Appl::SilentConnect
+Appl::Terminate 1
+```
+
+&nbsp;
+
 # Incr Tcl  
 
-<a name="ch4-1"></a>
-### 4.1 Fundamental Expressions  
+<a name="ch6-1"></a>
+### 6.1 Fundamental Expressions  
 
 ```
 itcl_class <class_name> {

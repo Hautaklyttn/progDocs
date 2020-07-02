@@ -2,425 +2,328 @@
 layout: default
 ---
 
-[Back](../)  
+[Back](../)
 
 &nbsp;
 
-# Tcl
----  
+# Python
+---
 
 &nbsp;
 
 ### 1. Basics    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 Tcl Interpreter</font>](#ch1-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Packages</font>](#ch1-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Regular Expressions</font>](#ch1-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 `VARIANT` data type</font>](#ch1-6)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 ...</font>](#ch1-7)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 ...</font>](#ch1-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 Geschichte</font>](#ch1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Allgemeines</font>](#ch1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.1 Der Interpreter, eine interaktive Shell</font>](#ch1-2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.2 Problem: 'Lack of Compile time checks'</font>](#ch1-2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Python Virtual Machine (PVM)</font>](#ch1-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Variablen in Python</font>](#ch1-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Strings</font>](#ch1-5)  
 
-### 2. Tcl - Tk
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Fenster aufsetzen</font>](#ch2-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Funktionalität hinter Menüpunkt</font>](#ch2-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Unterdrückung des leeren `wish`-Fensters</font>](#ch2-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 `grid` Layout Manager</font>](#ch2-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Darstellung dynamischer Daten (2D-Plot)</font>](#ch2-5)  
+### 2. Functions
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basic Functions</font>](#ch2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1.1 Funktion id()</font>](#ch2-1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1.2 Funktion dir()</font>](#ch2-1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1.3 Funktion help()</font>](#ch2-1-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 String Functions</font>](#ch2-2)  
 
-### 3. Functions  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 `scan` command</font>](#ch3-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 `binary scan` command</font>](#ch3-2)  
+### 3. Listen
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 Basics</font>](#ch3-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 List Functions</font>](#ch3-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 ...</font>](#ch3-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 ...</font>](#ch3-4)  
 
-### 4. HowTo's  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Konsolenfenster manuell öffnen</font>](#ch4-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Windows-Prozesse beenden</font>](#ch4-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.3 .zip compression</font>](#ch4-3)  
-
-### 5. IPG CarMaker
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Basics</font>](#ch5-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2 XCP</font>](#ch5-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.3 CarMaker-interne Funktion verändern</font>](#ch5-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.4 CM Namespace ::Appl</font>](#ch5-4)  
-
-### 6. Incr Tcl    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Fundamental Expressions</font>](#ch6-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.2 ...</font>](#ch6-2)  
+### 4. Dictionaries   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 ...</font>](#ch4-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 ...</font>](#ch4-2)  
 
 &nbsp;
 
 ---  
+
+# Basics
+
 &nbsp;
-
-
-# Basics  
 
 <a name="ch1-1"></a>
-### 1.1 Tcl Interpreter  
-
-**1.1.1 System Startup / Interpreter Files**  
-1. `init.tcl` (in "lib/tcl8.6")  
-The main file sourced by a Tcl interpreter when starting up (during 'Tcl_init'). When Tcl starts up, it searches for a directory that contains its 'init.tcl' startup script. You can short-circuit the search by defining the 'TCL_LIBRARY' environment variable (not needed in Tcl 8.0.5 or later).  
-The primary thing defined by 'init.tcl' is the implementation of the 'unknown' procedure. It also initializes 'auto_path' to contain '$tcl_library' and the parent directory added to 'auto_path' depending on the compiled in value of 'tcl_pkgPath'.  
-
-2. `auto_path` variable  
-Contains a valid Tcl list giving directories to search during auto-load operations. Variable is initialized during startup. Additional locations to look for files and packages indices should normally be added to this variable using 'lappend'. 'auto_path' init settings are set in 'init.tcl'. To add initial paths, one can set the environment variable 'TCLLIBPATH'. The following code can be added therefore in 'init.tcl':  
-```js
-if {[info exists env(TCLLIBPATH)]} {set env(TCLLIBPATH) [list <path>]}
-```
-
-3. `env` variable  
-This variable is maintained by Tcl as an array whose elements are the environment variables for the process.  
-   - **env(HOME)**  
-   This environment variable, if set, gives the location of the directory considered to be the current user's home directory.  
-   - **env(TCL_LIBRARY)**  
-   If set, then it specifies the location of the directory containing library scripts (the value of this variable will be assigned to the 'tcl_library' variable and therefore returned by the command ``[info library]``)  
-   - **env(TCLLIBPATH)**  
-   If set, then it must contain a valid Tcl list giving directories to search during auto-load operations. Directories must be specified in Tcl format, using "/" as path seperator, regardless of platform. This variable is only used when initializing the "auto_path" variable.
-
-&nbsp;
-
-**1.1.2 Action-Oriented vs. Object-Oriented**  
-In Tcl there are two approaches when defining commands in an application.
-> In the **action-oriented approach** there is one command for each action that can be taken on an object, and the command takes an object name as an argument. For example Tcl's file commands are action-oriented: there are separate commands for opening files, reading, writing, closing, etc.  
-In the **object-oriented approach** there is one command for each object, and the name of the command is the name of the object. When the command is invoked its first argument specifies the operation to perform on the object. Tk's widget work this way: if there is a button widget .b, there is also a command named .b you can invoke: '.b flash' to flash the widget or '.b invoke' to evaluate its Tcl script.  
-The action-oriented approach works well when there are many objects or the objects are unpredictable or short-lived.  
-The object-oriented approach works well when the number of objects isn't too great and the objects are well defined and exist for at least moderate amounts of time. The object-oriented approach has the advantage that it doesn't pollute the command name space with lots of commands for individual actions.
+### 1.1 Geschichte  
+Die Sprache wurde Anfang der 1990er Jahre von Guido van Rossum am Zentrum für Mathematik (Centrum voor Wiskunde en Informatica) in Amsterdam entwickelt. Ursprünglich war sie als Nachfolger für die Lehrsprache ABC entwickelt worden und sollte auf dem verteilten Betriebssystem Amoeba laufen. Guido van Rossum hatte auch an der Entwicklung der Sprache ABC mitgewirkt, so dass seine Erfahrungen mit ABC auch in Python einflossen.  
 
 &nbsp;
 
 <a name="ch1-2"></a>
-### 1.2 Packages  
-**1.2.1 Einbinden eines Packages**  
-(1) Erstellen des Packages mit Zeile `package provide <package_name>`  
-(2) Hinzufügen des neuen Package in (neues oder bestehendes) "pkgIndex.tcl" File:  
-```js  
-package ifneeded <package_name> <version> [list source [file join $dir <directory>]]  
+### 1.2 Allgemeines  
+
+<a name="ch1-2-1"></a>
+#### 1.2.1 Der Interpreter, eine interaktive Shell  
+Im Englischen steht das Wort "shell" für eine Schale, einen Panzer oder ganz allgemein eine Hülle oder Schutzhülle. "Shell" bezeichnet auch ein Schneckenhaus und das Gehäuse, das eine Muschel umschließt. Ebenso liegt eine Shell auch zwischen einem Betriebssystem und dem Benutzer. Wie eine Muschelschale schützt sie zum einen das Betriebssystem vor dem Benutzer und gleichzeitig erspart sie dem Benutzer die Benutzung der "primitiven" und schwer verständlichen Basisfunktionen, indem sie ihm komfortable Befehle zur Kommunikation mit dem Computer zur Verfügung stellt.  
+
+Auch die Programmiersprache Python bietet dem Anwender eine komfortable Kommandozeilen-Schnittstelle, die sogenannte Python-Shell, die man manchmal auch als interaktive Python-Shell bezeichnet. Man könnte meinen, dass es sich bei dem Begriff "interaktive Shell" um eine Tautologie handelt, da ja, so wie wir es oben beschrieben haben, Shells immer interaktiv sind. Dies ist jedoch nicht so: Es gibt auch vor allem im Umfeld von Linux und Unix Shells, die als Subshell aufgerufen werden und nicht interaktiv ausgeführt werden.  
+
+Man kann Python im interaktiven Modus aufrufen, indem man den Interpreter in einer Linux-Shell (Bash-Shell) ohne Parameter aufruft. Also  
+```js
+>>> python
 ```
-(3) Die globale Variable "auto_path" sammelt alle Pfade in denen sich die pkgIndex.tcl (und damit die Packages) befinden können.  
-(4) Nutzen eines Packages indem man im jeweiligen File die Zeile `package require <package_name> <version>` einfügt.  
 
-Nützliche Kommandos:  
-  a) ``package names``: Listet alle geladenen Packages auf  
-  b) ``Log $auto_path``: Gibt alle gelisteten Verzeichnisse aus  
+&nbsp;
 
-> 'tcllib' runterladen! Enthält zusätzliche Packages die nicht im Standard-Interpreter enthalten sind.  
+Weitere Möglichkeit der interaktiven Arbeit ist der Online-Interpreter:  
+[&rarr; &nbsp; Link](http://www.python-online.ch/pyonline/PyOnline.php)  
+
+&nbsp;
+
+<a name="ch1-2-2"></a>
+#### 1.2.2 Problem: 'Lack of Compile time checks'  
+As Python code is not generally compiled prior to execution, there is no general mechanism in place to check the code for certain types of errors before executing the program. <u>This means that errors will only be detectable during runtime, requiring sophisticated and extensive testing strategies before publishing code.</u> However, it may well be impossible to test every single path through the code under all circumstances, in particular if user input is involved, potentially leaving an arbitrary number of undetected errors in the code. While this is true to some degree for compiled languages as well, a significant number of errors would already be detected at compile time, while all errors in Python code exclusively occur during runtime.
 
 &nbsp;
 
 <a name="ch1-3"></a>
-### 1.3 Regular Expressions  
+### 1.3 Python Virtual Machine (PVM)  
+Ruft man das Skript in der Kommandozeile direkt auf, dann wird das Skript in Bytecode übersetzt und ausgeführt. Diesen Byte-Code bekommt die Anwenderin oder der Anwender nicht zu Gesicht.
 
-``^`` (called 'anchor') is used to search for pattern at the beginning of a string  
-``$`` (called 'dollar') is used to search for pattern at the end of a string  
+Das ändert sich, wenn man in einem anderen Python-Skript oder auch in der Python-Shell dieses Skript mittels dem Kommando "import" importiert. In diesem Fall wird eine in Bytecode übersetzte Version des Python-Programmes abgespeichert. Diese ist nicht mehr so einfach zu finden, wie dies in Python2 der Fall war. Die Datei befindet sich nun in einem Unterverzeichnis ``__pycache__``.
 
-To search for the exact pattern *\<pattern\>* in a string use the following command   
-```js
-regexp {^<pattern>$}
-```
-If the string contains other characters, the return value is 0.
+![001](../assets/pics/byte_code.png)   
 
-`[]` are used to specify a range in search patterns  
-`+` symbol indicated the range specified in [] to occur 1 or more times  
+Bei einem späteren "import" in einem anderen Programmlauf, wird dann direkt die Datei mit dem Byte-Code geladen. Importiert man die gleiche Datei mehrmals im gleichen Skript wird sie nur beim ersten Mal geladen.  
 
-E.g. to look for small alphabetical characters in the string stored in variable e, type
-```js
-regexp {[a-z]+ $e}
+Bei dem Byte-Code handelt es sich um einen maschinenunabhängigen Code, der mittels einer virtuellen Maschine (PVM, ``Python Virtual Machine``) ausgeführt wird.
 
-// Other search patterns
-regexp {\d+} $e     // searches for digits
-regexp {\D+} $e     // searches for not digits
-regexp {\s+} $e     // searches for spaces
-regexp {\S+} $e     // searches for not spaces
-```
 &nbsp;
 
 <a name="ch1-4"></a>
-### 1.4 `VARIANT` data type  
-Variables in **VisualBasic (VBA)** tend to be of type "variant".  
+### 1.4 Variablen in Python  
+Es gibt gravierende Unterschiede in der Art wie Python und C bzw. C++ Variablen behandeln. Vertraute Datentypen wie Ganzzahlen (Integer), Fließkommazahlen (floating point numbers) und Strings sind zwar in Python vorhanden, aber auch hier gibt es wesentliche Unterschiede zu C und C++.
 
-To construct a variable in Tcl of type "variant" (with subtype <type>) the following needs to be done:  
-```js
-::tcom::variant <type> <data>
-```  
-*\<type\>* is: 'bstr', 'error', 'bool', 'variant', 'decimal', 'i1', 'ui1', 'ui2', 'ui4', 'i8', 'ui8', int, 'uint'  
-*\<data\>* is the data to be converted.  
+In Programmiersprachen wie C, C++ oder Java hat jede Variable einen eindeutigen Datentyp. Das bedeutet, dass falls beispielsweise eine Variable vom Typ Integer ist, sie nur Integer-Werte aufnehmen kann. In diesen Programmiersprachen müssen Variablen auch vor ihrer Benutzung deklariert werden. Deklaration bedeutet Bindung an einen Datentyp, der dann für den gesamten Programmablauf unveränderlich ist.  
+
+In Python haben wir eine gänzlich andere Situation. Zunächst einmal bezeichnen Variablen in Python keinen bestimmten Typ und deshalb benötigt man auch in Python keine Typdeklaration. Benötigt man im Programm beispielsweise eine Variable i mit dem Wert 42, so erreicht man dies einfach mit der folgenden Anweisung:  
+```
+>>> i = 42
+```
+
+In Python kann zur Laufzeit sowohl der Wert einer Variablen geändert werden, als auch der Typ einer Variablen. Präziser: Ein neues Objekt eines beliebigen Typs wird der Variablen zugewiesen. Wir verdeutlichen dies in folgendem Beispiel:  
+```
+i = 42        # Typ wird implizit auf Integer gesetzt
+i = 41 + 0.11	# Typ wird in float geändert
+i = "fünfzig"	# Jetzt ist es ein string
+
+```
 
 &nbsp;
 
-# Tcl - Tk
-<font size="+2">- Grafische Anwendungsprogrammierung -</font>  
+>  Variablen referenzieren Objekte in Python. Die eigentlichen Daten sind jedoch im Objekt enthalten.
+
+&nbsp;
+
+```
+>>> x = 42  # Variable x zeigt auf ein Int-Objekt
+>>> y = x   # Eine zweite Variable referenziert jetzt das gleiche Objekt wie x
+```
+
+Was wird passieren, wenn wir nun die Zuweisung y = 78 ausführen?  
+**Python wird zuerst ein neues Integer-Objekt mit dem Inhalt '78' erzeugen und dann wird die Referenz von y auf dieses Objekt geändert. Wichtig ist dabei, dass x nach wie vor das alte Objekt referenziert, d.h. der Wert ist nach wie vor '42'.**  
+(&rarr; s. Kapitel 2.1: Funktion id() zum Prüfen der Identität)
+
+Wird x jetzt ein String zugewiesen, wäre das Integer-Objekt '42' verwaist. Es muss von Python entfernt werden, da es von keiner anderen Variable referenziert wird.
+
+&nbsp;
+
+<a name="ch1-5"></a>
+### 1.5 Strings  
+Ein String, oder Zeichenkette, kann man als eine Sequenz von einzelnen Zeichen sehen.
+Jedes einzelne Zeichen eines Strings, kann über einen Index angesprochen werden:  
+
+```
+>>> s = "Python"
+>>> print(s[0])
+P
+>>> print(s[3])
+h
+```
+
+&nbsp;  
+
+**Achtung:**
+> Wie in Java aber nicht wie in C oder C++, können Strings in Python nicht verändert werden. Versucht man eine indizierte Position zu ändern, erzeugt man eine Fehlermeldung.
+
+&nbsp;
+
+
+
+&nbsp;
+
+# Functions
+
 &nbsp;
 
 <a name="ch2-1"></a>
-### 2.1 Fenster aufsetzen
+## 2.1 Basic Functions  
 
-```js   
-set w . <window_name>             // Aufsetzen Fenster (Name: <window_name>)
-toplevel $w   
-wm title $w "<name_title>"        // Name des Fensters in Titelzeile
-wm geometry $w 300x200+300+300    // Fenster-Größe und Fenster-Startposition
+<a name="ch2-1-1"></a>
+### 2.1.1 Funktion *id()*  
+Die Identität einer Instanz dient dazu, sie von allen anderen Instanzen zu unterscheiden. Die Identität ist eine Ganzzahl, und sie ist innerhalb eines Programmes eindeutig. Die ``Identitätsfunktion id()`` liefert die Identität. So kann man prüfen, ob es sich um eine bestimmte Instanz handelt und nicht nur um eine mit dem gleichen Wert und Typ.
 
-wm resizable $w 0 0               // feste Fenstergröße
 ```
+>>> x = 42
+>>> id(x)
+10107136
+>>> y = x
+>>> id(x), id(y)
+(10107136, 10107136)
+>>> y = 78
+>>> id(x), id(y)
+(10107136, 10108288)
+```
+Wir stellen fest, dass sich die Identität erst ändert, nachdem wir y einen neuen Wert zugewiesen haben. Die Identität von x bleibt gleich, d.h. der Speicherort von x wird nicht geändert.  
+
+&nbsp;
+
+<a name="ch2-1-2"></a>
+### 2.1.2 Funktion *dir()*  
+You can use the built-in 'dir()' function to list  the identifiers that a module defines. The identifiers are the functions, classes and variables defined in that module.  
+
+When you pass a module name to the *dir()* function, it returns  the list of the names defined in that module. When no argument is applied to it, it returns the list of names defined in the current module.  
+
+```
+>>> import sys
+>>> dir(sys)
+['__doc__', '__stderr__', '__stdin__', '__stdout', '__getframe', 'api_version', 'argv', ...]
+```
+
+&nbsp;
+
+<a name="ch2-1-3"></a>
+### 2.1.3 Funktion *help()*  
+This function invoked the built-in help system.  
+If the argument is a string, then the string is looked up as the name of a module, function, class, method, keyword or documentation topic and a help page is printed on the console.  
+
+This function is added to the built-in namespace by the *site* module.
 
 &nbsp;
 
 <a name="ch2-2"></a>
-### 2.2 Funktionalität hinter Menüpunkt
+## 2.2 String Functions  
+&nbsp;
 
-z.B `.mbar.rts.m entrycget 4 -command`  (am Beispiel IPG CarMaker)  
-liefert die Funktion die im DropDown-Menü "Realtime System" an vierter Stelle hinterlegt ist.  
+**Konkatenation** (englisch: Concatenation)  
 
-&nbsp;  
+&nbsp;&nbsp;&nbsp; ``"Hello" + "World" -> "HelloWorld"``
 
-<a name="ch2-3"></a>
-### 2.3 Unterdrückung des leeren `wish`-Fensters  
+**Indexing**  
 
-Starten des Skripts mit
-```c
-wm withdraw .
-```
-schließt das leere 'wish'-Fenster.  
+&nbsp;&nbsp;&nbsp; ``"Python"[0] -> "P"``  
 
-&nbsp;  
+**Slicing**  
+[2:4] bedeutet im folgenden Ausdruck, dass wir aus dem String "Python" einen Teilstring herausschneiden, der mit dem Zeichen des Index 2 (inklusive) beginnt und bis zum Index 4 (exklusive) geht:  
 
-<a name="ch2-4"></a>
-### 2.4 `grid` Layout Manager  
-'grid' geht von einem "Schachbrettmuster" aus auf dem die einzelnen "widgets" verteilt werden. Die Größe der Felder hängt von der Höhe/Breite der genutzten widgets ab.  
+&nbsp;&nbsp;&nbsp; ``"Python"[2:4] -> "th"``
 
-Optionen:  
-`-column <n>  /  -row <n>`  
-Insert the widget in the n-th column/row (starting from 0)  
+**Länge eines Strings**  
 
-`-columnspan <n>  /  -rowspan <n>`  
-Arrange for the widget to span n clumns/rows. Default is one column/row.  
+&nbsp;&nbsp;&nbsp; `len("Python") -> 6`
 
-`padx <n>  / pady <n>`  
-Horizontal ('x') <u>external</u> padding and Vertical ('y') <u>external</u> padding  
+&nbsp;
 
-`ipadx <n>  / ipady <n>`  
-Horizontal ('x') <u>internal</u> padding and Vertical ('y') <u>internal</u> padding  
-
-`-sticky <side(s)>`  
-How the widget should be positioned and stretched within its cell. *\<side(s)\>* contains one or more of the character n,s,e or w. Each letter refers to the side to which the widget will stick.  
-
-`rowconfigure <master> <index> <option value>`  
-(&rarr; same for 'columnfigure')  
-Set the row properties of the <index> row in <master>. Valid option are:  
-   - `-pad <amount>`: Units in padding on the top and bottom of the tallest window in row  
-   - `-weight <int>`: Every row (and column) has a 'weight' grid option associated with it, which tells it how much it should grow if there is extra room in the <master> to fill. By default, the 'weight' of each column or row is '0' meaning don't expand to fill space.
-
-> "grid" und "place" lassen sich kombinieren!
-
-&nbsp;  
-
-<a name="ch2-5"></a>
-### 2.5 Darstellung dynamischer Daten (2D-Plot)  
-
-1. Möglichkeit: `canvas` - widget  
-Funktion `xview scroll <number> <what>` gibt die Möglichkeit einer scrollenden Darstellungsfläche (z.B. ``.c xview scroll 1 unit``). Probleme bei sehr dynamischen Charts: Canvas erzeugt keine Linien mehr zwischen den Punkten (&rarr; Unbrauchbar).  
-
-2. Möglichkeit: `vector`/`strip-chart` in BLT  
-Veränderung in einer 'Vector'-Variable wird automatisch in einem Graph, der diese Werte enthält, übernommen. D.h. in die Lap muss nur die Neuberechnung der 'Vector'-Punkte, nicht das Zeichnen des 'strip-charts' selber,´.  
-'Strip-chart' hat bereits alle nötigen Features integriert (parametrierbares 2D-Chart, parametrierbare Axen, parametrierbare Legende, usw.). Ist in der Lage auch hochdynamische Daten dazustellen (über Vektoren).
-
-&nbsp;  
-
-# Functions  
+# Listen
 
 <a name="ch3-1"></a>
-### 3.1 `scan` command  
+## 3.1 Basics
 
-```  
-scan <string> <format> <varName> ?varName?  
-```  
+The list is a most versatile datatype available in Python which can be written as a list of comma-separated values (items) between square brackets. Important thing about a list is that items in a list need <u>not</u> be of the same type.  
 
-This command parses substrings from an input string *\<string\>* in a fashion similar to the ANSI C **sscanf** procedure and returns a count of the number of conversions performed. *\<string\>* gives the input to be parsed and *\<format\>* indicates how to parse it, using ``%`` as a conversion specifier. Each *\<varName\>* gives the name of a variable; when a field is scanned from *\<string\>*, the result is converted back into a string and assigned to the corresponding variable.  
-When a '%' is encountered in *\<format\>*, it indicates the start of a conversion specifier. It converts the next input character according to the conversion specifier and stores the result in the variable given by the next argument to 'scan'.
+```
+>>> list1 = ['physics', 'chemistry', 1997, 2000];
+>>> list2 = [1, 2, 3, 4, 5];
+>>> list3 = ["a", "b", "c", "d"];
+```
 
-The following "conversion characters" are supported (and more):  
-`d` - The input field must be a decimal integer. It is read in and the value is stored in the variable as a decimal string.  
-`o` - The input field must be an octal integer. It is read in and the value is stored in the variable as a decimal string.  
-`x` - The input field must be a hexadecimal integer. Read in and stored in variable as a decimal string.  
-`c` - A single character is read in and its binary value is stored in the variable as a decimal string.  
+Similar to string indices, list indices start at 0 and lists can be sliced, concatenated and so on.  
+
+```
+>>> print "list1[0]: ", list1[0];
+list1[0]: physics
+>>> print "list2[1:5]: ", list2[1:5];
+list2[1:5]: [2,3,4,5]
+```
 
 &nbsp;
 
 <a name="ch3-2"></a>
-### 3.2 `binary scan` command  
+## 3.2 *List* Functions
 
-```  
-binary scan <string> <formatString> ?varName varName ...?  
-```  
-Extracts data from a binary string and returns it as ordinary Tcl string values. Return value is the number of conversions performed. *\<string\>* gives the input to be parsed and *\<formatString\>* indicates how to parse it. When a field is scanned from *\<string\>*, the result is assigned to the corresponding variable in *\<varName\>*.  
+  - Delete list element  
+     To remove a list element, you can use either the 'del' statement if you know exactly which element(s) you are deleting (by index) or the 'remove()' method if you do not know.  
+     ```
+      >>> del list[2]         ;# deleted the third items
+      >>> list1.remove(2000)  ;# also deletes the third item
+     ```
+     **(!)** 'remove()' only deletes the <u>first appearance</u> of the item in the brackets.
 
-```js
-binary scan \x01\x02\x03\x04 x2H* var1
-    // Rückgabewert: '1'
-    // var1 = '0304'
-```
+  - Basic list operations  
+     
+     |Function   |Python expression   |Result   |  
+     |:---|:---|:---:|  
+     |Length   | **len([1,2,3])**  | 3  |  
+     |Concatenation   | **[1,2,3]+[4,5,6]**   | [1,2,3,4,5,6]  |  
+     |Repetition   | **['Hi!']*4**  | ['Hi!','Hi!','Hi!','Hi!']  |  
+     |Membership   | **3 in [1,2,3]**  | True  |  
+     |Iteration   | **for x in [1,2,3]: print x**  | 1,2,3  |   
 
-`x` - moves the cursor forward 'count' bytes in *\<string\>* (hier: 2). If 'count' is '\*' or is larger than the number of bytes after the current cursor position, then the cursor is positioned after the last byte in *\<string\>*. If 'count' is omitted, then the cursor is moved forward one byte.
+  - Further functions  
+     
+     |Function   |description   |  
+     |:---|:---|  
+     |**max(list)**   | Returns item from list with max value  |  
+     |**min(list)**   | Returns item from list with min value  |  
+     |**list.append(obj)**   | Appends object 'obj' to list  |  
+     |**list.count(obj)**   | Returns number of how many times 'obj' occurs in list  |  
+     |**list.index(obj)**   | Returns the lowest index in list that 'obj' occurs  |  
+     |**list.indert(index,obj)**   | Inserts object 'obj' into list at offset 'index'  |   
 
-`H` - data is turned into a string of 'count' (hier: \*) hexadecimal digits in high-to-low order within each byte. The data bytes are scanned in first to last order. Any extra bits in the last byte are ignored. If 'count' is '\*', then all of the remaining hex digits in *\<string\>* will be scanned. If 'count' is omitted, then one hex digit will be scanned.  
+  - Copy/Compare List  
+     ```
+     >>> a = [1,2,3]
+     >>> b = a        ;# Achtung: keine Kopie! Zeiger auf Inhalt von 'a'
+     >>> b = a[:]     ;# Kopie von 'a' in 'b' (neuer Speicher wird angelegt)
+     >>> a == b  
+     True
+     ```  
 
-'count' := number after the indicator (x<u>2</u>H<u>\*</u>)
+  - Looping through list
+     ```
+     for <var> in <list> :
+          print <var>
+     ```
 
-&nbsp;
+  - Sorting list  
+     ```
+     >>> a = [1,4,3]
+     >>> sorted(a)
+     [1,3,4]
+     >>> sorted(a, reverse=true)
+     [4,3,1]
+     ```  
 
-<a name="ch3-3"></a>
-### 3.3 Befehle für Tcl-Programm-Interna  
-- `namespace children <namespace>`  
-Gibt eine Liste aller Unter-Namespaces zurück  
+  - String aus Liste / Liste aus String  
+     ```
+     >>> a = [1,2,3]
+     >>> '.'.join(a)
+     '1.2.3'
+     >>> ':'.join(a)
+     '1:2:3'
 
-- `info proc <namespace>::*`  
-Gibt eine Liste aller proc's im <namespace> zurück  
-
-- `info body <namespace>::<proc>`  
-Gibt den proc-Körper (=Code) zurück  
-
-- `info args <namespace>::<proc>`  
-Gibt die Argumente von <proc> zurück  
-
-- `info vars <namespace>::*`  
-Gibt eine Liste aller Variablen im <namespace> zurück   
-
-&nbsp;
-
-# HowTo's  
-
-<a name="ch4-1"></a>
-### 4.1 Konsolenfenster manuell öffnen  
-```js
-catch {console show}
-```  
-Befehl öffnet ein eigenes Konsolenfenster in dem alle getätigten Ausgaben erscheinen (z.B. per "puts").
-
-&nbsp;
-
-<a name="ch4-2"></a>
-### 4.2 Windows-Prozesse beenden
-  - Liste aller aktiven COM-Objekte:
-    ```js
-    info commands ::tcom::handle*
-    ```
-  - Liste aller PID's (process Id's) in Windows (twapi package):
-    ```js
-    twapi::get_process_ids
-    ```  
-  - Abfragen, welches Programm zur jew. PID gehört:  
-    ```js
-    exec {*}[auto_execok tasklist] /fi "pid eq <pid_no>"      // <pid_no> ist Integer
-    ```    
-  - Prozesse beenden:
-    - über PID:
-      ```js
-      exec [auto_execok taskkill] /PID $pid
-      ```     
-    - über PID (twapi):
-      ```js
-      twapi::end_process -force $pid
-      ```       
-    - **Best Use:** über Name:
-      ```js
-      exec {*}[auto_execok taskkill] /IM "Excel.exe" /T /F
-      ```    
-      **/T** = kills child process, **/F** = forceful termination
+     >>> b = 'aa:bb:cc'
+     >>> b.split(':')
+     ['aa', 'bb', 'cc']
+     ```
 
 &nbsp;
 
-<a name="ch4-3"></a>
-### 4.3 .zip compression
+# Dictionaries
 
-Simplest way to create a .zip-archive is to call the program "7-zip" with the command `eval exec`.  
-
-```
-eval exec -- <path/to/7z.exe> a -tzip <path/to/targetfile> <path/to/file2zip>
-```  
-
-**<path/to/targetfile>** : Path and file name (with .zip extension) to the target .zip file  
-**<path/to/file2zip>** : Path and file or directory which is supposed to be zipped
 
 &nbsp;
-
-# IPG CarMaker  
-
-<a name="ch5-1"></a>
-### 5.1 Basics
-
-&nbsp;
-
-<a name="ch5-2"></a>
-### 5.2 XCP
-
-1. Einstellungen unter `Realtime System` &rarr; `XCP Configuration`
-2. Dort werden benötigte ASAP's einer Gruppe ("Sample Group") zugeordnet. "Sample Rate" auf 10ms setzen und dahinter den Haken setzen, anschließend speichern.  
-3. Rechts-Klick im Fenster unten auf "Connect" klicken. Erscheint kein Fehler, sollte Verbindung funktionieren. Zusätzlicher  Test durch Rechts-Klick und "Start DAQ" möglich. Es sollte Messung starten, Stoppen der Messung mit "Stop DAQ".
-
-&nbsp;
-
-<a name="ch5-3"></a>
-### 5.3 CarMaker-interne Funktion verändern  
-
-Funktion/proc: `PatchProc`  
-
-```js
-PatchProc <CarMaker_Func> {<Code-Zeile aus CarMaker_Func>} {<eigener Code>}
-               (1)                     (2)                      (3)
-```
-(1) CarMaker-internes Programm, dem eigener Code hinzugefügt werden sollte  
-(2) Code-Zeile im CarMaker-Programm, die anzeigt, wo eigener Code hinzugefügt werden soll  
-(3) Eigener Code: meist ein selbst erstelltes 'proc', das aufgerufen werden soll  
-
-Der Aufruf der 'PatchProc'-Funktion steht dann in einem tcl-Skript, das mit 'source' in File `.CarMaker.tcl` aufgerufen wird.
-
-&nbsp;
-
-<a name="ch5-4"></a>
-### 5.4 CM Namespace ::Appl  
-
-#### 5.4.1 *proc* Übersicht  
-
-|proc|Beschreibung|  
-|:---|:---|
-|::SelectExe|Abhängig vom Array 'Pgm()'-Inhalt, wird die richtige Exe (bei HiL: .xeno) für das System gewählt|  
-|::Disconnect|Trennt CM vom HiL (=> 'Disconnect' button)|  
-|::Reboot|Neu booten des HiL Systems (=> 'Reboot' button)|  
-|::Shutdown|Fährt das HiL-Sytem runter (=> 'Shutdown System' button)|  
-|::Popup|Code, der die GUI ``Application Configuration`` schreibt. (!) Gute Quelle für hinterlegtes Verhalten|  
-|::Terminate|Beendet laufendes Simulationsprogramm *²|  
-|::ArchStr|Gibt bei Aufruf einen String zurück, der das jeweilige System angibt (z.B. 'Office' für SiL, 'xeno' für HiL)|  
-|::Connect|Verbindet HiL mit CM (=> 'Connect' button)|  
-|::Update|Proc updatet den 'ApplicationStatus'-Tab im 'ApplicationConfiguration'-Fenster|  
-|::IPGRTHost|Gibt einen String zurück, der den jeweiligen HiL-Namen angibt ('SimX..')|  
-|::Start|Funktionalität hinter `Start&Connect`|  
-|::CMDir|Gibt den Pfad zurück, von wo aus die aktuelle HiL-Exe gestartet wurde|  
-
-\*² : Funktion hinter `Terminate Application` button:
-```
-Appl::SilentConnect
-Appl::Terminate 1
-```
-
-&nbsp;
-
-# Incr Tcl  
-
-<a name="ch6-1"></a>
-### 6.1 Fundamental Expressions  
-
-```
-itcl_class <class_name> {
-  inherit <base_class> ?base_class?  
-  constructor args body  
-  destructor body  
-  method <name> args body  
-  proc <name> args body  
-  public <var_Name> ?init? ?config?  
-  protected <var_name> ?init?  
-  common <var_name> ?init?  
-}
-```
-
 
 [Back](../)

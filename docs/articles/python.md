@@ -262,6 +262,7 @@ list2[1:5]: [2,3,4,5]
      **(!)** 'remove()' only deletes the <u>first appearance</u> of the item in the brackets.
 
   - Basic list operations  
+     
      |Function   |Python expression   |Result   |  
      |:---|:---|:---:|  
      |Length   | **len([1,2,3])**  | 3  |  
@@ -271,6 +272,7 @@ list2[1:5]: [2,3,4,5]
      |Iteration   | **for x in [1,2,3]: print x**  | 1,2,3  |   
 
   - Further functions  
+     
      |Function   |description   |  
      |:---|:---|  
      |**max(list)**   | Returns item from list with max value  |  

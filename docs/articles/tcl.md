@@ -434,8 +434,8 @@ Appl::Terminate 1
 |::TestRunFName|Gibt den Namen des zuletzt gefahrenen TestRun zurück|  
 |::tc|Ist der String 'tm.tc' hinterlegt. Hieraus lassen sich Befehle erstellen, die direkt auf (aktuelle, dynamische) Inhalte des TestManagers zugreifen:|
 ||**$TestMgr::tc selection get** : Gibt den aktuell ausgewählten, d.h. blau hinterlegten Punkt (als Zeilennummer) im TestManager Fenster zurück.|  
-||**$TestMgr::tc item text <zeilennummer>** : Gibt Infos zur \<zeilennummer\>-Zeile zurück (Text in Zeile, Zeilennummer, u.a.).|  
-||**$TestMgr::tc item parent <zeilennummer>** : Gibt die Zeilennummer des zu Zeile \<zeilennummer\> übergeordneten Elementes zurück.|  
+||**$TestMgr::tc item text \<zeilennummer\>** : Gibt Infos zur \<zeilennummer\>-Zeile zurück (Text in Zeile, Zeilennummer, u.a.).|  
+||**$TestMgr::tc item parent \<zeilennummer\>** : Gibt die Zeilennummer des zu Zeile \<zeilennummer\> übergeordneten Elementes zurück.|  
 ||**$TestMgr::tc selection clear** : Entfernt alle ausgewählten (d.h. blau hinterlegten) Punkte im 'Test-Manager'-Fenster.|  
 ||**$TestMgr::tc selection add \<zeilennummer\>** : Fügt an der Stelle \<zeilennummer\> eine Auswahl hinzu (blau hinterlegter Punkt).|  
 |::Result|Enthält das letzte Resultat ('good', 'bad', etc.).|  

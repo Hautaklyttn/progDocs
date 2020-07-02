@@ -274,16 +274,16 @@ binary scan \x01\x02\x03\x04 x2H* var1
 Gibt eine Liste aller Unter-Namespaces zurück  
 
 - `info proc <namespace>::*`  
-Gibt eine Liste aller proc's im <namespace> zurück  
+Gibt eine Liste aller proc's im \<namespace\> zurück  
 
 - `info body <namespace>::<proc>`  
 Gibt den proc-Körper (=Code) zurück  
 
 - `info args <namespace>::<proc>`  
-Gibt die Argumente von <proc> zurück  
+Gibt die Argumente von \<proc\> zurück  
 
 - `info vars <namespace>::*`  
-Gibt eine Liste aller Variablen im <namespace> zurück   
+Gibt eine Liste aller Variablen im \<namespace\> zurück   
 
 &nbsp;
 

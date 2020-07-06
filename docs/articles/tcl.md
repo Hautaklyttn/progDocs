@@ -25,6 +25,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Unterdrückung des leeren `wish`-Fensters</font>](#ch2-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 `grid` Layout Manager</font>](#ch2-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Darstellung dynamischer Daten (2D-Plot)</font>](#ch2-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.6 Tk `canvas`</font>](#ch2-6)  
 
 ### 3. Functions  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 `scan` command</font>](#ch3-1)  
@@ -35,6 +36,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Konsolenfenster manuell öffnen</font>](#ch4-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Windows-Prozesse beenden</font>](#ch4-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.3 .zip compression</font>](#ch4-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.4 Tcl <-> Python Interface</font>](#ch4-4)  
 
 ### 5. IPG CarMaker
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Basics</font>](#ch5-1)  
@@ -227,6 +229,124 @@ Veränderung in einer 'Vector'-Variable wird automatisch in einem Graph, der die
 
 &nbsp;  
 
+<a name="ch2-6"></a>
+### 2.6 Tk `canvas`  
+ The 'canvas' widget is Tk's workhorse for 2D graphical display and can handle both bitmap and vector graphics.  
+ A canvas is one of the most powerful concepts in Tk. It acts as a drawing plane for lines, rectangles, ovals, polygones, text, arcs as well as container widget to group other widgets and it provides the ability to group elements together for creation, deletion, moving, etc.  
+
+ [...] Es können externe Grafiken angezeigt und manipuliert werden (jedoch nur im GIF-,PPM-,PGM- und X-Bitmap-Format). Alle Objekte auf dem canvas-Widget haben die Möglichkeit, Nutzereingaben wie Mausbewegungen, -klick und Tastendrücke zu verarbeiten.  
+
+<u>Widgets for drawing</u>  
+
+&nbsp;&nbsp;&nbsp;`Line` - Draws a line  
+&nbsp;&nbsp;&nbsp;`Arc` - Draws an Arc  
+&nbsp;&nbsp;&nbsp;`Rectangle` - Draws a rectangle  
+&nbsp;&nbsp;&nbsp;`Oval` - Draws an Oval  
+&nbsp;&nbsp;&nbsp;`Polygon` - Draws a Polygon  
+&nbsp;&nbsp;&nbsp;`Text` - Draws a Text  
+&nbsp;&nbsp;&nbsp;`Bitmap` - Draws a Bitmap  
+&nbsp;&nbsp;&nbsp;`Image` - Draws an Image  
+
+```
+canvas .myCanvas .background red -width 200 - height 200  
+pack .myCanvas  
+.myCanvas create arc 10 10 50 50 -fill yellow
+.myCanvas create line 10 30 50 50 100 10 -arrow both -fill yellow
+.myCanvas create oval 50 50 100 80 -fill yellow
+.myCanvas create polygon 50 150 100 80 120 120 100 190 -fill yellow
+.myCanvas create rectangle 150 150 170 170 -outline green
+.myCanvas create text 170 20 -text "Hello" -font [Helvetica -18 bold]
+.myCanvas create bitmap 180 50 -bitmap info
+```
+
+&nbsp;  
+
+<u>Item *Id* or *Tags*</u>  
+
+Items in a canvas widget may be named either of two ways: by **Id** or by **tag**. Each item has a unique identifying number, which is assigned to that item when it is created. The *Id* of an item never changed and id numbers are never re-used within the lifetime of a canvas widget.  
+
+Each item may also have any number of *tags* associated with it. A tag is just a string of characters and it may take any form except that of an integer. The same tag may be associated with many different items. This is commonly done to group items in various interesting ways: for example, all selected items might be given the tag 'selected'.  
+[...] You can use tags to correlate canvas items to particular objects in your application (so i.e. tag all canvas items that are part of the robot with id \#37 with the tag "robot37"). With tags, you don't have to keep track of the id's of canvas items to refer to groups of items later, tags let Tk do that for you.  
+
+You can assign tags when creating an item using the "tags" item configuration option. You can add tags later with the ``addtag`` method or remove them with the ``dtags`` method. You can get the list of tags for an item with the ``gettags`` method or return a list of item id numbers having the given tag with the ``find`` command.  
+
+The tag `current` is managed automatically by Tk; it applies to the current item, which is the top-most item whose drawn area covers the position of the mouse cursor. If the mouse is not in the canvas widget or is not over an item, then no item has the `current` tag.  
+
+```
+canvas .c  
+.c create line 10 10 20 20 -tags "first line drawing"  //Ausgabe: 1 (==Id des Item)
+.c create rectangle 30 30 40 40 -tags "drawing"        //Ausgabe: 2 (==Id des Item)  
+.c addtag rectangle withtag 2
+.c addtag polygon withtag rectangle  
+.c gettags 2                                   //Ausgabe: drawing rectangle polygon
+.c dtags 2 polygon                                     //Ausgabe: drawing rectangle
+.c find withtag drawing                            //Ausgabe: 1 2 (=Liste der Id's)
+```
+
+```
+set id [.c withtag current]
+```
+&rarr; &nbsp; Befehl schreibt in Variable 'id' die canvas widget id von dem Item über dem gerade der Mauszeiger liegt.  
+
+As you can see, things like `withtag` will take either an individual item or tag; in the latter case, they will apply to all items having that tag (which could be none). The `addtag` and `find`  have many other optins, allowing you to specify items near a point, overlapping a particular area and more.  
+
+&nbsp;
+
+<u>Bindings</u>  
+
+The canvas widget as a whole, like any other Tk widget can capture events using the `bind` command.  
+You can also attach bindings to individual items in the canvas (or groups of them). So if you want  to know whether or not a particular item has been clicked on, you don't need to watch for mouse click events for the canvas as a whole, Tk will take care of all this for you.  
+To capture these events, you use a bind command built into the canvas. It works exactly like the regular bind command, taking an event pattern and a callback. The only difference is you specify the canvas item this bind applies to.  
+
+```
+.c bind <tag_id> <1> "proc01 par1; set ::var 1"
+```
+&rarr; &nbsp; 'bind' für das Klicken mit Mouse-Button1 auf widget item mit tag oder id \<tag_id\>. Bei Klick wird "proc01 par1" ausgeführt und ::var 1 gesetzt.  
+
+```
+.c bind <tag_id> <Enter> "proc02 par1"
+.c bind <tag_id> <Leave> {set ::var ""}
+```
+&rarr; &nbsp; 'bind' für mouseover über widget item mit tag oder id \<tag_id>. Beim Eintritt über die Widget-Fläche wird "proc02 par1" ausgeführt, bei Austritt wird Variable ::var "" gesetzt.  
+
+&nbsp;
+
+<u>Modifying Items</u>  
+
+To delete items, use the `delete` method. To change an item's size and position, you can use the `coords` method; this allows you to provide new coordinates for the item, specified the same way when you first created the item. Calling this method without a new set of coordinates will return the current coordinates of the item. To move one or more items by a particular horizontal or vertical amount from their current location, you can use the `move` method.  
+
+```
+.c move <tag_id> 2c 2c
+```
+
+All items are ordered from top to bottom in what's called the stacking order. If an item later in the stacking order overlaps the coordinates of an item below it, the item on top will be drawn on top of the later item. The `raise` and `lower` methods allow you to adjust an item's position in the stacking order.  
+
+```
+.c raise <tag_id>
+```
+
+&nbsp;
+
+<u>'canvas' Options</u>  
+
+`-background <color>`  
+Used to set background color for widget.
+
+`-closeenough <distance>`  
+Sets the closeness of mouse cursor to a displayable item. The default is 1.0 pixel. This value may be a fraction and must be positive.  
+
+`-scrollregion <boundingBox>`  
+The bounding box for the total area of this canvas.  
+
+`-height <number>`  
+Used to set height for widget.  
+
+`-width <number>`  
+Sets the width for widget.   
+
+
+&nbsp;  
+
 # Functions  
 
 <a name="ch3-1"></a>
@@ -344,6 +464,36 @@ eval exec -- <path/to/7z.exe> a -tzip <path/to/targetfile> <path/to/file2zip>
 
 &nbsp;
 
+<a name="ch4-4"></a>
+### 4.4 Tcl <-> Python Interface  
+
+**In Python &rarr; call Tcl code**  
+Suppose you have a Tcl file (*foo.tcl*) with a proc called 'main' that requires a single filename as an argument. 'main' returns a string derived from reading *foo.tcl*.  
+
+```
+from tkinter import Tcl_init
+MYFILE = 'bar.txt'
+tcl = Tcl()                  ;# oder 'tcl=tkinter.Tcl()'
+  # Execute proc main from foo.tcl within  (*²)
+  # MYFILE as the argument
+tcl.eval('source foo.tcl')
+tcl_str = tcl.eval('main %s' %MYFILE)
+  # Access the contents of a Tcl variable  (*³)
+  # ($tclVar) from Python
+tcl.eval ('set tclVar foobarname')
+tclVar = tcl.eval('return $tclVar')
+```
+\*² : Aufruf eines Tcl proc's aus Python heraus mit Rückgabe eines Wertes  
+\*³ : Auslesen einer Tcl-Variable bzw. Setzen einer Tcl-Variable  
+
+&nbsp;
+
+
+
+
+
+&nbsp;
+
 # IPG CarMaker  
 
 <a name="ch5-1"></a>
@@ -434,8 +584,8 @@ Appl::Terminate 1
 |::TestRunFName|Gibt den Namen des zuletzt gefahrenen TestRun zurück|  
 |::tc|Ist der String 'tm.tc' hinterlegt. Hieraus lassen sich Befehle erstellen, die direkt auf (aktuelle, dynamische) Inhalte des TestManagers zugreifen:|
 ||**$TestMgr::tc selection get** : Gibt den aktuell ausgewählten, d.h. blau hinterlegten Punkt (als Zeilennummer) im TestManager Fenster zurück.|  
-||**$TestMgr::tc item text \<zeilennummer\>** : Gibt Infos zur \<zeilennummer\>-Zeile zurück (Text in Zeile, Zeilennummer, u.a.).|  
-||**$TestMgr::tc item parent \<zeilennummer\>** : Gibt die Zeilennummer des zu Zeile \<zeilennummer\> übergeordneten Elementes zurück.|  
+||**$TestMgr::tc item text <zeilennummer>** : Gibt Infos zur \<zeilennummer\>-Zeile zurück (Text in Zeile, Zeilennummer, u.a.).|  
+||**$TestMgr::tc item parent <zeilennummer>** : Gibt die Zeilennummer des zu Zeile \<zeilennummer\> übergeordneten Elementes zurück.|  
 ||**$TestMgr::tc selection clear** : Entfernt alle ausgewählten (d.h. blau hinterlegten) Punkte im 'Test-Manager'-Fenster.|  
 ||**$TestMgr::tc selection add \<zeilennummer\>** : Fügt an der Stelle \<zeilennummer\> eine Auswahl hinzu (blau hinterlegter Punkt).|  
 |::Result|Enthält das letzte Resultat ('good', 'bad', etc.).|  

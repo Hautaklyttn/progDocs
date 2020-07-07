@@ -491,6 +491,7 @@ Quantatoren sind spezielle Zeichen, die hinter ein einzelnes Zeichenliteral oder
 |{min,} |...muss mindestens 'min'-mal vorkommen. |  
 |{,max} |...darf maximal 'max'-mal vorkommen. |  
 |{min, max} |...muss mindestens 'min'-mal und darf 'max'-mal vorkommen. |  
+
 &nbsp;
 
 ```
@@ -511,11 +512,12 @@ Für gewisse Einsatzgebiete wird es unbedingt verlangt, Regeln aufzustellen zu k
 |Zeichen   |Beschreibung   |  
 |:---|:---|  
 |\A |Passt nur am Anfang eines Strings. |  
-|\b |Passt nur am Anfang oder Ende eines Wortes. |
+|\b |Passt nur am Anfang oder Ende eines Wortes. |  
 |\B |Passt nur, wenn es sich nicht um den Anfang oder das Ende eines Worted handelt. |  
 |\Z |Passt nur am Ende eines Strings. |  
 |^ |Passt nur am Anfang eines Strings. |  
 |$ |Passt nur am Ende eines Strings. |  
+
 &nbsp;
 
 ```
@@ -532,6 +534,7 @@ r"\APython\Z"
 |\S |Passt auf alle Zeichen die kein Whitespace sind. Äquivalent zu [^ \t \n \r \f \v]. |  
 |\w |Passt auf alle alphanumerischen Zeichen und den Unterstrich. Äquivalent zu [a-zA-Z0-9_]. |  
 |\W |Passt auf alle Zeichen die nicht alphanumerischen und kein Unterstrich sind. Äquivalent zu [^a-zA-Z0-9_]. |  
+
 &nbsp;  
 
 ```

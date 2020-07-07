@@ -34,8 +34,12 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 ...</font>](#ch3-4)  
 
 ### 4. Dictionaries   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 ...</font>](#ch4-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 ...</font>](#ch4-2)  
+
+### 5. HowTo's
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 File handling</font>](#ch5-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2 Regular Expressions</font>](#ch5-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2.1 Basics</font>](#ch5-2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2.2 Syntax regulärer Ausdrücke</font>](#ch5-2-2)  
 
 &nbsp;
 
@@ -262,7 +266,7 @@ list2[1:5]: [2,3,4,5]
      **(!)** 'remove()' only deletes the <u>first appearance</u> of the item in the brackets.
 
   - Basic list operations  
-     
+
      |Function   |Python expression   |Result   |  
      |:---|:---|:---:|  
      |Length   | **len([1,2,3])**  | 3  |  
@@ -272,7 +276,7 @@ list2[1:5]: [2,3,4,5]
      |Iteration   | **for x in [1,2,3]: print x**  | 1,2,3  |   
 
   - Further functions  
-     
+
      |Function   |description   |  
      |:---|:---|  
      |**max(list)**   | Returns item from list with max value  |  
@@ -323,6 +327,218 @@ list2[1:5]: [2,3,4,5]
 
 # Dictionaries
 
+Ein 'Dictionary' besteht aus Schlüssel-Objekt-Paaren, zu einem bestimmten Schlüssel gehört immer ein Objekt.  
+```
+>>> mydict = {}                          ;# leeres Dictionary
+>>> mydict = {"key_01":"value_01"}       ;# Wert setzen
+>>> mydict = {"key_x":"val_x", "key_y":"val_y"}
+
+>>> len(mydict)                          ;# Anzahl der Schlüssel-Wert-Paaren
+>>> del mydict[key_01]                   ;# Löschen Schlüssel+Objekt
+>>> "k" in mydict                        ;# Prüfen auf Schlüssel
+>>> "k" not in mydict
+
+>>> mydict.clear()                       ;# Entfernt alle Elemente im dictionary
+>>> mydict.get(key)                      ;# Gibt den 'Value' für 'key zurück
+>>> mydict.has_key(key)                  ;# Gibt 'true' zurück falls 'key' vorhanden 
+>>> mydict.items()                       ;# Gibt Liste mit (key, value)-Paaren zurück
+>>> mydict.keys()                        ;# Gibt Liste aller key's zurück
+>>> mydict.values()                      ;# Gibt Liste aller value's zurück
+```
+&nbsp;
+
+Iteration über ein Dictionary
+```
+>>> for key in mydict
+        print mydict[key]
+```
+&nbsp;
+
+Verschachtelte Dictionaries
+```
+>>> d = {}
+>>> d['dict1'] = {}
+>>> d['dict1']['innerkey'] = 'value'
+
+>>> d = {'dict1' : {'innerkey' : 'value'}}
+>>> d = {'dict1' : {'inkey1': val, 'inkey2' : val2}}
+
+# Besserer bzw. sicherer Weg
+# Anlegen:
+>>> d['key1'] = {}
+>>> d['key1']['innerkey'] = []
+>>> d['key1']['innerkey'].append('value')
+
+# Auslesen:
+>>> d.get('key1', {}).get('innerkey')
+# Sicherer, da bei Fehlen eines der 'keys' kein Fehler geworfen wird, sondern
+# 'None' zurückgegeben wird.
+```
+
+&nbsp;
+
+# How To's
+
+<a name="ch5-1"></a>
+## 5.1 File handling  
+
+`open()` returns a file object and is most commonly used with two arguments:  
+```
+>>> open(filename, mode)
+``` 
+
+The first arguement is the ``filename``.  
+The second argument describes in which way the file will be used. `mode` can be `r` when the file will only be read, `w` for only writing (an existing file with the same name will be erased) and `a` opens the file for appending.  
+&nbsp;
+
+For reading lines from a file, you can loop over the file object. This is memory efficient, fast, and leads to simple code:   
+```
+>>> f = open('workfile', 'r')
+    for line in f:
+       print line
+```
+&nbsp;
+
+
+If you want to read all lines of the file in a list you can also use `f.readlines()`.
+```
+>>> lines = f.readlines()
+```
+&nbsp;
+
+If you want to read in all lines of a file into one big string, you can use `f.read()`.
+```
+>>> text = f.read()
+```
+&nbsp;
+
+To write the content of a string to the file you use `f.write(string)`  
+```
+>>> f.write(string)
+```
+
+&nbsp;
+
+<a name="ch5-2"></a>
+## 5.2 Regular Expressions  
+
+<a name="ch5-2-1"></a>
+### 5.2.1 Basics    
+
+Das Modul `re` der Standardbibliothek bietet umfangreiche Möglichkeiten zum Arbeiten mit sogenannten 'regulären Ausdrücken'. In einem solchen regulären Ausdruck wird durch eine spezielle Syntax ein Textmuster beschrieben, das dann auf verschiedene Texte oder Textfragmente angewendet werden kann. Grundsätzlich gibt es zwei große Anwendungsbereiche von regulären Ausdrücken:  
+1. Im ersten Bereich, beim sog. 'Matching' wird geprüft, ob ein Textabschnitt auf das Muster des regulären Ausdruck passt oder nicht.  
+2. Die zweite Einsatzmöglichkeit von regulären Ausdrücken ist das sog. 'Searching', bei dem innerhalb eines größeren Textes nach Textfragmenten gesucht wird, die auf einen regulären Ausdruck passen.  
+
+Innerhalb von regulären Ausdrücken haben zahlreiche Zeichen Sonderbedeutungen, so wie auch der Backslash ("\\"). Prinzipiell werden reguläre Ausdrücke in Python als Strings dargestellt. Bei Strings werden aber Backslashes als Escape-Zeichen benutzt. Das bedeutet aber, dass sie aus unserem regulären Ausdruck entfernt werden, bzw. mit dem folgenden Zeichen einer Sonderbedeutung zugeführt werden. Die beste Lösung besteht darin, 'Raw-Strings' zu verwenden, also einen String mit einem vorgestellten `r` zu markieren:  
+```
+>>> r"^a.*\.html$"
+   # oder
+>>> r"cat"
+```
+
+Im Beispiel verwenden wir die Methode `search` aus dem Modul `re`. Es ist die wohl am wichtigsten und am häufigsten benutzte Methode. Mittels `search(expr, s)` wird ein String s nach dem Vorkommen eines Teilstrings untersucht, der auf den regulären Ausdruck 'expr' passt. Der erste gefundene Teilstring wird zurückgeliefert. Im positiven Fall wird ein sog. Matching-Objekt zurückgeiefert, im negativen Fall ein 'none'.  
+
+```
+>>> if re.search("cat", "A cat and a rat can't be friends."):
+        print "Der Ausdruck passt."  
+   else:  
+        print "Der Ausdruck passt nicht."
+# Output: "Der Ausdruck passt."
+```
+
+&nbsp;
+
+<a name="ch5-2-2"></a>
+### 5.2.2 Syntax regulärer Ausdrücke  
+
+Zeichenliterale innerhalb regulärer Ausdrücke sind case sensitive, d.h. dass der Ausdruck `r"python"` nicht auf den String "Python" passen würde.  
+
+In regulären Ausdrücken können eine ganze Reihe von **Steuerungszeichen** verwendet werden:  
+
+(a) Beliebige Zeichen  
+Die einfachste Verallgemeinerung, die innerhalb eines regulären Ausdrucks verwendet werden kann, ist die Kennzeichnung eines beliebigen Zeichens durch einen Punkt. So passt der Ausdruck `r".ython"` sowohl auf "python", "Python" als auch "Jython", nicht jedoch auf "Blython", da es sich nur um ein einzelnes beliebiges Zeichen handelt.  
+
+(b) Zeichenklassen  
+Abgesehen davon, ein Zeichen ausdrücklich als beliebig zu kennzeichnen, ist es auch möglich, eine Klasse von Zeichen  vorzugeben, die an dieser Stelle vorkommen dürfen.  
+
+`r"[jp]ython"`  
+Der Ausdruck lässt nur die Buchstaben 'j' und 'p' als erstes Zeichen des Wortes zu.  
+
+`r"[A_Z]ython"`  
+Der Ausdruck lässt den Bereich zwischen A und Z in Großbuchstaben zu.  
+
+`r"[A_Ra-r]ython"`  
+Um mehrere Bereiche zuzulassen, werden diese hintereinander geschrieben.  
+
+`r"[0-9]ython"`  
+Auch Ziffernbereiche können als Zeichenklasse verwendet werden.  
+
+`r"[pP]ython"`  
+Zeichen oder Zeichenbereiche können auch ausgeschlossen werden. Hier ist jedes Zeichen erlaubt, außer p und P.  
+
+Innerhalb einer Zeichenklasse gibt es, abgesehen vom Bindestrich und Zirkumflex, keine Zeichen mit spezieller Bedeutung.  
+Ein Punkt in einer Zeichenklasse ist tatsächlich ein Punkt und nicht etwa ein beliebiges Zeichen.  
+
+(c) Quantatoren  
+Quantatoren sind spezielle Zeichen, die hinter ein einzelnes Zeichenliteral oder eine Zeichenklasse geschrieben werden und kennzeichnen, wie oft diese auftreten dürfen.  
+
+|Quantator   |Beschreibung   | 
+|:---|:---|  
+|?|Das vorangegangene Zeichen bzw. die vorangeganene Zeichenklasse darf entweder keinmal oder einmal vorkommen.|  
+|*|...darf beliebig oft hintereinander vorkommen, das heißt unter anderem, dass sie auch weggelassen werden kann.|
+|+|...darf beliebig oft hintereinander vorkommen, mindestens aber einmal.|  
+|{anz}|...muss exakt 'anz'-mal vorkommen.|  
+|{min,}|...muss mindestens 'min'-mal vorkommen.|  
+|{,max}|...darf maximal 'max'-mal vorkommen.|  
+|{min, max}|...muss mindestens 'min'-mal und darf 'max'-mal vorkommen.|
+&nbsp;
+
+```
+r"P[Yy]?thon"
+```
+&rarr; Ausdruck erwartet an der zweiten Stelle des Wortes ein höchstens einmaliges Auftreten des großen oder kleinen 'Y'.  
+
+```
+r"P[Yy]{,2}thon"
+```
+&rarr; Ausdruck erwartet an der zweiten Stelle des Wortes maximal zwei jeweils große oder kleine 'Y'.  
+
+&nbsp;
+
+(d) Weitere Sonderzeichen  
+Für gewisse Einsatzgebiete wird es unbedingt verlangt, Regeln aufzustellen zu können, die über bloße Zeichenebene hinausgehen. Die hier gezeigten Sonderzeichen beziehen sich hauptsächlich auf das Matching von regulären Ausdrücken.  
+
+|Zeichen   |Beschreibung   | 
+|:---|:---|  
+|\A|Passt nur am Anfang eines Strings.|  
+|\b|Passt nur am Anfang oder Ende eines Wortes.|
+|\B|Passt nur, wenn es sich nicht um den Anfang oder das Ende eines Worted handelt.|  
+|\Z|Passt nur am Ende eines Strings.|  
+|^|Passt nur am Anfang eines Strings.|  
+|$|Passt nur am Ende eines Strings.|  
+&nbsp;
+
+```
+r"\APython\Z"
+```
+&rarr; Reg. Ausdruck passt auf die Strings "Python", nicht jedoch bei den Strings "abcPython" oder "Pythonabc".  
+&nbsp;  
+
+|Zeichen   |Beschreibung   | 
+|:---|:---|  
+|\d|Passt auf alle Zeichen, die Ziffern des Dezimalsystems sind. Äquivalent zu \[0-9\|.  
+|\D|Passt auf alle Zeichen, die nicht Ziffern des Dezimalsystems sind. Äquivalent zu \[^0-9\].|
+|\s|Passt auf alle Whitespace-Zeichen. Äquivalent zu [\t \n \r \f \v].|  
+|\S|Passt auf alle Zeichen die kein Whitespace sind. Äquivalent zu [^ \t \n \r \f \v].|  
+|\w|Passt auf alle alphanumerischen Zeichen und den Unterstrich. Äquivalent zu [a-zA-Z0-9_].|  
+|\W|Passt auf alle Zeichen die nicht alphanumerischen und kein Unterstrich sind. Äquivalent zu [^a-zA-Z0-9_].|  
+&nbsp;  
+
+```
+r"P\w*yth\dn"
+```
+&rarr; Reg. Ausdruck passt auf die Wörter "Pyth0n" oder "P_th1n", bspw jedoch nicht auf "Python".  
+&nbsp;  
 
 &nbsp;
 

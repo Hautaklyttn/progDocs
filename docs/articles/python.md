@@ -426,8 +426,8 @@ To write the content of a string to the file you use `f.write(string)`
 ### 5.2.1 Basics    
 
 Das Modul `re` der Standardbibliothek bietet umfangreiche Möglichkeiten zum Arbeiten mit sogenannten 'regulären Ausdrücken'. In einem solchen regulären Ausdruck wird durch eine spezielle Syntax ein Textmuster beschrieben, das dann auf verschiedene Texte oder Textfragmente angewendet werden kann. Grundsätzlich gibt es zwei große Anwendungsbereiche von regulären Ausdrücken:  
-1. Im ersten Bereich, beim sog. 'Matching' wird geprüft, ob ein Textabschnitt auf das Muster des regulären Ausdruck passt oder nicht.  
-2. Die zweite Einsatzmöglichkeit von regulären Ausdrücken ist das sog. 'Searching', bei dem innerhalb eines größeren Textes nach Textfragmenten gesucht wird, die auf einen regulären Ausdruck passen.  
+1. Im ersten Bereich, beim sog. ``Matching`` wird geprüft, ob ein Textabschnitt auf das Muster des regulären Ausdruck passt oder nicht.  
+2. Die zweite Einsatzmöglichkeit von regulären Ausdrücken ist das sog. ``Searching``, bei dem innerhalb eines größeren Textes nach Textfragmenten gesucht wird, die auf einen regulären Ausdruck passen.  
 
 Innerhalb von regulären Ausdrücken haben zahlreiche Zeichen Sonderbedeutungen, so wie auch der Backslash ("\\"). Prinzipiell werden reguläre Ausdrücke in Python als Strings dargestellt. Bei Strings werden aber Backslashes als Escape-Zeichen benutzt. Das bedeutet aber, dass sie aus unserem regulären Ausdruck entfernt werden, bzw. mit dem folgenden Zeichen einer Sonderbedeutung zugeführt werden. Die beste Lösung besteht darin, 'Raw-Strings' zu verwenden, also einen String mit einem vorgestellten `r` zu markieren:  
 ```
@@ -455,10 +455,10 @@ Zeichenliterale innerhalb regulärer Ausdrücke sind case sensitive, d.h. dass d
 
 In regulären Ausdrücken können eine ganze Reihe von **Steuerungszeichen** verwendet werden:  
 
-(a) Beliebige Zeichen  
+**(a) Beliebige Zeichen**  
 Die einfachste Verallgemeinerung, die innerhalb eines regulären Ausdrucks verwendet werden kann, ist die Kennzeichnung eines beliebigen Zeichens durch einen Punkt. So passt der Ausdruck `r".ython"` sowohl auf "python", "Python" als auch "Jython", nicht jedoch auf "Blython", da es sich nur um ein einzelnes beliebiges Zeichen handelt.  
 
-(b) Zeichenklassen  
+**(b) Zeichenklassen**  
 Abgesehen davon, ein Zeichen ausdrücklich als beliebig zu kennzeichnen, ist es auch möglich, eine Klasse von Zeichen  vorzugeben, die an dieser Stelle vorkommen dürfen.  
 
 `r"[jp]ython"`  
@@ -479,7 +479,7 @@ Zeichen oder Zeichenbereiche können auch ausgeschlossen werden. Hier ist jedes 
 Innerhalb einer Zeichenklasse gibt es, abgesehen vom Bindestrich und Zirkumflex, keine Zeichen mit spezieller Bedeutung.  
 Ein Punkt in einer Zeichenklasse ist tatsächlich ein Punkt und nicht etwa ein beliebiges Zeichen.  
 
-(c) Quantatoren  
+**(c) Quantatoren**  
 Quantatoren sind spezielle Zeichen, die hinter ein einzelnes Zeichenliteral oder eine Zeichenklasse geschrieben werden und kennzeichnen, wie oft diese auftreten dürfen.  
 
 |Quantator   |Beschreibung   | 
@@ -505,10 +505,10 @@ r"P[Yy]{,2}thon"
 
 &nbsp;
 
-(d) Weitere Sonderzeichen  
+**(d) Weitere Sonderzeichen**  
 Für gewisse Einsatzgebiete wird es unbedingt verlangt, Regeln aufzustellen zu können, die über bloße Zeichenebene hinausgehen. Die hier gezeigten Sonderzeichen beziehen sich hauptsächlich auf das Matching von regulären Ausdrücken.  
 
-|Zeichen   |Beschreibung   | 
+|Zeichen   |Beschreibung   |  
 |:---|:---|  
 |\A|Passt nur am Anfang eines Strings.|  
 |\b|Passt nur am Anfang oder Ende eines Wortes.|
@@ -524,7 +524,7 @@ r"\APython\Z"
 &rarr; Reg. Ausdruck passt auf die Strings "Python", nicht jedoch bei den Strings "abcPython" oder "Pythonabc".  
 &nbsp;  
 
-|Zeichen   |Beschreibung   | 
+|Zeichen   |Beschreibung   |  
 |:---|:---|  
 |\d|Passt auf alle Zeichen, die Ziffern des Dezimalsystems sind. Äquivalent zu \[0-9\|.  
 |\D|Passt auf alle Zeichen, die nicht Ziffern des Dezimalsystems sind. Äquivalent zu \[^0-9\].|

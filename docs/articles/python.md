@@ -482,15 +482,15 @@ Ein Punkt in einer Zeichenklasse ist tatsächlich ein Punkt und nicht etwa ein b
 **(c) Quantatoren**  
 Quantatoren sind spezielle Zeichen, die hinter ein einzelnes Zeichenliteral oder eine Zeichenklasse geschrieben werden und kennzeichnen, wie oft diese auftreten dürfen.  
 
-|Quantator   |Beschreibung   | 
+|Quantator   |Beschreibung   |  
 |:---|:---|  
-|?|Das vorangegangene Zeichen bzw. die vorangeganene Zeichenklasse darf entweder keinmal oder einmal vorkommen.|  
-|*|...darf beliebig oft hintereinander vorkommen, das heißt unter anderem, dass sie auch weggelassen werden kann.|
-|+|...darf beliebig oft hintereinander vorkommen, mindestens aber einmal.|  
-|{anz}|...muss exakt 'anz'-mal vorkommen.|  
-|{min,}|...muss mindestens 'min'-mal vorkommen.|  
-|{,max}|...darf maximal 'max'-mal vorkommen.|  
-|{min, max}|...muss mindestens 'min'-mal und darf 'max'-mal vorkommen.|
+|? |Das vorangegangene Zeichen bzw. die vorangeganene Zeichenklasse darf entweder keinmal oder einmal vorkommen. |  
+|* |...darf beliebig oft hintereinander vorkommen, das heißt unter anderem, dass sie auch weggelassen werden kann. |  
+|+ |...darf beliebig oft hintereinander vorkommen, mindestens aber einmal. |   
+|{anz} |...muss exakt 'anz'-mal vorkommen. |  
+|{min,} |...muss mindestens 'min'-mal vorkommen. |  
+|{,max} |...darf maximal 'max'-mal vorkommen. |  
+|{min, max} |...muss mindestens 'min'-mal und darf 'max'-mal vorkommen. |  
 &nbsp;
 
 ```
@@ -510,12 +510,12 @@ Für gewisse Einsatzgebiete wird es unbedingt verlangt, Regeln aufzustellen zu k
 
 |Zeichen   |Beschreibung   |  
 |:---|:---|  
-|\A|Passt nur am Anfang eines Strings.|  
-|\b|Passt nur am Anfang oder Ende eines Wortes.|
-|\B|Passt nur, wenn es sich nicht um den Anfang oder das Ende eines Worted handelt.|  
-|\Z|Passt nur am Ende eines Strings.|  
-|^|Passt nur am Anfang eines Strings.|  
-|$|Passt nur am Ende eines Strings.|  
+|\A |Passt nur am Anfang eines Strings. |  
+|\b |Passt nur am Anfang oder Ende eines Wortes. |
+|\B |Passt nur, wenn es sich nicht um den Anfang oder das Ende eines Worted handelt. |  
+|\Z |Passt nur am Ende eines Strings. |  
+|^ |Passt nur am Anfang eines Strings. |  
+|$ |Passt nur am Ende eines Strings. |  
 &nbsp;
 
 ```
@@ -526,12 +526,12 @@ r"\APython\Z"
 
 |Zeichen   |Beschreibung   |  
 |:---|:---|  
-|\d|Passt auf alle Zeichen, die Ziffern des Dezimalsystems sind. Äquivalent zu \[0-9\|.  
-|\D|Passt auf alle Zeichen, die nicht Ziffern des Dezimalsystems sind. Äquivalent zu \[^0-9\].|
-|\s|Passt auf alle Whitespace-Zeichen. Äquivalent zu [\t \n \r \f \v].|  
-|\S|Passt auf alle Zeichen die kein Whitespace sind. Äquivalent zu [^ \t \n \r \f \v].|  
-|\w|Passt auf alle alphanumerischen Zeichen und den Unterstrich. Äquivalent zu [a-zA-Z0-9_].|  
-|\W|Passt auf alle Zeichen die nicht alphanumerischen und kein Unterstrich sind. Äquivalent zu [^a-zA-Z0-9_].|  
+|\d |Passt auf alle Zeichen, die Ziffern des Dezimalsystems sind. Äquivalent zu \[0-9\]. |  
+|\D |Passt auf alle Zeichen, die nicht Ziffern des Dezimalsystems sind. Äquivalent zu \[^0-9\]. |  
+|\s |Passt auf alle Whitespace-Zeichen. Äquivalent zu [\t \n \r \f \v]. |  
+|\S |Passt auf alle Zeichen die kein Whitespace sind. Äquivalent zu [^ \t \n \r \f \v]. |  
+|\w |Passt auf alle alphanumerischen Zeichen und den Unterstrich. Äquivalent zu [a-zA-Z0-9_]. |  
+|\W |Passt auf alle Zeichen die nicht alphanumerischen und kein Unterstrich sind. Äquivalent zu [^a-zA-Z0-9_]. |  
 &nbsp;  
 
 ```

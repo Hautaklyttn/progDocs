@@ -488,9 +488,65 @@ tclVar = tcl.eval('return $tclVar')
 
 &nbsp;
 
+**In Tcl &rarr; call Python code**  
+Aufruf des Python-Interpreters mit Python-Skript ('rdn_skript.py') als Parameter mit dem `[exec]`-Befehl, z.B.  
+```
+set output [exec python rdn_skript.py]
+puts $output
+```
 
+Die `exec`-Funktion gibt als Rückgabewert den Output des aufgerufenen Python-Skripts zurück.  
+Die Rückgabe im Python-Skript wird über `print(x,y,...)` realisiert. Der übergebene Wert ist dann eine Liste mit den Werten x,y,...  
 
+Übergabe von Werten in das Python-Skript, kann über 'command line arguments' realisiert werden. Jedes Argument das  übergeben wird. ist dann in der Liste `sys.arg` verfügbar und kann im Python-Skript verarbeitet werden.  
 
+```
+import sys 
+
+def test_func():
+...
+    new_var = int(sys.argv[1]+10)
+    print(sys.argv[1], new_var)
+...
+
+test_func()
+```
+
+Aufruf (in Tcl):  
+```
+set val [exec python test.py 10]
+puts $val
+
+# Ausgabe: '10 20'
+```
+
+&nbsp;
+
+**Kommunikation über Sockets**  
+
+Tcl is based on a concept of channels. A channel is conceptually similar to a ``File*`` in C or a stream in Shell programming. The difference is that a channel may be either a stream device like a file or a connection oriented construct like a socket.  
+
+A stream based channel is created with the `open` command. A socket based channel is created with a `socket` command. A socket can be opened either as a client or as a server.
+
+If a socket channel is opened as a server, then the Tcl program will `listen` on that channel for another task to attempt to connect with it. When this happens, a new channel is created for that link (server&rarr;new client), and the Tcl program continues to listen for connections on the original port number. In this way, a single Tcl server could be talking to several clients simultaneously.  
+
+&nbsp;
+
+```
+socket -server <command> ?options? <port>
+```
+
+The 'socket' command with the `-server` flag starts  a server socket listening on port `<port>`. When a connection occurs on `<port>`, the proc `<command>` is called with the arguments  
+&nbsp;&nbsp;&nbsp;\<channel\>  :  the channel for the new client  
+&nbsp;&nbsp;&nbsp;\<address\>  :  the IP address of this client  
+&nbsp;&nbsp;&nbsp;\<port\> :  the port that is assigned to this client  
+
+&nbsp;
+
+```
+socket ?options? <host> <port>
+```
+The 'socket' command without the `-server` option opens a client connection to the system with IP address ``<host>`` and the port addredd `<port>`. The IP address may be given as a numeric string or as a fully qualified domain address. To connect to the local host, use the address 127.0.0.1 (the loopback address) or 'localhost'.
 
 &nbsp;
 

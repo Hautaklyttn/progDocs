@@ -19,13 +19,20 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Python Virtual Machine (PVM)</font>](#ch1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Variablen in Python</font>](#ch1-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Strings</font>](#ch1-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Aufruf eines Python-Skripts (*.py)</font>](#ch1-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Decorators</font>](#ch1-7)  
 
 ### 2. Functions
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basic Functions</font>](#ch2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1.1 Funktion id()</font>](#ch2-1-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1.2 Funktion dir()</font>](#ch2-1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1.3 Funktion help()</font>](#ch2-1-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1.4 Funktion type()</font>](#ch2-1-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 String Functions</font>](#ch2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 OO related Functions</font>](#ch2-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3.1 Funktion issubclass()</font>](#ch2-3-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3.2 Funktion isinstance()</font>](#ch2-3-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3.3 Funktion super()</font>](#ch2-3-3)  
 
 ### 3. Listen
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 Basics</font>](#ch3-1)  
@@ -154,7 +161,34 @@ h
 
 &nbsp;
 
+<a name="ch1-6"></a>
+### 1.6 Aufruf eines Python-Skripts (\*.py)
 
+Von der cmd shell  
+```
+python someFile.py
+```
+
+Im Python Interpreter (2.x)  
+```
+execfile('someFile.py')
+```
+
+Im Python Interpreter (3.x)  
+```
+exec(open('someFile.py').read())
+```
+&nbsp;
+
+<a name="ch1-7"></a>
+### 1.7 Decorators
+`@staticmethod`  
+The *staticmethod* decorator modifies a method function so that it does not use the self variable. The method function will not have access to a specific instance of the class. It behaves like a plain function except that you can call it from an instance or the class.  
+
+`@classmethod`  
+The *classmethod* decorator modifies a method function so that it receives the class object as the first parameter instead of an instance of the class. This method function will have access to the class object itself.  
+The 'classmethod' decorator is used to create singleton classes. This is a python technique for defining an object which is also the one and only instance. This gives us a very handy, easy-to-read way to segregate attributes into a separate part of a class declaration.  
+Generally, a function decorated with *@classmethod* is used for introspection of a class. An introspection method looks at the structure or features of the class, not the values of the specific instance.
 
 &nbsp;
 
@@ -207,6 +241,30 @@ This function is added to the built-in namespace by the *site* module.
 
 &nbsp;
 
+<a name="ch2-1-4"></a>
+### 2.1.4 Funktion *type()*
+Die Funktion *type(obj)* liefert die Klasse der Instanz 'obj' zurück.  
+
+```
+>>> x = [4,5,9]
+>>> print type(x)
+<type 'list'>
+
+>>> y = "Hello"
+>>> print type(y)
+<type 'str'>
+
+>>> v = 10
+>>> print type(v)
+<type 'int'>
+
+>>> z = {'a':1, 'b':2}
+>>> print type(z)
+<type 'dict'>
+```
+
+&nbsp;
+
 <a name="ch2-2"></a>
 ## 2.2 String Functions  
 &nbsp;
@@ -226,7 +284,31 @@ This function is added to the built-in namespace by the *site* module.
 
 **Länge eines Strings**  
 
-&nbsp;&nbsp;&nbsp; `len("Python") -> 6`
+&nbsp;&nbsp;&nbsp; `len("Python") -> 6`  
+
+&nbsp;
+
+
+<a name="ch2-3"></a>
+## 2.3 Object Oriented related Functions  
+
+All of the basic factory functions (str, int, float, long, complex, unicode, tuple, list, dict, set) are effectively class names. You can therefore, use a test like `isinstance(myParam, int)` to confirm that the argument value provided to this parameter is an integer. An additional class, `basestring` is the parent class of both 'str' and 'unicode'.  
+
+<a name="ch2-3-1"></a>
+### 2.3.1 Funktion *issubclass(sub, sup)*  
+Boolean function returns 'true' if the given subclass ``sub`` is a subclass of the upper-class ``sup``.
+
+&nbsp;
+
+<a name="ch2-3-2"></a>
+### 2.3.2 Funktion *isinstance(obj, class)*  
+Boolean function returns 'true' if ``obj`` is an instance of class ``class`` or is an instance of a subclass of `class`.  
+
+&nbsp;
+
+<a name="ch2-3-3"></a>
+### 2.3.3 Funktion *super(type)*  
+Function returns the superclass of the given type.
 
 &nbsp;
 
@@ -340,7 +422,7 @@ Ein 'Dictionary' besteht aus Schlüssel-Objekt-Paaren, zu einem bestimmten Schl�
 
 >>> mydict.clear()                       ;# Entfernt alle Elemente im dictionary
 >>> mydict.get(key)                      ;# Gibt den 'Value' für 'key zurück
->>> mydict.has_key(key)                  ;# Gibt 'true' zurück falls 'key' vorhanden 
+>>> mydict.has_key(key)                  ;# Gibt 'true' zurück falls 'key' vorhanden
 >>> mydict.items()                       ;# Gibt Liste mit (key, value)-Paaren zurück
 >>> mydict.keys()                        ;# Gibt Liste aller key's zurück
 >>> mydict.values()                      ;# Gibt Liste aller value's zurück
@@ -385,7 +467,7 @@ Verschachtelte Dictionaries
 `open()` returns a file object and is most commonly used with two arguments:  
 ```
 >>> open(filename, mode)
-``` 
+```
 
 The first arguement is the ``filename``.  
 The second argument describes in which way the file will be used. `mode` can be `r` when the file will only be read, `w` for only writing (an existing file with the same name will be erased) and `a` opens the file for appending.  
@@ -482,6 +564,7 @@ Ein Punkt in einer Zeichenklasse ist tatsächlich ein Punkt und nicht etwa ein b
 **(c) Quantatoren**  
 Quantatoren sind spezielle Zeichen, die hinter ein einzelnes Zeichenliteral oder eine Zeichenklasse geschrieben werden und kennzeichnen, wie oft diese auftreten dürfen.  
 
+
 |Quantator   |Beschreibung   |  
 |:---|:---|  
 |? |Das vorangegangene Zeichen bzw. die vorangeganene Zeichenklasse darf entweder keinmal oder einmal vorkommen. |  
@@ -490,7 +573,7 @@ Quantatoren sind spezielle Zeichen, die hinter ein einzelnes Zeichenliteral oder
 |{anz} |...muss exakt 'anz'-mal vorkommen. |  
 |{min,} |...muss mindestens 'min'-mal vorkommen. |  
 |{,max} |...darf maximal 'max'-mal vorkommen. |  
-|{min, max} |...muss mindestens 'min'-mal und darf 'max'-mal vorkommen. |  
+|{min, max} |...muss mindestens 'min'-mal und darf 'max'-mal vorkommen. |   
 
 &nbsp;
 
@@ -509,6 +592,7 @@ r"P[Yy]{,2}thon"
 **(d) Weitere Sonderzeichen**  
 Für gewisse Einsatzgebiete wird es unbedingt verlangt, Regeln aufzustellen zu können, die über bloße Zeichenebene hinausgehen. Die hier gezeigten Sonderzeichen beziehen sich hauptsächlich auf das Matching von regulären Ausdrücken.  
 
+
 |Zeichen   |Beschreibung   |  
 |:---|:---|  
 |\A |Passt nur am Anfang eines Strings. |  
@@ -526,6 +610,7 @@ r"\APython\Z"
 &rarr; Reg. Ausdruck passt auf die Strings "Python", nicht jedoch bei den Strings "abcPython" oder "Pythonabc".  
 &nbsp;  
 
+
 |Zeichen   |Beschreibung   |  
 |:---|:---|  
 |\d |Passt auf alle Zeichen, die Ziffern des Dezimalsystems sind. Äquivalent zu \[0-9\]. |  
@@ -533,7 +618,7 @@ r"\APython\Z"
 |\s |Passt auf alle Whitespace-Zeichen. Äquivalent zu [\t \n \r \f \v]. |  
 |\S |Passt auf alle Zeichen die kein Whitespace sind. Äquivalent zu [^ \t \n \r \f \v]. |  
 |\w |Passt auf alle alphanumerischen Zeichen und den Unterstrich. Äquivalent zu [a-zA-Z0-9_]. |  
-|\W |Passt auf alle Zeichen die nicht alphanumerischen und kein Unterstrich sind. Äquivalent zu [^a-zA-Z0-9_]. |  
+|\W |Passt auf alle Zeichen die nicht alphanumerischen und kein Unterstrich sind. Äquivalent zu [^a-zA-Z0-9_]. |   
 
 &nbsp;  
 

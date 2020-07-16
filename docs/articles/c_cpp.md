@@ -18,6 +18,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Auswertungsreihenfolge</font>](#ch1-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Headers und Libraries</font>](#ch1-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Die Funktion `main`</font>](#ch1-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Datentypen in C</font>](#ch1-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.8 Threads und Prozesse</font>](#ch1-8)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -40,6 +42,9 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2 `switch - case`</font>](#ch5-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.3 Das Schlüsselwort `extern`</font>](#ch5-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.4 Das Schlüsselwort `static`</font>](#ch5-4)  
+
+### 6. How To's   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Emulation</font>](#ch6-1)  
 
 &nbsp;
 
@@ -204,7 +209,44 @@ argv[2]: hannes
 
 Der erste Wert des Parameter-Arrays 'argv' ist immer der Programmname selbst, in diesem Falle 'foo'. Dahinter folgen die wirklichen Parameter bzgl. des Programmaufrufs.
 
+&nbsp;
 
+<a name="ch1-7"></a>
+### 1.7 Datentypen in C  
+
+|Type |Storage Size |Value range |  
+|:---|:---:|:---:|  
+|char |1 byte |-128 to 127 or 0 to 255 |  
+|unsigend char |1 byte |0 to 255 |  
+|signed char |1 byte |-128 to 127 |  
+|int |2 or 4 bytes |-32.768 to 32.767 or -/+2.147.483.648 |  
+|unsigned int |2 or 4 bytes |0 to 65.535 or 0 to 4.294.967.295 |  
+|short |2 bytes |-32.768 to 32.767 |  
+|unsigned short |2 bytes |0 to 65.535 |  
+|long |4 bytes |-2.147.483.648 to 2.147.483.647 |  
+|unsigned long |4 bytes |0 to 4.294.967.295 |  
+|float |4 bytes |1.2E-38 to 3.4E+38 |  
+|double |8 bytes |2.3E-308 to 1,7E+308 |  
+|long double |10 bytes |3.4E-4932 to 1.1E+4932 |  
+
+&nbsp;
+
+<a name="ch1-8"></a>
+### 1.8 Threads und Prozesse  
+
+Both, processes and threads, are independent sequences of execution. The typical difference is that **threads (of the same process) run in a shared memory space, while processes run in separate memory space**.  
+
+Im ersten Moment besteht kein Unterschied zwischen einem Prozess und einem Thread, denn letztendlich besteht ein Prozess mindestens aus einem Thread. Ferner endet ein Prozess, wenn sich alle Threads beenden. Somit ist der eine Prozess (dieser eine Prozess ist der erste Thread, auch *Main Thread* bzw. *Haupt-Thread* genannt) verantwortlich für die gleichzeitige Ausführung mehrerer Threads - da doch Threads auch nur innerhalb eines Prozesses ausgeführt werden. Der hauptsächliche Unterschied zwischen Threads und Prozessen besteht darin, dass Threads unabhängige Befehlsfolgen innerhalb eines Prozesses sind.  
+
+Benefits von Threads:  
+- gemeinsamer Speicherbereich aller Threads in einem Prozess (d.h. einfache Programmierung der Inter-Thread-Kommunikation)  
+- Möglichkeit den einzelnen Threads Prioritäten zuzuordnen (d.h. ein Thread kann mit einer höheren Priorität laufen als ein anderer)  
+- Ausnutzung mehrerer Prozessorkerne und damit Reduzierung der Gesamtrechenzeit  
+
+Threads are not part of the C standard, so the only way to use threads is to include some library:  
+- POSIX threads ('*pthreads*') in UNIX/Linux  
+- *_beginthread* / *_beginthreadex* if you want to use the C runtime library (WIN32API)  
+- *pthreads-win32* ('pthreads' implementation for Windows)
 
 &nbsp;
 
@@ -622,6 +664,63 @@ Statische Variablen und Methoden werden aufgrund ihres Zweckes ohne Klasseninsta
 ```c
 <Klassenname>::<Methode> (<Argumente>);
 ```
+
+&nbsp;
+
+&nbsp;
+
+# How To's
+
+<a name="ch6-1"></a>
+### 6.1 Emulation <font size="-1">(hier 'Prozessor Emulation')</font>  
+
+Basic Idea  
+> "Emulation is realised by handling the behaviour of the processor and the individual components.  
+> You build each individual piece of the system in SW and then connect the pieces much like wires do in hardware."  
+ 
+&nbsp;
+
+Two ways of processor emulation:  
+1. **Dynamic Recompilation**  
+2. **Interpretation**   
+
+&nbsp;
+
+**(1) Dynamic Recompilation**  
+With dynamic recompilation, you iterate over the code much like interpretation, but instead of executing opcodes, you build a list of operations. Once you reach a branch instruction, you compile this list of operations to machine code for your host platform, then you cache this compiled code and execute it. Then, when you hit a given instruction group again, you only have to execute the code from the cache.  
+
+**(2) Interpretation**  
+
+![emu](../assets/pics/emulators.png)  
+
+An emulator is a computer program that mimics the internal design and functionality of a computer system (*System A*). It allows users to run software designed for this specific system (*System A*) to run on a totally different computer system or architecture (*System B*).  
+
+In case of an emulator, we chose not to re-implement the desired game for our native system. Instead, we re-create the environment with a computer program which allows us to run the original machine code (so the Assembly code!) of the game. A benefit of this is that it won't just allow us to run that one game, but also any other application developed for that platform.  
+
+For start writing an emulator, it is important to find as much information as possible about the system you want to emulate. How much memory and registers are used, with what size? What architecture is used? Get hold of technical documents that describe the *instruction set*.  
+
+*Interpretational Emulation* bedeutet  
+- den (oftmals kleinen) Speicher des zu emulierenden Geräts in eine Variable (Array) zu packen, d.h. aus  
+  ``4k memory`` wird `unsigned char memory[4096];`  
+- das gleiche gilt für Register, d.h. aus  
+  `8-bit GP register` wird `unsigned char reg[16];`  
+- oder für Grafik-Speicher, d.h. aus  
+  `2048 pixels (64*32)` wird `unsigned char gfx[64*32];`  
+- bestimmte Register und spezielle Counter überführen, d.h. aus  
+  `Index Register I` wird `unsigned short I;`  
+  `program counter pc` wird `unsigned short pc;`  
+  `16 levels of stack` wird `unsigned short stack[16];`  
+  ``stack pointer sp`` wird `unsigned short sp;`  
+- für das *instruction set* des Prozessors:  
+  Bereitstellen von Funktionen oder 'switch-case'-Anweisungen, d.h. ein Mappen der Ursprungs-Assembly-Befehle auf Code in Hochsprache (z.B. C) des *Systems B*.  
+
+Das heisst der spätere Ablauf auf dem Zielsystem wäre dann:  
+   1. Laden des Ursprungs-Assembly-Codes in Memory-Array  
+   2. Lesen des opcodes in Array entsprechend des Wertes des program counters (pc)  
+   3. Übersetzen/Ausführen des jeweils entsprechenden Codes in C auf Zielsystem  
+   4. Compiler übersetzt den Code in Assembler ausführbar auf *System B*  
+   5. Ausführung auf *System B* 
+
 
 &nbsp;
 

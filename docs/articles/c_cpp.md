@@ -275,7 +275,7 @@ typedef unsigned long ULONG
 typedef unsigned int UINT
 ```  
 
-Wie diese Auflistung schon vermuten lässt, spricht die verbesserte Lesbarkeit des Programms für `typedef`.  
+Wie diese Auflistung schon vermuten lässt, spricht die verbesserte Lesbarkeit des Programms für 'typedef'.  
 
 &nbsp;
 

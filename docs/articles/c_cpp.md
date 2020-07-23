@@ -18,8 +18,13 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Auswertungsreihenfolge</font>](#ch1-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Headers und Libraries</font>](#ch1-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Die Funktion `main`</font>](#ch1-6)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Datentypen in C</font>](#ch1-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Übersicht Datentypen in C</font>](#ch1-7)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.8 Threads und Prozesse</font>](#ch1-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9 Benutzerdefinierte Datentypen</font>](#ch1-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.1 `typedef`</font>](#ch1-9-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.2 `enum`</font>](#ch1-9-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.3 `struct`</font>](#ch1-9-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.4 `union`</font>](#ch1-9-4)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -212,7 +217,7 @@ Der erste Wert des Parameter-Arrays 'argv' ist immer der Programmname selbst, in
 &nbsp;
 
 <a name="ch1-7"></a>
-### 1.7 Datentypen in C  
+### 1.7 Übersicht Datentypen in C  
 
 |Type |Storage Size |Value range |  
 |:---|:---:|:---:|  
@@ -236,7 +241,7 @@ Der erste Wert des Parameter-Arrays 'argv' ist immer der Programmname selbst, in
 
 Both, processes and threads, are independent sequences of execution. The typical difference is that **threads (of the same process) run in a shared memory space, while processes run in separate memory space**.  
 
-Auf den ersten Blick besteht kein Unterschied zwischen einem Prozess und einem Thread, denn letztendlich besteht ein Prozess mindestens aus einem Thread. Ferner endet ein Prozess, wenn sich alle Threads beenden. Somit ist der eine Prozess (dieser eine Prozess ist der erste Thread, auch *Main Thread* bzw. *Haupt-Thread* genannt) verantwortlich für die gleichzeitige Ausführung mehrerer Threads - da doch Threads auch nur innerhalb eines Prozesses ausgeführt werden. Der grundsätzliche Unterschied zwischen Threads und Prozessen besteht darin, dass Threads unabhängige Befehlsfolgen innerhalb eines Prozesses sind.  
+Im ersten Moment besteht kein Unterschied zwischen einem Prozess und einem Thread, denn letztendlich besteht ein Prozess mindestens aus einem Thread. Ferner endet ein Prozess, wenn sich alle Threads beenden. Somit ist der eine Prozess (dieser eine Prozess ist der erste Thread, auch *Main Thread* bzw. *Haupt-Thread* genannt) verantwortlich für die gleichzeitige Ausführung mehrerer Threads - da doch Threads auch nur innerhalb eines Prozesses ausgeführt werden. Der hauptsächliche Unterschied zwischen Threads und Prozessen besteht darin, dass Threads unabhängige Befehlsfolgen innerhalb eines Prozesses sind.  
 
 Benefits von Threads:  
 - gemeinsamer Speicherbereich aller Threads in einem Prozess (d.h. einfache Programmierung der Inter-Thread-Kommunikation)  
@@ -247,6 +252,129 @@ Threads are not part of the C standard, so the only way to use threads is to inc
 - POSIX threads ('*pthreads*') in UNIX/Linux  
 - *_beginthread* / *_beginthreadex* if you want to use the C runtime library (WIN32API)  
 - *pthreads-win32* ('pthreads' implementation for Windows)
+
+&nbsp;
+
+<a name="ch1-9"></a>
+### 1.9 Benutzerdefinierte Datentypen  
+
+<a name="ch1-9-1"></a>
+`typedef`  
+Mit Hilfe dieses Schlüsselwortes können Sie einen Datentyp umbenennen. Dabei wird kein neuer Datentyp erzeugt, sondern lediglich ein bereits bestehender unter einem neuen Namen angesprochen. Die allgemeine Form der Anweisung lautet:  
+```c  
+typedef <Datentyp> <Neuer_Name>
+```  
+
+Der Datentyp muss ein in C gültiger Datentyp sin, wobei auch selbst definierte vom Typ 'struct' oder 'union' zulässig sind. Der neue Name muss in Übereinstimmung mit der Namenskonvention für Bezeichner gewählt werden.  
+
+```c
+// z.B.
+typedef unsigned char UCHAR
+typedef unsigned short USHORT
+typedef unsigned long ULONG
+typedef unsigned int UINT
+```  
+
+Wie diese Auflistung schon vermuten lässt, spricht die verbesserte Lesbarkeit des Programms für `typedef`.  
+
+&nbsp;
+
+<a name="ch1-9-2"></a>
+`enum`  
+Aufzählungstypen sind gedacht für Integer-Variablen, die nicht jeden beliebigen Wert annehmen dürfen, sondern auf eine begrenzte Anzahl von Werten beschränkt sind. Diese Werte werden über Namen angesprochen. Die allgemeine Form einer 'enum'-Anweisung lautet:  
+
+```c
+enum <Name> {element_1, element_2, ..., element_n} <Variablenliste> 
+```  
+
+Die Angabe des Namens \<Name\> für den Aufzählungstyp kann entfallen, falls eine \<Variablenliste\> angegeben wird. Allerdings können dann später neue Variablen dieses Typs nicht mehr definiert werden. Wird ein Name angegeben, dann kann auf die Variablenliste verzichtet werden, da sich später noch beliebig viele Variablen dieses Aufzählungstyps definieren lassen. Folgende Anweisung deklariert einen Aufzählungstyp mit dem Namen 'Wochentag':  
+
+```c
+enum Wochentag {SON, MON, DIE, MIT, DON, FRE, SAM}
+// SON enstpricht 0, SAM entspricht 6
+```
+
+Jedes Namenssymbol steht für einen ganzzahligen Wert, wobei jedes Namenssymbol um den Wert 1 größer ist das das vorhergehende. Anfangswert für das erste Symbol beträgt standardmäßig 0. Auch eigene Werte sind möglich:  
+
+```c
+enum Himmelsrichtung {NORD, OST=90, SUED=180, WEST=270}
+```
+
+Für eine Variable des Typs 'Himmelsrichtung' stehen genau vier Werte (von NORD bis WEST) zur Auswahl. Variablen der jeweiligen Aufzählungstypen stehen nach den beiden aufgeführten enum-Anweisungen allerdings noch nicht zur Verfügung, denn beide beschränken sich auf die Deklaration eines neuen Datentyps. Damit geben sie dem Compiler bekannt, wie der Aufzählungstyp aufgebaut ist, reservieren aber noch keinen Speicherplatz. Dazu bedarf es einer Variablendefinition. Diese kann man gleich bei der Deklaration vornehmen, indem man nach der schließenden geschweiften Klammer den Namen einer oder mehrerer Variablen angibt.  
+
+```c
+// definiert die Variable 'Heute' vom Typ 'Wochentag'
+enum Wochentag Heute;
+```
+
+An die Variable 'Heute' kann jederzeit eines der 7 Elemente aus der Deklarationsliste zugewiesen werden.  
+
+```c
+// MON ist keine Zeichenkette, sondern steht für den Wert 1
+Heute = MON;
+```
+
+&nbsp;
+
+<a name="ch1-9-3"></a>
+`struct`   
+Wenn eine Serie zusammenhängender Daten bearbeitet werden soll, erweisen sich Arrays und Pointer als geeignet. Beide unterliegen  aber der Einschränkung, dass alle Elemente vom gleichen Datentyp sein müssen. C bietet Ihnen für diesen Zweck die Struktur, mit der Sie ein Konglomerat unterschiedlicher Datentypen zu einem Datenobjekt zusammenfassen und dabei auf einzelne Elemente zugreifen können.  
+
+Da jedes 'struct' in ihrem Aufbau völlig einzigartig sein kann, muss der Compiler vor dem Gebrauch einer Struktur über deren Zusammensetzung aufgeklärt werden. Dies geschieht in Form einer Deklaration, die quasi eine Schablone der betreffenden Struktur zur Verfügung stellt.  
+
+```c
+struct <Name> {
+  Datentyp VariablenName;
+  Datentyp VariablenName;
+  ...
+} <Variablenliste>
+```
+
+Wie schon bei den Aufzählungstypen kann auch bei der Deklaration von Strukturen entweder der \<Name\> oder die \<Variablenliste\> fehlen. Verzichten Sie auf die Angabe des Strukturnamens, dann nehmen Sie eine sog. 'anonyme Deklaration' vor. In diesem Fall stehen nur die Variablen zur Verfügung, die Sie bei der Deklaration durch Angabe in der Variablenliste definieren.  
+
+Erst bei der Definition einer Variablen vom Typ 'struct' reserviert der Compiler ausreichend Platz, um dann alle Elemente der Struktur unterzubringen.  
+
+```c
+// Variablen-Definition vom Typ 'adresse'
+struct adresse Kunde, Lieferant;
+
+// Zugriff auf einzelne Elemente
+Lieferant.ulTel = 297225;
+
+// Oder über Zeiger
+struct adresse *pAdresse;
+pAdresse = &Lieferant;
+(*pAdresse).ulTel = 7460688;
+```
+
+&nbsp;
+
+<a name="ch1-9-4"></a>
+`union`  
+Bei einer 'Union' handelt es sich um ein Datenobjekt, dessen Speicherplatz von mehreren Variablen verschiedenen Typs genutzt werden kann.  
+
+Während für Variablen vom Typ der Struktur  
+```c
+struct conv {
+  short sNumber;  
+  char cByte[2];
+}
+```
+
+so viel Speicherplatz angefordert wird, dass die beiden Variablen 'sNumber' und 'cByte' <u>nebeneinander</u> Platz finden, müssen sich bei der Union  
+
+```c
+union conv {
+  short sNumber;
+  char cByte[2];
+}
+```
+
+'sNumber' und 'cByte' den <u>gleichen</u> Speicherplatz teilen. Der Speicherbedarf einer 'Union' richtet sich also nicht nach der Gesamtgröße aller Elemente, sondern nach dem Platzbedarf des größten Elementes.  
+
+Zur Initialisierung von 'Union' darf nur **ein** Wert verwendet werden, dessen Datentyp mit jenem des ersten Elementes übereinstimmt.  
+
+Die Eigenschaft einer 'Union' mehrere Variablen innerhalb des gleichen Speicherbereiches zu versammeln, eröffnet die Möglichkeit, diesen Speicherabschnitt unter 'verschiedenen Gesichtspunkten' zu betrachten. Z.B. können vier Byte wahlweise als float, long, oder als char-Array mit 4 Elementen betrachtet werden.
 
 &nbsp;
 

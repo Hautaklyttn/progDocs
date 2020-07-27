@@ -16,7 +16,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Packages</font>](#ch1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Regular Expressions</font>](#ch1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 `VARIANT` data type</font>](#ch1-6)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 ...</font>](#ch1-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Tcl modules (.tm files)</font>](#ch1-7)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 ...</font>](#ch1-8)  
 
 ### 2. Tcl - Tk
@@ -148,6 +148,28 @@ To construct a variable in Tcl of type "variant" (with subtype <type>) the follo
 ```  
 *\<type\>* is: 'bstr', 'error', 'bool', 'variant', 'decimal', 'i1', 'ui1', 'ui2', 'ui4', 'i8', 'ui8', int, 'uint'  
 *\<data\>* is the data to be converted.  
+
+&nbsp;
+
+<a name="ch1-5"></a>
+### 1.5 Tcl modules (.tm files)  
+In brief , "modules" is a vastly simplified approach to software packaging. A Tcl module is a package in a single file that can be sourced/imported. There is no 'pkgIndex.tcl' file. The package name and version are expressed in the module filename itself, so e.g. for a package 'foo' with version 3.14 the file must be named `foo-3.14.tm`.  
+
+What are the benefits?  
+- simplified deployment of packages (with some necessary formalization of layout)  
+- speed: no filesystem search in subdirectories of '$auto_path' directories  
+- speed: no need to read/parse 'pkgIndex.tcl'  
+
+**Beispiel:** Import von 'fileutil' (*fileutil-1.14.x.tm*)  
+
+- zu finden unter "...\Tcl\lib\teapot\package\tcl\teapot\tcl8\8.2\fileutil-1.14.8.tm"
+- .tm files können durch bekanntmachen ihres Ordners importiert werden:  
+  `::tcl::tm::path add <path>`  
+  \<path\>: der oben genannte absolute Pfad **ohne** den Dateinamen (*.tm)  
+- Import der Funktionalität dann mit  
+  `package require fileutil`  
+  (=> Output: '1.14.8')
+
 
 &nbsp;
 
@@ -706,7 +728,71 @@ In Tcl werden sämtliche  Befehle durch eine in C geschriebene 'Befehlsprozedur'
 
 **Konkreter Ablauf:**  
 (a) `Befehlsprozeduren`  
+Die Schnittstelle zu einer Befehlsprozedur wird in Tcl durch den Funktionsprototypen (hier: 'Tcl_CmdProc') genauestens definiert:  
+```c
+int Tcl_CmdProc(ClientData cData, Tcl_Interp *interp, int argc, char *argv[])
+```
+Die Befehlsprozedur wird von Tcl mit vier Argumenten aufgerufen wann immer der Befehl den sie implementiert in einem Interpreter ausgeführt wird.  
 
+Beispiel: Befehlsprozedur für einen Tcl-Befehl `eq` der seine beiden Argumente auf Gleichheit prüft:  
+```c
+int EqCmd (ClientData cData, Tcl_Interp *interp, int argc, char *argv[]) {
+  if (argc != 3) {
+    interp->result = "wrong #args";
+    return TCL_ERROR;
+  }
+  if(strcomp(argv[1], argv[2]) == 0) {
+    interp->result = "1";
+  } else {
+    interp->result = "0";
+  }
+  return TCL_OK;
+}
+```
+
+Die Befehlsprozedur "EqCmd" überprüft zunächst ob sie mit exakt zwei Argumenten aufgerufen wurde und weist jeden anderen Versuch ab, indem sie eine Fehlermeldung "TCL_ERROR" zurückgibt. Stimmt sie Anzahl, prüft sie sie auf Gleichheit und zeigt über einen Completion-Code von "TCL_OK" die erfolgreiche Ausführung der Operation an.  
+
+&nbsp;  
+
+(b) `Anmeldung`  
+Um Tcl einen neuen Befehl bekannt zu machen, müssen Sie eine Befehlsprozedur zunächst beim Interpreter über die Funktion `Tcl_CreateObjCommand` (veraltet: 'Tcl_CreateCommand') unter dem gewünschten Namen registrieren.  
+```c
+#include <stdio.h>
+#include <tcl.h>
+
+main(int argc, char *argv[]) {
+  Tcl_Interp *interp;
+  interp = Tcl_CreateInterp();
+  int code;
+  
+  Tcl_CreateObjCommand(interp, "eq", EqCmd, (ClientData) NULL, (Tcl_CmdDeleteProc) NULL);
+  Tcl_PkgProvide(interp, "Equality", "1.0");
+  code = Tcl_EvalFile(interp, argv[1]);
+
+  if (*interp-> result != 0) {
+    printf("%s\n", interp->result);
+  }
+  if (code != TCL_OK) { exit(1) };
+  exit(0);
+}
+```  
+
+Das erste Argument zu "Tcl_CreateObjCommand" spezifiziert dem Tcl-Interpreter, in dem der neue Befehl zur Verfügung stehen soll. Die beiden nächsten Argumente geben den Namen des Befehls und die ihn implementierende Befehlsprozedur an. Die letzten beiden Argumente der Funktion, können für so einfache Befehle wie "eq" mit 'NULL' angegeben werden. Wann immer nun der Befehl "eq" in 'interp' eingesetzt wird, ruft Tcl die C-Funktion "EqCmd" auf, um die gewünschte Operation auszuführen. Falls bereits ein Befehl dieses Namens existiert, wird er stillschweigend gelöscht und durch den neuen ersetzt.  
+Die Funktion "Tcl_PckProvide" ist optional und ist dafür gedacht, der oder den neuen Funktion(en) eine Package zuzuordnen. Dadurch wird es möglich die Funktionalität später über `package require` einzubinden.  
+
+&nbsp;
+
+(c) `Kompilieren und Erstellen der .dll`  
+
+&nbsp;
+
+(d) `Eintrag in pkgIndex.tcl`  
+Um die neue Funktionalität als Package nutzen zu können wird ein 'pkgIndex.tcl' erstellt (oder ein vorhandenes genutzt) und darin der Unterordner vermerkt aus dem die .dll geladen werden soll:  
+```c
+package ifneeded "Equality" 1.0 [list load [file join $dir <libeq> [info sharelibextension]]]
+```
+`libeq` ist der Unterordner mit der .dll.  
+Anschließend muss der Pfad der 'pkgIndex.tcl'-Datei im "auto_path" bekannt gemacht werden.
 
 &nbsp;
 

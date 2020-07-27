@@ -37,7 +37,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Windows-Prozesse beenden</font>](#ch4-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.3 .zip compression</font>](#ch4-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.4 Tcl <-> Python Interface</font>](#ch4-4)  
-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.5 Erstellen neuer Tcl-Funktionen (über .dll)](#ch4-5)   
+ 
 ### 5. IPG CarMaker
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Basics</font>](#ch5-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2 XCP</font>](#ch5-2)  
@@ -47,7 +48,7 @@ layout: default
 
 ### 6. Incr Tcl    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Fundamental Expressions</font>](#ch6-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.2 ...</font>](#ch6-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.2 Debug-Befehle</font>](#ch6-2)  
 
 &nbsp;
 
@@ -546,7 +547,166 @@ The 'socket' command with the `-server` flag starts  a server socket listening o
 ```
 socket ?options? <host> <port>
 ```
-The 'socket' command without the `-server` option opens a client connection to the system with IP address ``<host>`` and the port addredd `<port>`. The IP address may be given as a numeric string or as a fully qualified domain address. To connect to the local host, use the address 127.0.0.1 (the loopback address) or 'localhost'.
+The 'socket' command without the `-server` option opens a client connection to the system with IP address ``<host>`` and the port addredd `<port>`. The IP address may be given as a numeric string or as a fully qualified domain address. To connect to the local host, use the address 127.0.0.1 (the loopback address) or 'localhost'.   
+
+&nbsp;  
+
+When a channel exists, a handler can be defined that will be invoked when the channel is available for reading or writing. This handler is defined with the `fileevent` command. When a Tcl procedure does a `gets` or `puts` to a blocking device and the device isn't ready for I/O, the program will block until the device is ready. This may be a long while if the other end of the I/O channel has gone off line. Using the `fileevent` command, the program only accesses an I/O channel when it is ready to move data.  
+
+```
+fileevent <channelId> readable ?script?
+
+fileevent <channelId> writable ?script?
+```
+
+The `fileevent` command defines a handler to be invoked when a condition occurs. The conditions are `readable` which invokes `script` when data is ready to be read on ``<channelId>``, and `writable` when \<channelID\> is ready to receive data. Note that end-of-life must be checked for by the 'script'.  
+
+&nbsp;  
+
+Finally, there is a command to wait until an event happens. The `vwait` command will wait until a variable is set. This can be used to create a semaphore style functionality for the interaction betweeen client and server and let a controlling procedure know that an event has occured.  
+
+```
+vwait <varName>
+```
+
+The `vwait` command pauses the execution of a script until some background action sets the value of `<varName>`. A background action can be a proc invoked by a fileevent or a socket connection or an event from a Tk widget.  
+
+&nbsp;  
+
+1. Tcl server &harr; Tcl client
+  ```c
+  proc serverOpen {channel addr port} {
+      global connected
+      set connected 1
+      fileevent $channel readable "readline server $channel"
+      puts "OPENED"
+  }
+
+  proc readLine {who channel} {
+      global didRead
+      if {[gets $channel line] < 0} {
+        fileevent $channel readable {}
+        after idle "close $channel; set out 1"
+      } else {
+        puts "Read Line: $line"
+        puts $channel "This is a return."
+        flush $channel
+        set didRead 1
+      }
+  }
+
+  set connected 0
+  set server [socket -server serverOpen 33000]
+  after 100 update
+
+  set sock [socket -async 127.0.0.1 33000]
+  vwait connected
+
+  puts $sock "A Test Line"
+  flush $sock
+
+  vwait didRead
+  set len [gets $sock line]
+  puts "Return line: $len -- $line"
+
+  catch {close $sock}
+  vwait out
+  close server
+  ```
+
+&nbsp;  
+
+2. Python server &harr; Tcl client
+  ```py
+  import socket
+
+  host = ''
+  port 45000
+  s=socket.socket
+  s.bind(host,port)
+  s.listen(1)
+  print "Listening on port %d" % port
+
+  while 1:
+    try:
+      sock, addr = s.accept()
+      print "Connection from", sock.getpeername()
+      while 1:
+        data=sock,recv(4096)
+        # check if still alive
+        if len(data) == 0:
+          break
+        # ignore new lines
+        req = data.strip()
+        if len(req) == 0
+          continue
+        # point the request
+        print 'Received <-- %s' % req
+        # Do something with it
+        resp = "Hello Tcl, this is your response: %s\n" % req.encode('hex')
+        print 'Sent --> %s' %resp
+        sock.sendall(resp)
+    except socket.error, ex:
+      ...
+  ```
+
+  ```c
+  set host "127.0.0.1"
+  set port 45000
+
+  # connect to server
+  set my_sock [socket $host $port]
+
+  # disable line buffering
+  fconfigure $my_sock -buffering none
+  set i 0
+
+  while {1} {
+    # send data
+    set request "Hello Python #$i"
+    puts "Sent --> $request"
+    puts $my_sock "$request"
+
+    # wait for a response
+    gets $my_sock response
+    puts "Received <-- $response"
+    after 500
+    incr i
+    puts " "
+  }
+  ```
+
+  ```c
+  fconfigure <channelId> <name> <value>
+  ```
+
+The `fconfigure` command sets and retrieves options for channels (in this case for a 'socket').
+
+```c
+-buffering <value>
+```
+If `<value>` is 'full', then the I/O system will buffer output until its internal buffer is full or until the `flush` command is invoked. If `<value>` is 'none', the I/O system will flush automatically after every output operation.
+
+&nbsp;
+
+<a name="ch4-5"></a>
+### 4.5 Erstellen neuer Tcl-Funktionen (über .dll)  
+
+3 Gründe Funktionalität in C zu implementieren  
+
+1. Arbeit auf niedriger Ebene (hardwarenah), z.B. direkter Zugriff auf 'sockets'.  
+2. Performance: bei langwierigen, numerischen Berechnungen oder Arbeit auf einem sehr großen Datenbestand.  
+3. Komplexität: bei sehr komplexen Datenstrukturen oder sehr umfangreichen Applikation-Source-Code.  
+
+Um eine Tcl Applikation so flexibel und leistungsstark wie möglich zu gestalten, sollte man zu neu implementierten Funktionalitäten stets eine klare und einfache Schnittstelle durch eine Menge von C-Funktionen schaffen, die jeweils einen neuen Tcl-Befehl für **eine primitive Operation** implementieren. Diese primitiven Operationen kann man später viel einfacher in Tcl-Skripten zu mächtigen und vielseitigen Funktionen kombinieren.  
+
+Die zentrale Datenstruktur, um die sich nahezu alles in der Tcl-Library dreht, ist eine C-Struktur vom Typ `Tcl_Interp`. Nahezu jede Funktion der Tcl-Library erwartet einen solchen Zeiger auf 'Tcl_Interp' als Argument. Der Grund dafür ist, dass Interpreter sämtliche Informationen über den aktuellen Zustand bei der Evaluierung eines Tcl-Skriptes enthalten, sie "kennen" alle Befehle, die von einer Applikation durch C-Funktionen implementiert werden, sie "wissen" erlche Tcl-Prozeduren definiert sind und welche Variablen gerade welche Werte enthalten und sie verwalten den "Execution-Stack", der den Zustand in Ausführung befindlicher Befehle und Prozeduren widerspiegelt. Auch wenn die meisten Applikationen nur einen einzigen Tcl-Interpreter verwenden, ist es durchaus möglich, mehrere voneinander unabhängige Interpreter in einem Prozess zu verwalten.  
+
+In Tcl werden sämtliche  Befehle durch eine in C geschriebene 'Befehlsprozedur' implementiert. Wann immer ein Befehl von einem Skript aufgerufen wird, bedient sich Tcl seiner Befehlsprozedur, um die gewünschte Operation auszuführen.  
+
+**Konkreter Ablauf:**  
+(a) `Befehlsprozeduren`  
+
 
 &nbsp;
 
@@ -667,6 +827,37 @@ itcl_class <class_name> {
   common <var_name> ?init?  
 }
 ```
+
+&nbsp;
+
+<a name="ch6-1"></a>
+### 6.2 Debug-Befehle  
+
+1. Ausgabe des proc-Körpers
+    ```c
+    # Erstellen Objekt der Klasse
+    <class> rdn_obj
+    ```
+    ```c
+    # Komplettes proc (mit Argumenten)
+    rdn_obj info function <proc>
+    ```
+    oder  
+    ```c
+    # nur proc body
+    rdn_obj info function <proc> -body
+    ```  
+
+2. iTcl-Objekt auf Herkunft prüfen  
+    ```c
+    # Prüft ob <obj> ein Objekt der Klasse <class> ist
+    itcl::is object -class <class> <obj>
+    ```   
+
+    ```c
+    # Prüft ob Variable <obj> ein Objekt ist bzw ob überhaupt vorhanden
+    itcl::is object <obj>
+    ```       
 
 
 [Back](../)

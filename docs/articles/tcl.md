@@ -31,13 +31,16 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 `scan` command</font>](#ch3-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 `binary scan` command</font>](#ch3-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 Befehle für Tcl-Programm-Interna</font>](#ch3-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 `after` command</font>](#ch3-4)  
 
 ### 4. HowTo's  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Konsolenfenster manuell öffnen</font>](#ch4-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Windows-Prozesse beenden</font>](#ch4-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.3 .zip compression</font>](#ch4-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.4 Tcl <-> Python Interface</font>](#ch4-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.4 Tcl <-> Python Interface (`sockets`)</font>](#ch4-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.5 Erstellen neuer Tcl-Funktionen (über .dll)</font>](#ch4-5)   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.6 Call file in same folder</font>](#ch4-6)   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.7 Increment Characters</font>](#ch4-7)   
  
 ### 5. IPG CarMaker
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Basics</font>](#ch5-1)  
@@ -45,10 +48,14 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.3 CarMaker-interne Funktion verändern</font>](#ch5-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.4 CM Namespace ::Appl</font>](#ch5-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.5 CM Namespace ::TestMgr</font>](#ch5-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.6 CM Namespace ::SessionLog</font>](#ch5-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.7 Logging Module</font>](#ch5-7)  
+
 
 ### 6. Incr Tcl    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Fundamental Expressions</font>](#ch6-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.2 Debug-Befehle</font>](#ch6-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.3 Pointer</font>](#ch6-3)  
 
 &nbsp;
 
@@ -431,6 +438,19 @@ Gibt eine Liste aller Variablen im <namespace> zurück
 
 &nbsp;
 
+<a name="ch3-4"></a>
+### 3.4 `after` command  
+
+This command is used to *delay execution of the program* (1) or to *execute a command in the background in the future* (2).  
+
+For (1): `after <ms>`  
+\<ms\> must be an integer giving a time in milliseconds. While the command is sleeping, the application dose not respond to events.  
+
+For (2): `after <ms> ?script?`  
+In this form the command returns immediately, but it arranges for a Tcl command to be executed \<ms\> milliseconds later as an event handler. The command will be executed exactly once, at the given time.
+
+&nbsp;
+
 # HowTo's  
 
 <a name="ch4-1"></a>
@@ -488,7 +508,7 @@ eval exec -- <path/to/7z.exe> a -tzip <path/to/targetfile> <path/to/file2zip>
 &nbsp;
 
 <a name="ch4-4"></a>
-### 4.4 Tcl <-> Python Interface  
+### 4.4 Tcl <-> Python Interface (`sockets`)  
 
 **In Python &rarr; call Tcl code**  
 Suppose you have a Tcl file (*foo.tcl*) with a proc called 'main' that requires a single filename as an argument. 'main' returns a string derived from reading *foo.tcl*.  
@@ -707,7 +727,32 @@ The `fconfigure` command sets and retrieves options for channels (in this case f
 ```c
 -buffering <value>
 ```
-If `<value>` is 'full', then the I/O system will buffer output until its internal buffer is full or until the `flush` command is invoked. If `<value>` is 'none', the I/O system will flush automatically after every output operation.
+If `<value>` is 'full', then the I/O system will buffer output until its internal buffer is full or until the `flush` command is invoked. If `<value>` is 'none', the I/O system will flush automatically after every output operation.  
+
+&nbsp;
+
+Tcl also supports **non-blocking reads and writes**, and allows you to configure the sizes of the I/O buffers, and how lines are terminated.  
+
+A **non-blocking** read or write means that instead of a `gets` call waiting until data is available, it will return immediately. If there was data available, it will be read and if no data is available, the `gets` call will return a 0 length.  
+The `fblocked` and `fconfigure` commands provide more control over the behaviour of a channel.
+
+The `fblocked` command checks whether a channel has returned all available input. It is useful when you are working with a channel that has been set to non-blocking mode and you need to determine if there should be data available, or if the channel has been closed from the other end.  
+
+```c
+...
+set blocked [fblocked $channel]
+...
+set len [gets $channel line]
+...
+if {$len<0} {
+  if {$blocked} {
+    puts "Input is blocked"
+  } else {
+    puts "The socket was closed"
+    close $channel
+  }
+}
+```
 
 &nbsp;
 
@@ -793,6 +838,31 @@ package ifneeded "Equality" 1.0 [list load [file join $dir <libeq> [info shareli
 ```
 `libeq` ist der Unterordner mit der .dll.  
 Anschließend muss der Pfad der 'pkgIndex.tcl'-Datei im "auto_path" bekannt gemacht werden.
+
+&nbsp;
+
+<a name="ch4-6"></a>
+### 4.6 Call file in same folder  
+To get the path to a \<file\> that is in the same directory as the currently executing script, use  
+```c
+file join [file dirname[info script]] <file>  
+```
+
+&nbsp;
+
+<a name="ch4-7"></a>
+### 4.7 Increment Characters  
+The `incr` command only accepts integers. To count up the alphabet use the following proc:
+```c
+proc next char {
+  scan $char %c i
+  format %c [expr $i + 1]
+}
+
+next a
+
+==> Output: 'b'
+```
 
 &nbsp;
 
@@ -896,6 +966,54 @@ Appl::Terminate 1
 
 &nbsp;
 
+<a name="ch5-6"></a>
+### 5.6 CM Namespace ::SessionLog  
+
+#### 5.6.1 *proc* Übersicht  
+
+|proc|Beschreibung|  
+|:---|:---|
+|::Load|Fktn. macht ersten Check von akt. LogFile (\<fn\>). Anschließend Aufruf der Fktn. "Reload" (in 'SimOutput/\<hil\>/log/...')|  
+|::Reload|Fktn. macht zweiten Check von akt. LogFile und speichert handler in ::fd-Variable + Aufruf der Fktn. "Poll".|  
+|::Poll|Fktn. geht in "::fd"-Variable hinterlegte Liste durch und ruft Fktn. "HandleLogLine" mit jeweiliger Zeile als Parameter auf.|  
+|::HandleLogLine|Fktn. extrahiert den Text aus der Zeile und schaut ob Text einen TAG enthält (switch-case).Anschließend wird Text (entsprechend des TAGs formattiert) in letzte Zeile im SessionLog-Textfeld geschrieben.| 
+|::Popup|Fktn. ruft die Fktn. "CreateDialog" auf|  
+|::CreateDialog|Fktn. baut das SessionLog-Fenster. Es werden die TAG-Mappings erstellt mit Hilfe dieser später im Textfeld der Text farbig gemacht bzw eingerückt wird.|  
+|::Disconnect|Fktn. graut den bisherigen Text im Textfeld aus.|  
+|::Close|Fktn. schließt das SessionLog-Fenster.|  
+
+#### 5.6.2 *var* Übersicht  
+
+|var|Beschreibung|  
+|:---|:---|
+|::Title|Name des SessionLog Fensters|  
+|::Title2|Namen der oben in blau im SessionLog-Fenster erscheint (enthält akt. LogFile-Namen)|  
+|::FName|Pfad zum akt. Log-File('SimOutput/.../\<LogFile\>)|  
+|::fd|File-Handle für das aktuelle Log-File|  
+|::w_text|Handle für Textfeld im SessionLog-Fenster|  
+|::nWarnings|Anzahl der aktuell im SessionLog-Fenster angezeigten Warnings|  
+|::nErrors|Anzahl der aktuell im SessionLog-Fenster angezeigten Errors|  
+|::tw|Handle für SessionLog-Fenster|  
+
+&nbsp;
+
+<a name="ch5-7"></a>
+### 5.7 Logging Module  
+In general it seems useful to keep a history of important or unusual situations and events during the simulation of a TestRun, that does not disappear when the simulation is finished or the user turns off his computer.  
+
+Each time a CarMaker simulation program is started, it creates a new log file in the `SimOutput` subdirectory of the CarMaker project directory. Log messages are recorded in the log file with a time stamp relative to the start of the current simulation.  
+
+Log messages fall into one of the following three categories:
+
+- `Error`  
+  Issuing an error log message causes the current simulation to be aborted, so messages of this category should be reserved for cases where the program code is unable to cope with the current situation.  
+- `Warning`  
+  This category should be used for situations that are unnormal, but not critical. It means that the program code is able to handle the situation.  
+- *Purely informational messages*  
+  Use this category to inform about special events or conditions, like e.g. an ABS controller that is deactivated. It is also intended for debugging purposes.
+
+&nbsp;
+
 # Incr Tcl  
 
 <a name="ch6-1"></a>
@@ -916,7 +1034,7 @@ itcl_class <class_name> {
 
 &nbsp;
 
-<a name="ch6-1"></a>
+<a name="ch6-2"></a>
 ### 6.2 Debug-Befehle  
 
 1. Ausgabe des proc-Körpers
@@ -945,5 +1063,56 @@ itcl_class <class_name> {
     itcl::is object <obj>
     ```       
 
+&nbsp;
+
+<a name="ch6-3"></a>
+### 6.3 Pointer  
+
+Each object must have a unique name. When we use the object name as a command, there is no question about which object we are talking to. In effect, the object name in iTcl is like the memory address of an object in C++. It uniquely identifies the object.  
+
+> We can create a "pointer" to an object by saving its **name** in a variable.
+
+```c
+class obj01
+set ptr_obj01 "obj01"
+```
+
+Mit `$ptr_obj01` kann nun auf Methoden/Variablen/etc. der Klasse `class01` zugegriffen werden.  
+
+Das heisst um in einer Klasse A Objekte einer Klasse B zu kapseln, wird in Klasse A lediglich eine public-Variable erstellt (kein Objekt). Anschließend kann dann, z.B. der Konstruktor so ausgelegt werden, dass er ein oder mehrere Parameter entgegennimmt, die Objekte erwarten und diese dann den internen (Objekt-)Variablen zuweisen.  
+
+```c
+class class_02 {
+  public variable var02 2
+  ...
+}
+
+class class_03 {
+  ...
+}
+
+class class_01 {
+  public variable obj_var01
+  public variable obj_var02
+
+  constructor {obj_01 ob_j02} {
+    set obj_var01 $obj01
+    set obj_var02 $obj02
+  }
+}
+
+class_02 obj_02
+class_03 obj_03
+
+class_01 obj_01 obj_02 obj_03
+
+set val [[obj_01 cget -obj_var01] cget -var02]
+
+puts "value: $val"
+
+==> Output: "value: 2"
+```  
+
+&nbsp;
 
 [Back](../)

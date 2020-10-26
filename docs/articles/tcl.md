@@ -50,7 +50,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.5 CM Namespace ::TestMgr</font>](#ch5-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.6 CM Namespace ::SessionLog</font>](#ch5-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.7 Logging Module</font>](#ch5-7)  
-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.8 Editing KValue/NValue</font>](#ch5-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9 InfoFile Parameter Access</font>](#ch5-9)  
 
 ### 6. Incr Tcl    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Fundamental Expressions</font>](#ch6-1)  
@@ -869,7 +870,41 @@ next a
 # IPG CarMaker  
 
 <a name="ch5-1"></a>
-### 5.1 Basics
+### 5.1 Basics  
+
+#### 5.1.1 Architektur  
+
+- CM consists of several programs. *IPG Movie*, *IPG Control* and *Instruments* are all implemented as individual programs that can be started from the CarMaker GUI.  
+- 'CM simulation program' VVE  
+  Task is not to provide any kind of elaborate user interface but to perform the actual simulation of a TestRun and to interface with external hardware (e.g. a real controller unit).  
+
+&nbsp;
+
+![cm](../assets/pics/cm_arch.png)  
+
+&nbsp;  
+
+For the purpose of program interaction and coordination between them, the CarMaker simulation program plays a central role. It must react to commands sent by the CarMaker interface tools. It must register quantities that tools might want to receive on a regular basis, e.g. the quantity that contains the current simulation time or physical quantities calculated by the vehicle module inside the simulation program.  
+
+Communication between the CarMaker program is done using standard network communication mechanisms. A special CarMaker module, the APO library, implements communication services for the CarMaker programs and defines the "language" being used between them. (APO := Applications Online).  
+
+&nbsp;
+
+#### 5.1.2 Quantities / Data Dictionary  
+
+Inside the CarMaker simulation program the DataDict modules stores important variables (quantities) of the program in a data dictionary. This dictionary is the basis for the following functionality in the CarMaker environment:  
+
+- Storage of simulation results (&rarr; *IPG Control*)  
+- Availability of online data during a simulation  
+
+General Implementation  
+- The relevant `#include` file is 'DataDict.h'. It contains all necessary type definitions and function prototypes.  
+- For each basic C type (double, float, int,...) of a variable there is a corresponding function 'DDefxxx()' to register this variable in the data dictionary  
+- Variables whose values are monotonically increasing over time or whose ranges span only a limited number of discrete states should be marked accordingly using functions like 'DDefAttrib()' and 'DDEfStates()'. Visualization tools like *IPGControl* rely heavily on the correct specification of these attributes.  
+- Registering a variable in the dictionary means that you have to specify a name and a unit for the variable, and its address in memory. Furthermore the DVA write access place has to be set. If the quantity is read-only, place should be assigned *DVA_None*. Otherwise one of *DVA_IO_In*, *DVA_DM*, *DVA_VC* or *DVA_IO_Out* should be assigned as the DVA write access place.  
+- In case of success a handle to the resulting dictionary entry is returned, *NULL* otherwise. The handle may be used e.g. in subsequent calls to functions like 'DDefStates()' or 'DDefAttrib()'.  
+- Zugriff auf Quantity im Manöver erfolgt einfach über Namen, z.B. "IO_CAN1_ECMChasFr02_DLC" oder "WL.ABSWarningLamp".  
+
 
 &nbsp;
 
@@ -1010,7 +1045,49 @@ Log messages fall into one of the following three categories:
 - `Warning`  
   This category should be used for situations that are unnormal, but not critical. It means that the program code is able to handle the situation.  
 - *Purely informational messages*  
-  Use this category to inform about special events or conditions, like e.g. an ABS controller that is deactivated. It is also intended for debugging purposes.
+  Use this category to inform about special events or conditions, like e.g. an ABS controller that is deactivated. It is also intended for debugging purposes.  
+
+&nbsp;
+
+<a name="ch5-8"></a>
+### 5.8 Editing KValue/NValue  
+Setting a key value / named value: `KeyValue/NamedValue set <name> <value>`  
+Getting a key value / named value: `KeyValue/NamedValue get <name>`  
+Check for existence of variable: `KeyValue/NamedValue exists <name>`  
+Return a list of all current KeyValues/NamedValues: `KeyValue/NamedValue names`  
+Delete single element: `KeyValue/NamedValue del <name>`  
+Delete whole list: `KeyValue/NamedValue reset`  
+
+&nbsp;
+
+<a name="ch5-9"></a>
+### 5.9 Editing KValue/NValue  
+- `String` key := (key with equal (=) sign)  
+  e.g. 'CarLoad.0.mass = 50'  
+- `Text` key := (key with a colon (:), spanning multiple lines)  
+  e.g. SuspRSrping:  
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.01   -250.0  
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00   0.00  
+
+- Reading Infofile key  
+  for `String` key:  
+  &nbsp;&nbsp;&nbsp;&nbsp;`IFileRead <paramfile> key`  
+  for `Text` key:  
+  &nbsp;&nbsp;&nbsp;&nbsp;`IFileReadTxt <paramfile> key`  
+- Modifying InfoFile key  
+  for `String` key:  
+  &nbsp;&nbsp;&nbsp;&nbsp;`IFileModify <fileparam> key value`  
+  for `Text` key:  
+  &nbsp;&nbsp;&nbsp;&nbsp;`IFileModifyTxt <fileparam> key value`  
+
+The \<paramfile\>/\<fileparam\> is a placeholder for the requested Infofile.  
+
+(!) Do not forget to invoke `IFileFlush` before starting.  
+
+- Writing the changes to InfoFile  
+  &nbsp;&nbsp;&nbsp;&nbsp;`IFileFlush`  
+  Writes the changes made to Infofiles by the 'IFileModify' commands to the actual files.
+
 
 &nbsp;
 

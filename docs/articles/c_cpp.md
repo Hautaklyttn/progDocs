@@ -25,6 +25,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.2 `enum`</font>](#ch1-9-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.3 `struct`</font>](#ch1-9-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.4 `union`</font>](#ch1-9-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10 Precompiled Header</font>](#ch1-10)
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -37,6 +38,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 Addition und Subtraktion</font>](#ch3-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 Call-by-Value</font>](#ch3-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 Call-by-Reference</font>](#ch3-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.5 Pointer auf Pointer</font>](#ch3-5)  
 
 ### 4. Pointer und Arrays   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten</font>](#ch4-1)  
@@ -47,9 +49,17 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2 `switch - case`</font>](#ch5-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.3 Das Schlüsselwort `extern`</font>](#ch5-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.4 Das Schlüsselwort `static`</font>](#ch5-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.5 `printf` Formatierungszeichen</font>](#ch5-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.6 `True` and `False` in C</font>](#ch5-5)  
 
-### 6. How To's   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Emulation</font>](#ch6-1)  
+### 6. Bibliotheken   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 String</font>](#ch6-1)  
+
+### 7. How To's   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.1 Emulation</font>](#ch7-1)  
+
+### 8. Qt and QML   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 Basics</font>](#ch8-1)  
 
 &nbsp;
 
@@ -378,6 +388,15 @@ Die Eigenschaft einer 'Union' mehrere Variablen innerhalb des gleichen Speicherb
 
 &nbsp;
 
+<a name="ch1-10"></a>
+### 1.10 Precompiled Header  
+
+In computer programming, a *precompiled header* is a (C or C++) header file that is compiled into an intermediate form, that is <u>faster to process for the compiler</u>.  
+
+Usage of *precompiled headers* may significantly reduce compilation time, especially when applied to large header files or header failes that include many other header files.
+
+&nbsp;
+
 &nbsp;
 
 
@@ -511,10 +530,14 @@ Wird ein Pointer vom Typ ``int *`` um 1 erhöht, so zeigt er um ein int-Objekt w
 
 Nach der Variablen *alpha* in obigem Bild können Variablen eines anderen Typs liegen. Der Pointer lässt sich nicht beirren, er läuft im *int*-Raster weiter.
 
+&nbsp;
+
 <a name="ch3-3"></a>
 ### 3.3 Call-by-Value  
 
 In vielen Programmiersprachen werden im Normalfall Parameter an Funktionen mithilfe einer Kopie übergeben. Das wird als **call-by-value** bezeichnet. Das bedeutet, dass innerhalb der aufgerufenen Funktion mit der Kopie gearbeitet wird und sich Änderungen nicht auf den ursprünglichen Wert auswirken.
+
+&nbsp;
 
 <a name="ch3-4"></a>
 ### 3.4 Call-by-Reference
@@ -576,6 +599,55 @@ int main () {
 }
 ````
 
+&nbsp;
+
+<a name="ch3-5"></a>
+### 3.5 Pointer auf Pointer  
+
+|||
+|:---:|:---:|
+|\*ptr | Pointer zeigt auf eine Speicherstelle|
+|\*\*ptr|  Pointer zeigt auf einen Pointer|
+|||
+
+Man hat einen Zeiger der auf einen Zeiger zeigt, der auf eine Variable zeigt und auf diese Variable zugreifen kann. Es wird dabei von *mehrfacher Indirektion* gesprochen. Am häufigsten werden Zeiger im Zusammenhang mit Arrays von Zeigern eingesetzt.  
+
+```c
+int matrix [zeile][spalte]
+```
+
+```c
+int **matrix;
+matrix = malloc(zeile * sizeof(int));        //Reservierung für Speicher für die Zeile
+
+for (i=0; y<zeile; i++) {                    
+  matrix[i] = malloc(spalte * sizeof(int));  //Reservierung für Speicher für die Spalte
+  if (NULL == matrix[i]) {
+    printf("Kein Speicher mehr!");
+  }
+}
+```
+
+![04](../assets/pics/ptr_to_ptr.png)  
+
+&nbsp;
+
+- Äquivalenz zwischen Zeigern und mehrdimensionalen Arrays:
+
+|Zugriff auf|Möglichkeit 1|Möglichkeit 2|Möglichkeit 3|
+|:---:|:---:|:---:|:---:|
+|1.Zeile, 1.Spalte|\*\*matrix|\*matrix[0]|matrix[0][0]|
+|i.Zeile, 1.Spalte|\*\*(matrix+i)|\*matrix[i]|matrix[i][0]|
+|1.Zeile, i.Spalte|\*(*matrix+i)|\*matrix[0]+i|matrix[0][i]|
+|i.Zeile, j.Spalte|\*(\*(matrix+i)+j)|\*matrix[i]+j|matrix[i][j]|  
+
+Wie im Falle der eindimensionalen Arrays gilt auch für die mehrdimensionalen Arrays, dass der Name des Arrays auf das erste Element des Arrays verweist. Für unser obiges Beispiel bedeutet dies, dass *matrx* ein Zeiger auf das erste Element des als *int matrix[4][3]* deklarierten Arrays ist. Was aber genau ist das erste Element von *matrix*? Es ist nicht die int-Variable *matrix[0][0]*! Denken Sie daran, dass *matrix* ein Array von Arrays ist. Das erste Element ist daher *matrix[0]* - ein Array von drei int-Variablen (und eines der vier untergeordneten Arrays aus *matrix*).  
+
+Wenn aber *matrix[0]* ein Array ist, stellt sich die Frage, ob *matrix[0]* selbst wieder auf etwas verweist. Und tatsächlich, *matrix[0]* zeigt auf das erste Element *matrix[0][0]*, d.h. es ist ein Zeiger! Denken Sie daran, dass der Name eines Arrays ohne Klammern ein Zeiger auf das erste Element darstellt. Der Ausdruck *matrix[0]* ist der Name des Arrays *matrix[0][0]* ohne das letzte Klammernpaar und damit ein Zeiger.  
+
+Folgende Regel gilt für n-dimensionale Arrays:
+- Der Array-Name gefolgt von n Klammernpaaren (wobei jedes Paar einen passenden Index einschließt) wird zu Array-Daten (genauer gesagt, zu den Daten aus dem spez. Array-Element) ausgewertet.
+- Der Array-Name gefolgt von weniger als n Klammernpaaren wird zu einem Zeiger auf ein Array-Element ausgewertet.
 
 &nbsp;  
 
@@ -793,14 +865,147 @@ Statische Variablen und Methoden werden aufgrund ihres Zweckes ohne Klasseninsta
 <Klassenname>::<Methode> (<Argumente>);
 ```
 
+&nbsp;  
+
+<a name="ch5-5"></a>
+### 5.5 ``printf`` Formatierungszeichen  
+
+```c
+printf ("<text> %<format>\n", <Wert>);
+```
+
+Die Formatierung bei *printf* wird mittels Formatierungszeichen realisiert. Häufig benutzte Zeichen sind:  
+- *%d* &nbsp; Decimal signed integer (also *%i*)
+- *%o* &nbsp; Octal integer
+- *%x* &nbsp; Hex integer (also *%X*)
+- *%u* &nbsp; unsigned integer
+- *%c* &nbsp; Character
+- *%s* &nbsp; String
+- *%f* &nbsp; double/floating
+- *%e* &nbsp; double (also *%E*)
+- *%g* &nbsp; double (also *%G*)
+- *%p* &nbsp; Zeiger
+
+Die Flags müssen nach einem *%* stehen.  
+Es können in einem Befehl mehrere Flags verwendet werden. Die entsprechende Anzahl Werte (*\<Wert\>*) ist dann, durch Kommas getrennt, anzufügen.  
+
+**Genauigkeit:** `%8.2f`  
+Das heißt z.B., dass ein Bereich von 8 Zeichen für ein float/double-Ausgabe reserviert werden soll. Die letzten beiden Stellen werden für die Nachkommastellen reserviert.  
+
+`%#08x`, z.B. ``printf("%#08x\n", 7);`` &rarr; Output: `0x000007`  
+
+d.h. das *0x* zählt zu den 8 Characters der Ausgabe! Für 8 Digits nach dem *0x* muss es `%#010x` heißen.
+
+&nbsp;  
+
+<a name="ch5-6"></a>
+### 5.6 `True` and `False` in C  
+
+The C programming language doesn't have a concept of a boolean variable, i.e. a type class that can be either `true` or `false`. Why bother when you can use numerical values:  
+> In C 'true' is represented by any numerical value not equal to 0 and 'false' is represented by 0.  
+
+This fact is usually well hidden and can be ignored, but it does allow you to write  
+```c
+if (a != 0)
+// just as
+if (a)
+```
+
+&nbsp;
+
+&nbsp;
+
+# Bibliotheken
+
+<a name="ch6-1"></a>
+### 6.1 String  
+
+Um String-Funktionen nutzen zu können, muss die Bibliothek *string.h* eingebunden werden.  
+&nbsp;
+
+**strlen (char \*str)**  
+Funktion ermittelt die Länge eines Strings bzw. die Anzahl seiner Zeichen.  
+
+&nbsp;
+
+**char \*strcpy (char \*dest, char \*src)**  
+Mit *string copy* können wir den Inhalt eines Strings kopieren.  
+- *\*dest* ist Zeiger auf Ziel-Array
+- *\*src* ist Zeiger auf Quell-Array
+
+Rückgabewert ist char-Zeiger auf Ziel-Array.
+
+```c
+char textA[5] = "abc";
+printf("textA: %s", textA);    // textA: abc
+
+strcpy(textA, "xyz");
+printf("textA: %s", textA);    // textA: xyz
+```
+
+**char \*strcpy (char \*dest, char \*src, int n)**  
+Mit *strcpy* kopiert man n Zeichen von *src* nach *dest*. Das String-Ende-Zeichen (*\\0*) muss manuell gesetzt werden.  
+
+&nbsp;
+
+**char \*strcat (char \*dest, char \*src)**  
+Mit *strcat* können wir Strings verketten, also aneinenaderhängen. Das Ergebnis wird in *dest* gespeichert.
+
+**char \*strncat (char \*dest, char \*src, int n)**  
+Mit *strncat* können wir n Zeichen ans *src* anhängen.  
+
+&nbsp;
+
+**int \*strcmp (char \*str1, char \*str2)**  
+Mit *strcmp* können wir zwei Strings vergleichen.  
+Rückgabewerte:  
+- 0 := die Strings sind gleich
+- \>0 := das erste ungleiche Zeichen in *str1* ist größer als in *str2*
+- \<0 := das erste ungleiche Zeichen in *str1* ist kleiner als in *str2*  
+
+**int \*strncmp (char \*str1, char \*str2, int n)**  
+Mit *strncmp* und dem Parameter n können wir die ersten n Zeichen der Strings vergleichen.
+
+&nbsp;
+
+**char \*strstr (char \*string, char \*needle)**  
+Mit *strstr* können wir nach Zeichenketten in einem String suchen. Der Rückgabewert ist die Adresse vom Anfang des gefundenen *needle* in String (gespeichert in *needle*) ansonsten *NULL*.  
+
+&nbsp;
+
+**char \*strchr (char \*s, int c)**  
+Mit *string char* können wir ein Zeichen in einem String suchen. Das zu suchende Zeichen wird mit dem Parameter *c* als ASCII-Code übergeben. Rückgabewert ist *NULL* wenn Zeichen nicht gefunden, ansonsten Adresse des ersten gefundenen Zeichens.  
+
+&nbsp;
+
+**char \*strtok (char \*str1, char \*delimiters)**  
+Mit *strtok* können wir einen String anhand von Trennzeichen zerteilen und die einzelnen Abschnitte herauslesen. Die Trennzeichen werden im Parameter *delimiter* übergeben.  
+Beim ersten Aufruf muss *strtok* mit einem String initialisiert werden. Die Rückgabe ist hierbei der erste Abschnitt. Bei Folgeaufrufen wird statt *string* der *NULL*-Wert übergeben, da *strtok* bereits initialisiert ist und intern einen Zeiger auf *String* gespeichert hat. Der Zeiger *ptr*, welcher den Rückgabewert abfängt, zeigt auf das erste Zeichen des jeweiligen Abschnitts in *string*. Das jeweilige Ende wird mit *\\0* in *string* gesetzt, d.h. der String wird verändert. Man sollte bei *strtok* immer eine Kopie des Strings verwenden.  
+
+```c
+char string[] = "Kurt; ist, der; Größte";
+char delimiter[] = ",;";
+ptr strtok(string, delimiter);    // Initialisieren und ersten Abschnitt erstellen
+
+while (ptr != NULL) {
+  printf("Ausgabe: %s\n", ptr);
+  ptr = strtok(NULL, delimiter);
+}
+
+// Ausgabe: Kurt
+// Ausgabe: ist 
+// Ausgabe: der
+// Ausgabe: Größte
+```
+
 &nbsp;
 
 &nbsp;
 
 # How To's
 
-<a name="ch6-1"></a>
-### 6.1 Emulation <font size="-1">(hier 'Prozessor Emulation')</font>  
+<a name="ch7-1"></a>
+### 7.1 Emulation <font size="-1">(hier 'Prozessor Emulation')</font>  
 
 Basic Idea  
 > "Emulation is realised by handling the behaviour of the processor and the individual components.  
@@ -850,6 +1055,27 @@ Das heisst der spätere Ablauf auf dem Zielsystem wäre dann:
    5. Ausführung auf *System B* 
 
 
-&nbsp;
+&nbsp; 
+
+# Qt and QML  
+
+> "Qt is a cross platform development framework written in C++."
+
+<a name="ch8-1"></a>
+### 8.1 Basics  
+
+- Qt was originally for user interfaces - now for everything (e.g. databases, XML, WebKits, multimedia, networking, OpenGL, scripting, etc.)
+- Qt extends C++ with macros and introspection  
+
+  ````c
+  foreach (int value, intList) {...}         // macro
+
+  QObject *o = new QPushButton;
+  o->metaObject()->classObject();            // introspection (returns "QPushButton")
+
+  connect(button, SIGNAL(clicked()), window, SLOT (close()));      // macro
+  ````
+
+
 
 [Back](../)

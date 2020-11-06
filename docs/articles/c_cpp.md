@@ -1059,23 +1059,67 @@ Das heisst der spätere Ablauf auf dem Zielsystem wäre dann:
 
 # Qt and QML  
 
-> "Qt is a cross platform development framework written in C++."
-
-<a name="ch8-1"></a>
-### 8.1 Basics  
+> "Qt is a cross platform development framework written in C++."  
 
 - Qt was originally for user interfaces - now for everything (e.g. databases, XML, WebKits, multimedia, networking, OpenGL, scripting, etc.)
 - Qt extends C++ with macros and introspection  
 
   ````c
-  foreach (int value, intList) {...}         // macro
+  foreach (int value, intList) {...}     // macro
 
   QObject *o = new QPushButton;
-  o->metaObject()->classObject();            // introspection (returns "QPushButton")
+  o->metaObject()->classObject();        // introspection (returns "QPushButton")
 
-  connect(button, SIGNAL(clicked()), window, SLOT (close()));      // macro
+  connect(button, SIGNAL(clicked()), window, SLOT (close()));    // macro
   ````
 
+&nbsp; 
+
+<a name="ch8-1"></a>
+### 8.1 Basics  
+ 
+````c
+#include <QApplication>
+#include <QLabel>
+
+int main (int argc, char **argv) {
+  QApplication app(argc, argv);
+  QLabel l("Hello World!");
+  l.show();
+  return app.exec();
+}
+````
+
+**QApplication**:  
+Jede Applikation enthält genau eine (!) Instanz dieser Klasse. Sie hält das Ganze zusammen und bewerkstelligt die Kommunikation zwischen Benutzer und den Objekten. Wichtig: am Ende der Main-Methode der *exec()* - Aufruf.  
+
+**QObject**:  
+QObject ist die Basisklasse von nahezu allen QT-Klassen und allen Widgets. Sie enthält viele der Machanismen die Qt ausmachen, z.b. Events, *Signals&Slots* oder Speichermanagement.  
+
+**QWidget**:  
+abgeleitet von der 'Urklasse' *QObject*, stellt eine Instanz der Klasse QWidget ein grafisches Element dar. Die Klasse Widget bringt viele der Methoden mit, um das Aussehen, Größe, Position auf dem Bildschirm, etc. zu verändern. Mit *show()* wird das Widget angezeigt, mit *hide()* versteckt. Jedes Widget wird innerhalb dessen Vater-Widgets dargestellt.  
+
+&nbsp;
+
+**[Meta Data]**  
+- Qt implements introspection in C++  
+    - every QObject has a meta object
+    - the meta object knows about  
+        - class name (QObject::className)
+        - inheritance (QObject::inherits)
+        - properties
+        - signals and slots
+        - general information (QObject::classInfo)
+- The meta data is gathered at compile time by the *meta object compiler* (moc)
+- The *moc* harvests data from the header  
+
+&nbsp;
+
+![emu](../assets/pics/mocs_qt.png)  
+
+&nbsp;
+
+- What does *moc* look for?
 
 
 [Back](../)

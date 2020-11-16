@@ -51,7 +51,9 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.6 CM Namespace ::SessionLog</font>](#ch5-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.7 Logging Module</font>](#ch5-7)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.8 Editing KValue/NValue</font>](#ch5-8)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9 InfoFile Parameter Access</font>](#ch5-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9 InfoFile Handling</font>](#ch5-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9.1 Parameter Access</font>](#ch5-9-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9.2 C Functions</font>](#ch5-9-2)  
 
 ### 6. Incr Tcl    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Fundamental Expressions</font>](#ch6-1)  
@@ -1061,7 +1063,11 @@ Delete whole list: `KeyValue/NamedValue reset`
 &nbsp;
 
 <a name="ch5-9"></a>
-### 5.9 Editing KValue/NValue  
+### 5.9 InfoFile Handling
+
+<a name="ch5-9-1"></a>
+#### 5.9.1 Parameter Access  
+
 - `String` key := (key with equal (=) sign)  
   e.g. 'CarLoad.0.mass = 50'  
 - `Text` key := (key with a colon (:), spanning multiple lines)  
@@ -1088,6 +1094,68 @@ The \<paramfile\>/\<fileparam\> is a placeholder for the requested Infofile.
   &nbsp;&nbsp;&nbsp;&nbsp;`IFileFlush`  
   Writes the changes made to Infofiles by the 'IFileModify' commands to the actual files.
 
+&nbsp;
+
+<a name="ch5-9-2"></a>
+#### 5.9.2 C functions  
+
+`InfoNew()`  
+Creates a new instance of type 'tInfos' (=Infofile handle). Returns the newly created Infofile handle.  
+Bsp.: `TestIOIFile = InfoNew();`  
+
+`InfoDelete(tInfos *inf)`  
+Deletes the specified Infofile handle, i.e. deallocates all data associated with it. Returns 0 in case of success, -1 otherwise.  
+
+`InfoRead(tErrorMsg **perrors, tInfos *inf, const char *filename)`  
+Reads the file 'filename' and stores the Infofile data read in handle 'inf'.  
+
+'perrors' := pointer to an array that will contain any errors generated during the reading of the infofile date  
+'inf' := Infofile handle that will be used to store the information read  
+'filename' := name of the Infofile to be read  
+
+```c
+tErrorMsg *pMessage = NULL;  
+InfoRead(&pMessage, TestIOIFile, "Data/Misc/ConfigFile")
+```
+
+`InfoWrite(tInfos *inf, const char *filename)`  
+Writes the information contained in Infofile handle 'inf' to the file specified by 'filename'. Returns 0 on success, any other value indicates error.  
+
+`InfoGetStr(char **pval, tInfos *inf, const char *key)`  
+Gets the string value of 'key' located in the InfoFile buffer that is specified with the handle 'inf'. Returns 0 on success, -1 otherwise.  
+
+'pval' := pointer to the value that is read from the infofile buffer  
+'inf' := tInfos handle to the Infofile buffer  
+'key' := Name of the key to read  
+
+Bsp: `InfoGetStr(&VehConf.Variant, TestIOIFile, "VehicleConfig.Variant");`  
+
+`InfoGetLong(long **pval, tInfos *inf, const char *key)`  
+Gets the long int value of 'key'.  
+
+`InfoGetDbl(double *pval, tInfos *inf, const char *key)`  
+Gets the double value of 'key'.  
+
+`InfoGetTxt(char ***pval, tInfos *inf, const char *key)`  
+Gets the text string value of 'key'.  
+
+`InfoSetStr(tInfos *inf, const char *key, const char *val)`  
+Set the value of 'val' to 'key'. If the specified key does not exist then one will be created. Returns 0 on success, -1 otherwise.  
+
+'inf' := tInfos handle to the Infofile buffer  
+'key' := Name of the key to be set  
+'val' := New value to be written to the key  
+
+`InfoSetLong(tInfos *inf, const char *key, long val)`  
+Set the value of 'val' to 'key'.  
+
+`InfoSetDbl(tInfos *inf, const char *key, double val)`  
+Set the value of 'val' to 'key'.  
+
+`InfoSetTxt(tInfos *inf, const char *key, char **val)`  
+Set the value of 'val' to 'key'.  
+
+&nbsp;
 
 &nbsp;
 

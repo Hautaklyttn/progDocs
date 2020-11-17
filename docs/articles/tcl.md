@@ -1099,61 +1099,61 @@ The \<paramfile\>/\<fileparam\> is a placeholder for the requested Infofile.
 <a name="ch5-9-2"></a>
 #### 5.9.2 C functions  
 
-`InfoNew()`  
-Creates a new instance of type 'tInfos' (=Infofile handle). Returns the newly created Infofile handle.  
-Bsp.: `TestIOIFile = InfoNew();`  
+- `InfoNew()`  
+  Creates a new instance of type 'tInfos' (=Infofile handle). Returns the newly created Infofile handle.  
+  Bsp.: `TestIOIFile = InfoNew();`  
 
-`InfoDelete(tInfos *inf)`  
-Deletes the specified Infofile handle, i.e. deallocates all data associated with it. Returns 0 in case of success, -1 otherwise.  
+- `InfoDelete(tInfos *inf)`  
+  Deletes the specified Infofile handle, i.e. deallocates all data associated with it. Returns 0 in case of success, -1 otherwise.  
 
-`InfoRead(tErrorMsg **perrors, tInfos *inf, const char *filename)`  
-Reads the file 'filename' and stores the Infofile data read in handle 'inf'.  
+- `InfoRead(tErrorMsg **perrors, tInfos *inf, const char *filename)`  
+  Reads the file 'filename' and stores the Infofile data read in handle 'inf'.  
 
-'perrors' := pointer to an array that will contain any errors generated during the reading of the infofile date  
-'inf' := Infofile handle that will be used to store the information read  
-'filename' := name of the Infofile to be read  
+  'perrors' := pointer to an array that will contain any errors generated during the reading of the infofile date  
+  'inf' := Infofile handle that will be used to store the information read  
+  'filename' := name of the Infofile to be read  
 
-```c
-tErrorMsg *pMessage = NULL;  
-InfoRead(&pMessage, TestIOIFile, "Data/Misc/ConfigFile")
-```
+  ```c
+  tErrorMsg *pMessage = NULL;  
+  InfoRead(&pMessage, TestIOIFile, "Data/Misc/ConfigFile")
+  ```
 
-`InfoWrite(tInfos *inf, const char *filename)`  
-Writes the information contained in Infofile handle 'inf' to the file specified by 'filename'. Returns 0 on success, any other value indicates error.  
+- `InfoWrite(tInfos *inf, const char *filename)`  
+  Writes the information contained in Infofile handle 'inf' to the file specified by 'filename'. Returns 0 on success, any other value indicates error.  
 
-`InfoGetStr(char **pval, tInfos *inf, const char *key)`  
-Gets the string value of 'key' located in the InfoFile buffer that is specified with the handle 'inf'. Returns 0 on success, -1 otherwise.  
+- `InfoGetStr(char **pval, tInfos *inf, const char *key)`  
+  Gets the string value of 'key' located in the InfoFile buffer that is specified with the handle 'inf'. Returns 0 on success, -1 otherwise.  
 
-'pval' := pointer to the value that is read from the infofile buffer  
-'inf' := tInfos handle to the Infofile buffer  
-'key' := Name of the key to read  
+  'pval' := pointer to the value that is read from the infofile buffer  
+  'inf' := tInfos handle to the Infofile buffer  
+  'key' := Name of the key to read  
 
-Bsp: `InfoGetStr(&VehConf.Variant, TestIOIFile, "VehicleConfig.Variant");`  
+  Bsp: `InfoGetStr(&VehConf.Variant, TestIOIFile, "VehicleConfig.Variant");`  
 
-`InfoGetLong(long **pval, tInfos *inf, const char *key)`  
-Gets the long int value of 'key'.  
+- `InfoGetLong(long **pval, tInfos *inf, const char *key)`  
+  Gets the long int value of 'key'.  
 
-`InfoGetDbl(double *pval, tInfos *inf, const char *key)`  
-Gets the double value of 'key'.  
+- `InfoGetDbl(double *pval, tInfos *inf, const char *key)`  
+  Gets the double value of 'key'.  
 
-`InfoGetTxt(char ***pval, tInfos *inf, const char *key)`  
-Gets the text string value of 'key'.  
+- `InfoGetTxt(char ***pval, tInfos *inf, const char *key)`  
+  Gets the text string value of 'key'.  
 
-`InfoSetStr(tInfos *inf, const char *key, const char *val)`  
-Set the value of 'val' to 'key'. If the specified key does not exist then one will be created. Returns 0 on success, -1 otherwise.  
+- `InfoSetStr(tInfos *inf, const char *key, const char *val)`  
+  Set the value of 'val' to 'key'. If the specified key does not exist then one will be created. Returns 0 on success, -1 otherwise.  
 
-'inf' := tInfos handle to the Infofile buffer  
-'key' := Name of the key to be set  
-'val' := New value to be written to the key  
+  'inf' := tInfos handle to the Infofile buffer  
+  'key' := Name of the key to be set  
+  'val' := New value to be written to the key  
 
-`InfoSetLong(tInfos *inf, const char *key, long val)`  
-Set the value of 'val' to 'key'.  
+- `InfoSetLong(tInfos *inf, const char *key, long val)`  
+  Set the value of 'val' to 'key'.  
 
-`InfoSetDbl(tInfos *inf, const char *key, double val)`  
-Set the value of 'val' to 'key'.  
+- `InfoSetDbl(tInfos *inf, const char *key, double val)`  
+  Set the value of 'val' to 'key'.  
 
-`InfoSetTxt(tInfos *inf, const char *key, char **val)`  
-Set the value of 'val' to 'key'.  
+- `InfoSetTxt(tInfos *inf, const char *key, char **val)`  
+  Set the value of 'val' to 'key'.  
 
 &nbsp;
 

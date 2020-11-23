@@ -60,6 +60,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9 InfoFile Handling</font>](#ch5-9)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9.1 Parameter Access</font>](#ch5-9-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9.2 C Functions</font>](#ch5-9-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.10 *APO* Grundlagen</font>](#ch5-10)  
 
 ### 6. Incr Tcl    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Fundamental Expressions</font>](#ch6-1)  
@@ -1306,6 +1307,28 @@ Set the value of 'val' to 'key'.
 
 `InfoSetTxt(tInfos *inf, const char *key, char **val)`  
 Set the value of 'val' to 'key'.  
+
+&nbsp;
+
+<a name="ch5-10"></a>
+### 5.10 *APO* Grundlagen  
+
+*APO* := Applications Online
+
+The APO is a communications library used to pass messages back and forth between server applications abd a client application. The servers and clients can be running on the same host, on two or more hosts running on the same OS and being connected by a network, or on two or more hosts running on a different OS and being connected by a network.  
+The APO library is a higher level library, built over TCP (stream) and UDP (datagram) sockets and is intended to provide the user with a simple programming interface, while still maintaining the flexibility required by most time critical applications.  
+
+*APO Broker Demon*  
+To understand how it is possible for multiple servers, multiple clients and multiple hosts to function together simultaneously, it is necessary to introduce the APO broker demon and describe its role.  
+The APO broker demon is an application that runs on each host that a server resides. Only one broker per host is needed. The primary role of the broker is to maintain a current list of the servers that are running on the broker's host computer, and to relay this information to the clients when requested.  
+For each server entry the broker also maintains additional information about each server that could be used by the client for identification, e.g. the server's class, identity and description.  
+
+![apo](../assets/pics/apo_comm.png)  
+
+`A` := Client queries broker and list of servers is returned  
+`B` := Client/Server communication  
+`C` := Variables are passed to client from server  
+`D` := Server tells broker "I'm alive"  
 
 &nbsp;
 

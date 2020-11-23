@@ -22,11 +22,10 @@ layout: default
 ### 2. Tcl - Tk
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Fenster aufsetzen</font>](#ch2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Befehle zum Ermitteln von GUI-Inhalten</font>](#ch2-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.1 Funktionalität hinter Menüpunkt</font>](#ch2-2-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.2 Fenster-bezogene Informationen ermitteln - `winfo`</font>](#ch2-2-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.3 Widget-bezogene Informationen ermitteln - `cget`</font>](#ch2-2-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.4 Menü-bezogene Informationen ermitteln - `entrycget`</font>](#ch2-2-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.5 Menü-Eintrag hinzufügen</font>](#ch2-2-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.1 Fenster-bezogene Informationen ermitteln - `winfo`</font>](#ch2-2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.2 Widget-bezogene Informationen ermitteln - `cget`</font>](#ch2-2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.3 Menü-bezogene Informationen ermitteln - `entrycget`</font>](#ch2-2-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.4 Menü-Eintrag hinzufügen</font>](#ch2-2-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Unterdrückung des leeren `wish`-Fensters</font>](#ch2-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 `grid` Layout Manager</font>](#ch2-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Darstellung dynamischer Daten (2D-Plot)</font>](#ch2-5)  
@@ -212,13 +211,7 @@ wm resizable $w 0 0               // feste Fenstergröße
 ### 2.2 Befehle zum Ermitteln von GUI-Inhalten  
 
 <a name="ch2-2-1"></a>
-#### 2.2.1 Funktionalität hinter Menüpunkt  
-z.B `.mbar.rts.m entrycget 4 -command`  (am Beispiel IPG CarMaker)  
-liefert die Funktion die im DropDown-Menü "Realtime System" an vierter Stelle hinterlegt ist.  
-&nbsp;
-
-<a name="ch2-2-2"></a>
-#### 2.2.2 Fenster-bezogene Informationen ermitteln - `winfo`  
+#### 2.2.1 Fenster-bezogene Informationen ermitteln - `winfo`  
 The *winfo* command is used to retrieve information about windows managed by Tk. It can take any number of different forms, depending on the *option* argument.  
 ```c
 winfo <option> ?arg...arg?
@@ -251,8 +244,8 @@ Returns a decimal string giving \<window\>'s y-coordinate (upper-left corner)
 Returns the class name for \<window\>, i.e. it returns the kind of widget (e.g. 'label')  
 &nbsp;  
 
-<a name="ch2-2-3"></a>
-#### 2.2.3 Widget-bezogene Informationen ermitteln - `cget`  
+<a name="ch2-2-2"></a>
+#### 2.2.2 Widget-bezogene Informationen ermitteln - `cget`  
 Um widget-Parameter zu ermitteln (z.B. '-text' oder '-command') wird der einfache *cget*-Befehl verwendet:  
 ```c
 <window> cget -<param>
@@ -261,8 +254,8 @@ Um widget-Parameter zu ermitteln (z.B. '-text' oder '-command') wird der einfach
 \<param\> := Parameter handle, z.B. *command* oder *text*  
 &nbsp;  
 
-<a name="ch2-2-4"></a>
-#### 2.2.4 Menü-bezogene Informationen ermitteln - `entrycget`  
+<a name="ch2-2-3"></a>
+#### 2.2.3 Menü-bezogene Informationen ermitteln - `entrycget`  
 Um Informationen über Menüeinträgen zu ermitteln (z.B. '-label' oder '-command') wird der *entrycget*-Befehl verwendet:  
 ```c
 <menu_handle> entrycget <index> -<param>
@@ -270,10 +263,13 @@ Um Informationen über Menüeinträgen zu ermitteln (z.B. '-label' oder '-comman
 \<menu_handle\> := Menu handle, z.B. *.mbar.file.m*  
 \<index\> := Integerwert (0,1,..), bezeichnet Stelle im Menü  
 \<param\> := Parameter handle, z.B. *command* oder *label*  
+
+z.B `.mbar.rts.m entrycget 4 -command`  (am Beispiel IPG CarMaker)  
+liefert die Funktion die im DropDown-Menü "Realtime System" an vierter Stelle hinterlegt ist.  
 &nbsp;  
 
-<a name="ch2-2-5"></a>
-#### 2.2.5 Menü-Eintrag hinzufügen  
+<a name="ch2-2-4"></a>
+#### 2.2.4 Menü-Eintrag hinzufügen  
 Um einen neuen Menüpunkt an beliebiger Stelle im Untermenü hinzuzufügen:  
 ```c
 <menu_handle> insert <index> <type> -lab <name> -comm <befehl>

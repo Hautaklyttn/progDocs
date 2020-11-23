@@ -21,7 +21,12 @@ layout: default
 
 ### 2. Tcl - Tk
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Fenster aufsetzen</font>](#ch2-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Funktionalität hinter Menüpunkt</font>](#ch2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Befehle zum Ermitteln von GUI-Inhalten</font>](#ch2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.1 Funktionalität hinter Menüpunkt</font>](#ch2-2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.2 Fenster-bezogene Informationen ermitteln - `winfo`</font>](#ch2-2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.3 Widget-bezogene Informationen ermitteln - `cget`</font>](#ch2-2-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.4 Menü-bezogene Informationen ermitteln - `entrycget`</font>](#ch2-2-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.5 Menü-Eintrag hinzufügen</font>](#ch2-2-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Unterdrückung des leeren `wish`-Fensters</font>](#ch2-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 `grid` Layout Manager</font>](#ch2-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Darstellung dynamischer Daten (2D-Plot)</font>](#ch2-5)  
@@ -32,6 +37,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 `binary scan` command</font>](#ch3-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 Befehle für Tcl-Programm-Interna</font>](#ch3-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 `after` command</font>](#ch3-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.5 `clipboard` (Windows-Zwischenspeicher)</font>](#ch3-4)  
 
 ### 4. HowTo's  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Konsolenfenster manuell öffnen</font>](#ch4-1)  
@@ -41,6 +47,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.5 Erstellen neuer Tcl-Funktionen (über .dll)</font>](#ch4-5)   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.6 Call file in same folder</font>](#ch4-6)   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.7 Increment Characters</font>](#ch4-7)   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.8 XML Handling</font>](#ch4-8)   
  
 ### 5. IPG CarMaker
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Basics</font>](#ch5-1)  
@@ -202,10 +209,73 @@ wm resizable $w 0 0               // feste Fenstergröße
 &nbsp;
 
 <a name="ch2-2"></a>
-### 2.2 Funktionalität hinter Menüpunkt
+### 2.2 Befehle zum Ermitteln von GUI-Inhalten  
 
+#### 2.2.1 Funktionalität hinter Menüpunkt  
 z.B `.mbar.rts.m entrycget 4 -command`  (am Beispiel IPG CarMaker)  
 liefert die Funktion die im DropDown-Menü "Realtime System" an vierter Stelle hinterlegt ist.  
+&nbsp;
+
+#### 2.2.2 Fenster-bezogene Informationen ermitteln - `winfo`  
+The *winfo* command is used to retrieve information about windows managed by Tk. It can take any number of different forms, depending on the *option* argument.  
+```c
+winfo <option> ?arg...arg?
+```  
+
+**Commands:**  
+
+`winfo children <windows>`  
+Returns a list containing the path names of all children of the window.  
+
+`winfo geometry <window>`  
+Returns the geometry for \<window\> in the form *width x height + x + y*. All dimensions are in pixels.  
+
+`winfo exists <window>`  
+Returns '1' if there exists a window named \<window\>, '0' if no such window exists.  
+
+`winfo height <window>`/`winfo width <window>`  
+Returns a decimal string giving \<window\>'s height and width in pixels.  
+
+`winfo id <window>`  
+Returns a hexadecimal string goving a low-level identifier for \<window\> (in Windows: *HWND*)  
+
+`winfo x <window>`  
+Returns a decimal string giving \<window\>'s x-coordinate (upper-left corner)  
+
+`winfo y <window>`  
+Returns a decimal string giving \<window\>'s y-coordinate (upper-left corner)  
+
+`winfo class <window>`  
+Returns the class name for \<window\>, i.e. it returns the kind of widget (e.g. 'label')  
+&nbsp;  
+
+#### 2.2.3 Widget-bezogene Informationen ermitteln - `cget`  
+Um widget-Parameter zu ermitteln (z.B. '-text' oder '-command') wird der einfache *cget*-Befehl verwendet:  
+```c
+<window> cget -<param>
+```  
+\<window\> := Fenster handle, z.B. *.f.btn.start*  
+\<param\> := Parameter handle, z.B. *command* oder *text*  
+&nbsp;  
+
+#### 2.2.4 Menü-bezogene Informationen ermitteln - `entrycget`  
+Um Informationen über Menüeinträgen zu ermitteln (z.B. '-label' oder '-command') wird der *entrycget*-Befehl verwendet:  
+```c
+<menu_handle> entrycget <index> -<param>
+```  
+\<menu_handle\> := Menu handle, z.B. *.mbar.file.m*  
+\<index\> := Integerwert (0,1,..), bezeichnet Stelle im Menü  
+\<param\> := Parameter handle, z.B. *command* oder *label*  
+&nbsp;  
+
+#### 2.2.5 Menü-Eintrag hinzufügen  
+Um einen neuen Menüpunkt an beliebiger Stelle im Untermenü hinzuzufügen:  
+```c
+<menu_handle> insert <index> <type> -lab <name> -comm <befehl>
+```  
+\<type\> := Typ des Eintrags (z.B. *command* (Standard) / *checkbutton* / *radiobutton*)  
+\<name\> := gewünschter Name im Menü  
+\<befehl\> := aufzurufendes Tcl-File oder Tcl-Proc  
 
 &nbsp;  
 
@@ -450,7 +520,26 @@ For (1): `after <ms>`
 \<ms\> must be an integer giving a time in milliseconds. While the command is sleeping, the application dose not respond to events.  
 
 For (2): `after <ms> ?script?`  
-In this form the command returns immediately, but it arranges for a Tcl command to be executed \<ms\> milliseconds later as an event handler. The command will be executed exactly once, at the given time.
+In this form the command returns immediately, but it arranges for a Tcl command to be executed \<ms\> milliseconds later as an event handler. The command will be executed exactly once, at the given time.  
+
+&nbsp;
+
+<a name="ch3-5"></a>
+### 3.5 `clipboard` (Windows-Zwischenspeicher)  
+```c  
+clipboard <option> ?arg...arg?  
+```  
+
+This command provides a Tcl interface to the Windows clipboard ("Zwischenablage"), which stores data for later retrieval. In order to copy data (=Strg+C) into the clipboard, *clipboard clear* must be called followed by a sequence of one or more calls to *clipboard append*.  
+
+`clipboard append ?-format <format>? <data>`  
+Appends \<data\> to the clipboard on Window's display with the representation given by \<format\> (optional)  
+
+`clipboard clear`  
+Removes any previous contents from clipboard.  
+
+`clipboard get`  
+Retrieves data from clipboard and returns it.
 
 &nbsp;
 
@@ -869,6 +958,68 @@ next a
 
 &nbsp;
 
+<a name="ch4-8"></a>
+### 4.8 XML handling  
+
+1. **XML-Datei-Handler anlegen**  
+   `tDOM::xmlOpenFile` expects a filename and returns a file channel handle. This handle gets feeded into a `dom parse -channel ...`.  
+   ```c
+   set xmlfd [tDOM::xmlOpenFile $filename]
+   set doc [dom parse -channel $xmlfd]
+   close $xmlfd
+   ```
+
+2. **XML namespace**  
+   Durch ":" getrennte Bezeichner sind 'namespace'-Bereiche, d.h. der Wert vor dem ":" bezeichnet den namespace. Um aus dem namespace-Unterbereich Werte auszulesen, ist es nötig im Vorfeld ein *namespace prefix* mapping durchzuführen.  
+   Namespace-Bereiche im XML-File beginnen (normalerweise) mit einem Mapping  
+   `xmlns:<ns-name> = <adresse>`  
+   Hier wird \<ns-name\> der angegebenen \<adresse\> zugeordnet. Dieses Mapping muss in den Tcl-Code überführt werden durch Anlegen einer entsprechenden Variable, z.B.  
+   `set nsmap {<ns_name> <adresse>}`  
+&nbsp;
+3. **XML-Wert auslesen**  
+   Will man einen Variablenwert aus einem XML-Unterbereich auslesen, gilt (nach Erstellen des handle):  
+   `$doc selectNodes -namespace $nsmap <XML-Pfad zur Variable>`  
+   &nbsp;
+   ```xml
+   <faList>
+      <id name="F40_0130_EKE_LL_0719">
+         <ns1:fa xmlns:ns1="http://bmw.com">
+            <ns1:header createdBy="qxi9921">
+               <ns1:saCodes>
+                  <ns1:saCode>240</ns1:saCode>
+                  <ns1:saCode>249</ns1:saCode>
+                  <ns1:saCode>548</ns1:saCode>
+               </ns1:saCodes>
+    ...
+   ```
+   &nbsp;
+   ```c
+   set nsmap [ms1 http://bmw.com]
+   set a [$doc selectNodes -namespace $nsmap {string(/faList/id/@name)}]
+
+   => a:= "F40_0130_EKE_LL_0719"
+   ```
+   **Einzelnen Wert auslesen**
+   ```c
+   set a [$doc selectNodes -namespace $nsmap {string(/faList/id/ns1:fa/ns1:header/@createdBy)}]
+
+   => a:= "qxi9921"
+   ```
+   **Wertebereich auslesen (hier: alle 'saCodes')**
+   ```c
+   set node [$doc selectNodes -namespace $nsmap /faList/id/ns1:fa/ns1:header/ns1:saCodes/ns1:saCode]
+
+   => "node" enthält jetzt 'handle' für alle Einträge 'saCode'.
+
+   foreach _node $node {Log [$node text]}
+
+   => Ausgabe: 240
+               249
+               248
+   ```
+
+&nbsp;
+
 # IPG CarMaker  
 
 <a name="ch5-1"></a>
@@ -1099,61 +1250,61 @@ The \<paramfile\>/\<fileparam\> is a placeholder for the requested Infofile.
 <a name="ch5-9-2"></a>
 #### 5.9.2 C functions  
 
-- `InfoNew()`  
-  Creates a new instance of type 'tInfos' (=Infofile handle). Returns the newly created Infofile handle.  
-  Bsp.: `TestIOIFile = InfoNew();`  
+`InfoNew()`  
+Creates a new instance of type 'tInfos' (=Infofile handle). Returns the newly created Infofile handle.  
+Bsp.: `TestIOIFile = InfoNew();`  
 
-- `InfoDelete(tInfos *inf)`  
-  Deletes the specified Infofile handle, i.e. deallocates all data associated with it. Returns 0 in case of success, -1 otherwise.  
+`InfoDelete(tInfos *inf)`  
+Deletes the specified Infofile handle, i.e. deallocates all data associated with it. Returns 0 in case of success, -1 otherwise.  
 
-- `InfoRead(tErrorMsg **perrors, tInfos *inf, const char *filename)`  
-  Reads the file 'filename' and stores the Infofile data read in handle 'inf'.  
+`InfoRead(tErrorMsg **perrors, tInfos *inf, const char *filename)`  
+Reads the file 'filename' and stores the Infofile data read in handle 'inf'.  
 
-  'perrors' := pointer to an array that will contain any errors generated during the reading of the infofile date  
-  'inf' := Infofile handle that will be used to store the information read  
-  'filename' := name of the Infofile to be read  
+'perrors' := pointer to an array that will contain any errors generated during the reading of the infofile date  
+'inf' := Infofile handle that will be used to store the information read  
+'filename' := name of the Infofile to be read  
 
-  ```c
-  tErrorMsg *pMessage = NULL;  
-  InfoRead(&pMessage, TestIOIFile, "Data/Misc/ConfigFile")
-  ```
+```c
+tErrorMsg *pMessage = NULL;  
+InfoRead(&pMessage, TestIOIFile, "Data/Misc/ConfigFile")
+```
 
-- `InfoWrite(tInfos *inf, const char *filename)`  
-  Writes the information contained in Infofile handle 'inf' to the file specified by 'filename'. Returns 0 on success, any other value indicates error.  
+`InfoWrite(tInfos *inf, const char *filename)`  
+Writes the information contained in Infofile handle 'inf' to the file specified by 'filename'. Returns 0 on success, any other value indicates error.  
 
-- `InfoGetStr(char **pval, tInfos *inf, const char *key)`  
-  Gets the string value of 'key' located in the InfoFile buffer that is specified with the handle 'inf'. Returns 0 on success, -1 otherwise.  
+`InfoGetStr(char **pval, tInfos *inf, const char *key)`  
+Gets the string value of 'key' located in the InfoFile buffer that is specified with the handle 'inf'. Returns 0 on success, -1 otherwise.  
 
-  'pval' := pointer to the value that is read from the infofile buffer  
-  'inf' := tInfos handle to the Infofile buffer  
-  'key' := Name of the key to read  
+'pval' := pointer to the value that is read from the infofile buffer  
+'inf' := tInfos handle to the Infofile buffer  
+'key' := Name of the key to read  
 
-  Bsp: `InfoGetStr(&VehConf.Variant, TestIOIFile, "VehicleConfig.Variant");`  
+Bsp: `InfoGetStr(&VehConf.Variant, TestIOIFile, "VehicleConfig.Variant");`  
 
-- `InfoGetLong(long **pval, tInfos *inf, const char *key)`  
-  Gets the long int value of 'key'.  
+`InfoGetLong(long **pval, tInfos *inf, const char *key)`  
+Gets the long int value of 'key'.  
 
-- `InfoGetDbl(double *pval, tInfos *inf, const char *key)`  
-  Gets the double value of 'key'.  
+`InfoGetDbl(double *pval, tInfos *inf, const char *key)`  
+Gets the double value of 'key'.  
 
-- `InfoGetTxt(char ***pval, tInfos *inf, const char *key)`  
-  Gets the text string value of 'key'.  
+`InfoGetTxt(char ***pval, tInfos *inf, const char *key)`  
+Gets the text string value of 'key'.  
 
-- `InfoSetStr(tInfos *inf, const char *key, const char *val)`  
-  Set the value of 'val' to 'key'. If the specified key does not exist then one will be created. Returns 0 on success, -1 otherwise.  
+`InfoSetStr(tInfos *inf, const char *key, const char *val)`  
+Set the value of 'val' to 'key'. If the specified key does not exist then one will be created. Returns 0 on success, -1 otherwise.  
 
-  'inf' := tInfos handle to the Infofile buffer  
-  'key' := Name of the key to be set  
-  'val' := New value to be written to the key  
+'inf' := tInfos handle to the Infofile buffer  
+'key' := Name of the key to be set  
+'val' := New value to be written to the key  
 
-- `InfoSetLong(tInfos *inf, const char *key, long val)`  
-  Set the value of 'val' to 'key'.  
+`InfoSetLong(tInfos *inf, const char *key, long val)`  
+Set the value of 'val' to 'key'.  
 
-- `InfoSetDbl(tInfos *inf, const char *key, double val)`  
-  Set the value of 'val' to 'key'.  
+`InfoSetDbl(tInfos *inf, const char *key, double val)`  
+Set the value of 'val' to 'key'.  
 
-- `InfoSetTxt(tInfos *inf, const char *key, char **val)`  
-  Set the value of 'val' to 'key'.  
+`InfoSetTxt(tInfos *inf, const char *key, char **val)`  
+Set the value of 'val' to 'key'.  
 
 &nbsp;
 

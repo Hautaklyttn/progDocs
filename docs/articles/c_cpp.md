@@ -55,8 +55,9 @@ layout: default
 ### 6. Bibliotheken   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 String</font>](#ch6-1)  
 
-### 7. How To's   
+### 7. How To's & Special Syntax   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.1 Emulation</font>](#ch7-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2 `#define DECLARE_HANDLE(n)` (Windows API Code)</font>](#ch7-2)  
 
 ### 8. Qt and QML   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 Basics</font>](#ch8-1)  
@@ -1059,6 +1060,31 @@ Das heisst der spätere Ablauf auf dem Zielsystem wäre dann:
    4. Compiler übersetzt den Code in Assembler ausführbar auf *System B*  
    5. Ausführung auf *System B* 
 
+&nbsp; 
+
+<a name="ch7-2"></a>
+### 7.2 `#define DECLARE_HANDLE(n)` (Windows API Code)  
+```c
+#define DECLARE_HANDLE(n) typedef struct n##__{int i;}*n
+
+DECLARE_HANDLE(HWND);
+```
+> "##" means connect the parameter.
+
+So the macro equals:
+`typedef struct HWND__{int i;}*HWND`
+
+The main purpose of this construct is to prevent the misuse of handles. If all handles are simply *void \** or *int* or *long long* or some other basic type, there is nothing to prevent you from using one instead of another. A pointer to a struct HWND__ and pointer to struct HBITMAP__ isn't the same thing, so if you have a the following code:  
+```c
+HWND hwnd;
+HBITMAP hbmp;
+
+hbmp = GetBitmap(...);
+hwnd = hbmp;    // gives compiler error. 
+```
+It's a fairly classic technique to ensure that you get unique types for something that the API supplier don't want to provide the true declaration for. 
+
+Handles don't actually point to anything in memory; they are just used to refer to objects (files, resource, semaphores, windows) when making calls to the Windows API. While they're nothing more than just indexes into kernel's object tables, the developers decided that they make it a pointer to an unused structure which would make them "opaque" and cause less confusion between other types. The *DECLARE_HANDLE* is a function macro that does just that - declaring opaque types for handles.
 
 &nbsp; 
 

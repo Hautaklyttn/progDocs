@@ -1392,6 +1392,7 @@ For each server entry the broker also maintains additional information about eac
       `info breakpoints`: list of breakpoints  
       `disable`: disable <breakpointNr>  
       `quit`: leave gbd  
+  
       (!) `bt full`: summary of how your program got where it is  
 
 &nbsp;

@@ -17,7 +17,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Regular Expressions</font>](#ch1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 `VARIANT` data type</font>](#ch1-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Tcl modules (.tm files)</font>](#ch1-5)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 ...</font>](#ch1-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Variable Aliases</font>](#ch1-6)  
 
 ### 2. Tcl - Tk
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Fenster aufsetzen</font>](#ch2-1)  
@@ -60,7 +60,10 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9 InfoFile Handling</font>](#ch5-9)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9.1 Parameter Access</font>](#ch5-9-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9.2 C Functions</font>](#ch5-9-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.10 *APO* Grundlagen</font>](#ch5-10)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.10 'APO' Grundlagen</font>](#ch5-10)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.11 CM Quantites</font>](#ch5-11)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.12 CM Debugging</font>](#ch5-12)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.13 Auslesen von InfoFiles aus Projekt</font>](#ch5-13)  
 
 ### 6. Incr Tcl    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Fundamental Expressions</font>](#ch6-1)  
@@ -187,6 +190,19 @@ What are the benefits?
   `package require fileutil`  
   (=> Output: '1.14.8')
 
+&nbsp;
+
+<a name="ch1-6"></a>
+### 1.6 Variable Aliases  
+
+While Tcl provides the command `interp aliases` to create command aliases, Tcl provides at first glance no mechanism to create variable aliases. However the Tcl command `upvar` cannot only refer to variables of a different stack frame, but 'upvar' can also refer to variables inside the same stack frame. This can be considered as a variable alias.  
+The following example creates a variable 'v' which is then referred by the variable 'a':  
+```c
+set v 123
+upvar 0 v a
+
+puts $a    // Output: "123"
+```
 
 &nbsp;
 
@@ -1330,6 +1346,76 @@ For each server entry the broker also maintains additional information about eac
 `C` := Variables are passed to client from server  
 `D` := Server tells broker "I'm alive"  
 
+&nbsp;
+
+<a name="ch5-11"></a>
+### 5.11 CM Quantities  
+
+`Quantities` are defined and updated by the server and read by the client. In CarMaker a quantity (such as velocity or steering wheel angle) would be modified by the running CarMaker vehicle model (the server) and sent to any clients (e.g. *IPG Control*) that asked to be informed about that quantity. A client that requests a certain quantity to be delivered at a specified interval is said to have <u>subcribed</u> to that variable.  
+
+&nbsp;
+
+<a name="ch5-12"></a>
+### 5.12 CM Debugging  
+
+1. **Compilation with the debugger option**  
+   - In your *src* directory, command: `make clean`  
+   - Add the following lines to your *Makefile*:  
+     `OPT_CFLAGS: "make"`  
+   - Command: `make`  
+  &nbsp;
+2. **Starting the program with debugger**
+   1. Öffne Kommandozeile (`cmd`)  
+   2. `telnet <hil_name>` (<u>Login:</u> ``hil``, <u>Passwort:</u> `CarMaker`)  
+   3. 'Naviation zu 'home': `cd ..`
+   4. Navigation zu Projektordner: e.g. `cd /Projects/<project_folder>`  
+   5. Starten des Debuggers:  
+      `gdb --args ./bin/CarMaker.xeno -io <io_options>` oder  
+      `gdb --args ./src/CarMaker.xeno -io <io_options>`  
+      (xeno in *src* hat die größere Debuggerausgabe!)  
+   6. Optional: Breakpoints setzen  
+      - `break <function_name>`
+      - `break <file_name>:<line>`
+   7. Start Debugging: `run -screen -constdt -nhs -sst`  
+       - *-screen*: no logfile, write message to screen
+       - *-constdt*: CarMaker accepts cycle time overrruns
+       - *-sst*: run simulation in a single thread
+       - *-nhs*: do no special handling for signals  
+   &nbsp;
+   If you didn't start the program with a TestRun, you can now connect your GUI and start a simulation manually. You can interrupt the program manually pressing Ctr-C otherwise, if you run on a breakpoint, the program will stop.
+   8. Useful commands after Run:  
+      `w`: show where you are  
+      `c`: continue
+      `s`: step (one step further, step into functions)  
+      `n`: next (one step further, not into functions)  
+      `p`: 'p*<Pointer>' for content or p<Pointer> for memory access  
+      `info breakpoints`: list of breakpoints  
+      `disable`: disable <breakpointNr>
+      `quit`: leave gbd
+      (!) `bt full`: summary of how your program got where it is  
+
+&nbsp;
+
+<a name="ch5-13"></a>
+### 5.13 Auslesen von InfoFiles aus Projekt  
+
+```c
+int iGetInt(const struct tInfos *Inf, const char *key)  
+long iGetLong(const struct tInfos *Inf, const char *key)  
+double iGetDbl(const struct tInfos *Inf, const char *key)  
+char iGetStr(const struct tInfos *Inf, const char *key)  
+char** iGetTxt(const struct tInfos *Inf, const char *key)  
+```
+
+mit `inf` := InfoFile handle oder 'SimCore_<var>.Inf'  
+mit `key` := InfoFile key  
+
+`SimCore.<var>.Inf` :=  
+aktueller TestRun : `SimCore.TestRun.Inf`  
+aktuelles Fahrzeug : `SimCore.Vhcl.Inf`  
+
+(!) Einbinden von *SimCore.h* nicht vergessen (`#include "SimCore.h"`)
+  
 &nbsp;
 
 &nbsp;

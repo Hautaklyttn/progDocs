@@ -1381,17 +1381,17 @@ For each server entry the broker also maintains additional information about eac
        - *-constdt*: CarMaker accepts cycle time overrruns
        - *-sst*: run simulation in a single thread
        - *-nhs*: do no special handling for signals  
-   &nbsp;
+   &nbsp;  
    If you didn't start the program with a TestRun, you can now connect your GUI and start a simulation manually. You can interrupt the program manually pressing Ctr-C otherwise, if you run on a breakpoint, the program will stop.
    8. Useful commands after Run:  
       `w`: show where you are  
       `c`: continue
       `s`: step (one step further, step into functions)  
       `n`: next (one step further, not into functions)  
-      `p`: 'p*<Pointer>' for content or p<Pointer> for memory access  
+      `p`: 'p*\<Pointer\>' for content or p\<Pointer\> for memory access  
       `info breakpoints`: list of breakpoints  
-      `disable`: disable <breakpointNr>
-      `quit`: leave gbd
+      `disable`: disable <breakpointNr>  
+      `quit`: leave gbd  
       (!) `bt full`: summary of how your program got where it is  
 
 &nbsp;

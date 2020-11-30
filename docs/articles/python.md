@@ -794,7 +794,7 @@ Ein Server ist unter einer bestimmten Adresse im Netzwerk erreichbar und operier
                komm.close()
                break
             
-            print "[%s]%s % (addr[0], data)
+            print "[%s] %s" % (addr[0], data)
             nachricht = raw_input("Antwort:")
             komm.send(nachricht)
    finally:

@@ -278,8 +278,11 @@ def ref_demo(x):
 ```
 
 Ruft man diese Funktion auf und überprüft gleichzeitig mittels der build-in-Funktion *id()* die Identität der Variable x, stellt man fest, dass das globale x so lange dem lokalen x der Funktion entspricht, bis man x in der Funktion einen anderen Wert zuweist.  
+
 &nbsp;
+
 ![cb](../assets/pics/callBy_py.png)   
+
 &nbsp;
 
 So verhält sich Python zuerst wie *call-by-reference*, dann wie *call-by-value*.  

@@ -19,8 +19,11 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Python Virtual Machine (PVM)</font>](#ch1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Variablen in Python</font>](#ch1-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Strings</font>](#ch1-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5.1 Execute String containing Python code</font>](#ch1-5-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Aufruf eines Python-Skripts (*.py)</font>](#ch1-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Decorators</font>](#ch1-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.8 `import`</font>](#ch1-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9 `call-by-value` / `call-by-reference`</font>](#ch1-9)  
 
 ### 2. Functions
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basic Functions</font>](#ch2-1)  
@@ -47,6 +50,9 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2 Regular Expressions</font>](#ch5-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2.1 Basics</font>](#ch5-2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2.2 Syntax regulärer Ausdrücke</font>](#ch5-2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.3 Sockets</font>](#ch5-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.4 Code Quality Metrics</font>](#ch5-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.5 Access Windows Applications using COM</font>](#ch5-5)  
 
 &nbsp;
 
@@ -161,6 +167,26 @@ h
 
 &nbsp;
 
+<a name="ch1-5-1"></a>
+#### 1.5.1 Execute String containing Python code  
+
+For statements use `exec(string)` (Python 2/3) or `exec string` (Python 2):  
+
+```py
+>>> mycode = 'print "hello world"'
+>>> exec(mycode)
+'hello world'
+```
+When you need the value of an expression, use `eval (string)`:  
+
+```py
+>>> x=eval("2+2")
+>>> x
+4
+```
+
+&nbsp;
+
 <a name="ch1-6"></a>
 ### 1.6 Aufruf eines Python-Skripts (\*.py)
 
@@ -189,6 +215,86 @@ The *staticmethod* decorator modifies a method function so that it does not use 
 The *classmethod* decorator modifies a method function so that it receives the class object as the first parameter instead of an instance of the class. This method function will have access to the class object itself.  
 The 'classmethod' decorator is used to create singleton classes. This is a python technique for defining an object which is also the one and only instance. This gives us a very handy, easy-to-read way to segregate attributes into a separate part of a class declaration.  
 Generally, a function decorated with *@classmethod* is used for introspection of a class. An introspection method looks at the structure or features of the class, not the values of the specific instance.
+
+&nbsp;
+
+<a name="ch1-8"></a>
+### 1.8 `import`  
+- Use classes & functions defined in another file  
+- A python module is a file with the same name (plus the *.py* extension)  
+
+Three formats of the command:  
+1. `import somefile`
+   - Everything in *somefile.py* gets imported.
+   - To refer to sth in the file, append the text 'somefile.' to the front of its name, e.g.  
+     ```py
+     somefile.className.method('abc')
+     somefile.myFunc('123')
+     somefile.var123
+     ```
+   &nbsp;
+2. `from somefile import *`
+   - Everything in *somefile.py* gets imported.
+   - To refer to sth in the module, just use its name. Everything in the module is now in the current namespace, e.g.  
+     ```py
+     className.method('abc')
+     myFunc('123')
+     var123
+     ```
+   &nbsp;  
+3. `from somefile import className`  
+   - Only the item 'className' gets imported.  
+   - After import only 'className' can be used without module prefix.
+
+&nbsp;  
+
+*Where does python look for module files?*  
+The list of directories where Python will look for the files to be imported is *sys.path*. This is just a variable named 'path' stored inside the 'sys' module, i.e.  
+```py
+import sys
+sys.path
+   => ["", /Library/Frameworks/..., ...]
+```  
+
+To add a directory of your own to this list, append it to the list:  
+```py
+sys.path.append('/my/new/path')
+```
+
+&nbsp;
+
+<a name="ch1-9"></a>
+### 1.9 `call-by-value` / `call-by-reference`  
+In vielen Büchern oder Einführungen in Python liest man dass Python den einen oder den anderen Übergabemechanismus habe. Was ist nun richtig?  
+
+Die Autoren *dehnen* die ursprünglichen Begriffe, so dass sie passen. Python benutzt einen Mechanismus, den man als "Call-by-Object" (auch "Call by Object Reference" oder "Call by Sharing") bezeichnet.  
+
+Beim Aufruf einer Funktion werden bei Python nicht Zeiger auf Variablen sondern Zeiger auf zugrundeliegende Objekte übergeben, insofern könnte man von einer Art Referenzübergabe sprechen. Zur Erklärung das folgende Beispiel:  
+```py
+def ref_demo(x):
+   print "x=",x," id=",id(x)
+   x=42
+   print "x=",x," id=",id(x)
+```
+
+Ruft man diese Funktion auf und überprüft gleichzeitig mittels der build-in-Funktion *id()* die Identität der Variable x, stellt man fest, dass das globale x so lange dem lokalen x der Funktion entspricht, bis man x in der Funktion einen anderen Wert zuweist.  
+&nbsp;
+![cb](../assets/pics/callBy_py.png)   
+&nbsp;
+
+So verhält sich Python zuerst wie *call-by-reference*, dann wie *call-by-value*.  
+
+```py
+>>> x=9
+>>> ref_demo(x)
+x=9  id=29488104
+x=42 id=29489304
+
+>>> id(x)
+29489304
+```
+
+Allerdings kann man beim Aufruf im Gegensatz zu einem echten *call-by-reference* beliebige Ausdrücke, wie bei der Wertübergabe übergeben.  
 
 &nbsp;
 
@@ -627,6 +733,148 @@ r"P\w*yth\dn"
 ```
 &rarr; Reg. Ausdruck passt auf die Wörter "Pyth0n" oder "P_th1n", bspw jedoch nicht auf "Python".  
 &nbsp;  
+
+&nbsp;
+
+<a name="ch5-3"></a>
+## 5.3 Sockets  
+
+Das Modul *socket* der Standardbibliothek bietet grundlegende Funktionalität zur Netzwerkkommunikation.  
+
+Die Idee, die hinter der *socket* API steckt, ist die, dass das Programm, das Daten über die Netzwerkschnittstelle senden oder empfangen möchte, dies beim Betriebssystem anmeldet und von diesem einen sogenannten 'Socket' (dt. Steckdose) bekommt. Über diesen Socket kann das Programm jetzt eine Netzwerkverbindung zu einem anderen Socket aufbauen. Dabei spielt es keine Rolle, ob sich der Zielsocket auf demselben Rechner, einem Rechner im lokalen Netzwerk oder einem Rechner im Internet befindet.  
+
+&nbsp;
+
+![so](../assets/pics/sockets_py.png)  
+
+&nbsp;
+
+Eine Kommunikation zwischen zwei Rechnern A und B (genauer: zwischen Prozessen auf diesen Rechnern) benötigt die IP-Adressen der beteiligten Rechner sowie die Ports:  
+**A** (IP-Adresse, Port) &harr; **B** (IP-Adresse, Port)  
+
+Ein Server ist unter einer bestimmten Adresse im Netzwerk erreichbar und operiert passiv, das heißt, er wartet auf eingehende Verbindungen. Sobald eine Verbindungsanfrage eines Clients eintrifft, wird, sofern der Server die Anfrage akzeptiert, ein neuer Socket erzeugt, über den die Kommunikation mit diesem speziellen Client läuft.  
+
+*client endpoints* : endpoint of a conversation  
+*server socket* : more like a switchboard operator  
+
+- Socket vs Webservice
+  In a nutshell sockets are what web services use to communicate with their client. You can send any random bytes over a socket. When you use a web service, data is sent usding a standard format that makes it easy for the client to parse the data. Additionally using raw sockets gives you the benefit of control.  
+
+&nbsp;
+
+- Ablauf **Verbindungsaufbau**  
+  Zunächst wird im Serverprogramm der sogenannte *Verbindungssocket* erzeugt. Das ist ein Socket der ausschließlich dazu gedacht ist, auf eingehende Verbindungen zu horchen und diese ggfs. zu akzeptieren. Über den Verbindungssocket läuft keine Kommunikation. Durch Aufruf der Methoden *bind* und *listen* wird der Verbindungssocket an eine Netzwerkadresse gebunden und dazu instruiert, nach einkommenden Verbindungsanfragen zu lauschen.  
+
+  Nachdem eine Verbindungsanfrage eingetroffen ist und mittels *accept* akzeptiert wurde, wird ein neuer Socket, der sog. 'Kommunikationssocket' erzeugt. Über einen solchen Kommunikationssocket wird die vollständige Kommunikation zwischen Server und Client über Methoden wie *send* und *recv* abgewickelt. Beachten Sie, dass ein Kommunikationssocket immer nur für einen verbundenen Client zuständig ist.  
+
+  Die Struktur des Client ist vergleichsweise einfach. So gibt es bspw. nur einen Kommunikationssocket, über den mithilfe der Methode *connect* eine Verbindungsanfrage an einen bestimmten Server gesendet werden kann. Danach erfolgt, ähnlich wie beim Server, die tatsächliche Kommunikation über Methoden wie *send* oder *recv*.  
+  &nbsp;
+
+  (1) Server
+  ```py
+  import socket
+
+  host=''
+  port=45000
+
+  s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.bind((host,port))
+  s.listen(1)
+
+  try:
+      while True:
+         komm, addr = s.accept()
+         while True
+            data=komm.recv(1024)
+
+            if not data
+               komm.close()
+               break
+            
+            print "[%s]%s % (addr[0], data)
+            nachricht = raw_input("Antwort:")
+            komm.send(nachricht)
+   finally:
+      s.close()
+  ```
+
+  - Es wird "AF_INET" für das IPv4-Protokoll und "SOCK_STREAM" für die Verwendung von TCP übergeben. Damit ist der Socket nur in seiner Reinform instanziiert. Der Socket muss an eine IP-Adresse und einen Port gebunden werden.
+  &nbsp;
+
+  (2) Client
+  ```py
+  import socket
+
+  ip=raw_input("IP-Adresse: ")
+  s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect((ip,50000))
+
+  try
+     while True:
+        nachricht=raw_input("Nachricht:")
+        s.send(nachricht)
+        antwort=s.recv(1024)
+        print "[%s] %s" % (ip,antwort)
+   finally
+      s.close()
+  ```  
+  - Auf der Clientseite wird der instanziierte Socket s  durch Aufruf der Methode *connect* mit dem Verbindungspartner verbunden. Die Methode *connect* verschickt genau die Verbindungsanfrage, die beim Server durch *accept* akzeptiert werden kann. Wenn die Verbindung abgelehnt wurde, wird eine Exception geworfen.  
+  - In Python, you use `socket.setblocking(0)` to make it <u>non-blocking</u>. The major mechanical difference is that *send*, *recv*, *connect* and *accept* can return without having done anything.
+&nbsp;
+
+&nbsp;
+
+<a name="ch5-4"></a>
+## 5.4 Code Quality Metrics  
+There are several popular Python tools that measure various metrics for Python developes, ranging from general code quality to specific metrics, like duplicated code or complexity. You can measure the cyclomatic complexity of your code with either *pygenie* or *pymetrics*.  
+
+*What is your cyclomatic complexity?*  
+Cyclomatic complexity is a software metric, developed by Thomas J. McCabe in 1976, to determine a program's complexity. The metric measures the number of linearly independent paths, or branches, through source code. According to McCabe, it is best to keep the complexity of a method below 10. This is important because research into human memory has determined that 7 (plus or minus 2) is the magical number of items that a human can hold in short term memory.  
+
+If a developer is working on code that has 50 linearly independent paths, then they are roughly exceeding five times the capacity of short term memory in keeping track of what is occuring in that method.  Simpler methods that don't tax all of a human's short term memory are easier to work with  and have been proven to be less error prone. You can find a strong correlation between cyclomatic complexity and faultiness.  
+
+&nbsp;
+
+<a name="ch5-5"></a>
+## 5.5 Access Windows Applications using COM  
+Python has the "Python for Windows Extension" package known as *pywin32* that allows us to easily access Window's component object model (COM) and control Microsoft applications via Python.  
+
+All of these applications start with similar imports and process for activating an application. Here is a short example of opening up Excel:  
+
+```py
+# Importieren des COM-Moduls
+import win32com.client as win32    
+
+# Erstellen eines COM-Objekts
+excel=win32.gencache.EnsureDispatch ("Excel.Application")
+
+# Excel startet sichtbar auf
+excel.visible=True
+
+# Erstellen eines neuen 'Workbooks'
+wb=excel.Worksbooks.Add()
+ws=wb.Worksheets("<name_tab>")
+
+# Öffnen Workbook
+wb=excel.Workbooks.Open("test_file.xlsx")
+
+# Speichern+Schließen
+wb.SaveAs("test_file.xlsx")
+excel.Application.Quit()
+
+# Neues Worksheet
+ws_new=wb.Worksheets.Add()  # Werden vorne eingefügt
+ws_new.Name="MyNewSheet"    # Worksheet umbenennen
+
+# Zellenwert ändern
+ws_new.Cells(2,2).Value="Eintrag xy"
+
+# Farbe in Zelle ändern
+ws_new.Cells(3,3).Interior.ColorIndex=#000000
+
+# Zellenwert auslesen
+value=ws_new.Cells(2,2).Value
+```
 
 &nbsp;
 

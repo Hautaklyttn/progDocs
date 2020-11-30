@@ -265,39 +265,52 @@ sys.path.append('/my/new/path')
 
 <a name="ch1-9"></a>
 ### 1.9 `call-by-value` / `call-by-reference`  
-In vielen Büchern oder Einführungen in Python liest man dass Python den einen oder den anderen Übergabemechanismus habe. Was ist nun richtig?  
+Je nach Programmiersprache gibt es unterschiedliche Möglichkeiten wie Argumente übergeben werden:
 
-Die Autoren *dehnen* die ursprünglichen Begriffe, so dass sie passen. Python benutzt einen Mechanismus, den man als "Call-by-Object" (auch "Call by Object Reference" oder "Call by Sharing") bezeichnet.  
+**call-by-value**: Hier wird funktionsintern mit Kopien der als Parameter übergebenen Instanzen gearbeitet.
 
-Beim Aufruf einer Funktion werden bei Python nicht Zeiger auf Variablen sondern Zeiger auf zugrundeliegende Objekte übergeben, insofern könnte man von einer Art Referenzübergabe sprechen. Zur Erklärung das folgende Beispiel:  
-```py
-def ref_demo(x):
-   print "x=",x," id=",id(x)
-   x=42
-   print "x=",x," id=",id(x)
-```
+*Vor- Nachteile*: Eine Funktion kann keine Änderungen von Instanzen aus dem Hauptprogramm bewirken, erzeugt jedoch unter Umständen einen erheblichen Overhead.
 
-Ruft man diese Funktion auf und überprüft gleichzeitig mittels der build-in-Funktion *id()* die Identität der Variable x, stellt man fest, dass das globale x so lange dem lokalen x der Funktion entspricht, bis man x in der Funktion einen anderen Wert zuweist.  
+**call-by-reference**: Dabei wird funktionsintern mit Referenzen (Pointer) auf die im Hauptprogramm befindlichen Instanzen gearbeitet.
 
-&nbsp;
+*Vor- Nachteile*: “Schlanke” Calls da keine Daten erzeugt werden, jedoch besteht die Gefahr, dass eine Funktion Instanzen aus dem Hauptprogramm ändern kann.
 
-![cb](../assets/pics/callBy_py.png)   
+Python verwendet diesbezüglich eine <u>Mischform</u>.
 
-&nbsp;
-
-So verhält sich Python zuerst wie *call-by-reference*, dann wie *call-by-value*.  
+Eine **call-by-reference** gibt es nur bei <u>veränderbaren Datentypen</u> (**list, dict**).  
 
 ```py
->>> x=9
->>> ref_demo(x)
-x=9  id=29488104
-x=42 id=29489304
-
->>> id(x)
-29489304
+>>> def test(liste):
+...     liste += [5,6,7]
+...
+>>> zahlen = [1,2,3]
+>>> print zahlen
+[1, 2, 3]
+>>> test(zahlen)
+>>> print zahlen
+[1, 2, 3, 5, 6, 7]
+>>>
+```
+Man sieht die (ungewollte) Veränderung der Liste im Hauptprogramm. Vermeidung einfach durch Kopieren beim Funktionsaufruf:
+```py
+>>> test(zahlen[:])
+>>> print zahlen
+[1, 2, 3]
 ```
 
-Allerdings kann man beim Aufruf im Gegensatz zu einem echten *call-by-reference* beliebige Ausdrücke, wie bei der Wertübergabe übergeben.  
+Bei unveränderbaren Datentypen (z.B. Zahlen, Strings oder Tupel) wird ein **call-by-value** verwendet.
+```py
+>>> def test_zahl(zahl):
+...    zahl += 2
+...
+>>> a = 2
+>>> print a
+2
+>>> test_zahl(a)
+>>> print a
+2
+```
+
 
 &nbsp;
 
@@ -794,7 +807,7 @@ Ein Server ist unter einer bestimmten Adresse im Netzwerk erreichbar und operier
                komm.close()
                break
             
-            print "[%s] %s" % (addr[0], data)
+            print "[%s]%s % (addr[0], data)
             nachricht = raw_input("Antwort:")
             komm.send(nachricht)
    finally:

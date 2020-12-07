@@ -22,17 +22,12 @@ layout: default
 
 &nbsp;
 
----  
-
 # Basics
 
 &nbsp;
 
 <a name="ch1-1"></a>
 ### 1.1 Geschichte  
-
-
-&nbsp;
 
 &nbsp;
 

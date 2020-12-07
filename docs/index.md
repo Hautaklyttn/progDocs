@@ -14,4 +14,6 @@ layout: home
 
 [python](./articles/python.html)
 
+[javascript](./articles/js.html)
+
 [misc](./articles/misc.html)

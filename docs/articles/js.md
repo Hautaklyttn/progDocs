@@ -19,7 +19,6 @@ layout: default
 
 ### 3. HowTo's
 
-
 &nbsp;
 
 # Basics

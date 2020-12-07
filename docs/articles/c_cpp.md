@@ -1112,9 +1112,9 @@ Handles don't actually point to anything in memory; they are just used to refer 
 ### 8.1 Qt5 / Qt Quick / QML  
 **Qt5** is a complete refreshing of the very successful Qt4 release. Qt5 is focusing on the following:  
 
-- Outstanding graphics:
+- Outstanding graphics:  
   Qt Quick 2 is based on OpenGL using a scene graph implementation. The recomposed graphics stack allows a new level of graph effects combined with an ease of use never seen before in this field.
-- Developer productivity:
+- Developer productivity:  
   QML and JavaScript are the primary means for UI creation. The back-end will be driven by C++. The split between JavaScript and C++ allows a fast iteration for front-end developers concentrating on creating beautiful user interfaces and back-end C++ developers concentrating on stability, performance and extending the runtime.  
 - Cross-platform portability:  
   It is now possible to port Qt to a wider range of platforms easier and faster. Qt 5 is structured around the concept of Qt Essentials and Add-ons, which allows OS developer to focus on the essentials modules and leads to a smaller runtime altogether.  

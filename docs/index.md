@@ -16,4 +16,6 @@ layout: home
 
 [javascript](./articles/js.html)
 
+[qt and qml](./articles/qt_qml.html)
+
 [misc](./articles/misc.html)

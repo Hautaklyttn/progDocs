@@ -20,6 +20,7 @@ layout: default
 
 ### 2. How To's   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Importing a JS resource from another JS resource</font>](#ch2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Deploying a `static` Application on Windows</font>](#ch2-2)  
 
 &nbsp;
 
@@ -275,6 +276,20 @@ Button {
 
 &nbsp; 
 
+**Property Binding (to a JS variable)**  
+
+A property with a binding in QML is automatically updated as necessary (e.g. `width: height*2`).  
+
+However, if the property is later assigned a value **from JavaScript side**, the value is not automatically updated when the value in JavaScript changes.  
+
+To bind a QML property to a JavaScript variable \<js_var\>, it must be wrapped in the `Qt.binding()` function, e.g.  
+
+```js
+height: Qt.binding(function() {return <js_var>})
+```
+
+&nbsp; 
+
 <a name="ch1-1-3"></a>
 #### 1.1.3 `Signals`  
 
@@ -416,6 +431,30 @@ abgeleitet von der 'Urklasse' *QObject*, stellt eine Instanz der Klasse QWidget 
     ```js
     Qt.include(<js_file>)
     ```
+
+&nbsp;  
+
+<a name="ch2-2"></a>
+### 2.2 Deploying a `static` Application on Windows
+
+By default the Qt5 libraries distributed from qt.io are dynamically linked. This means that every Qt app dynamically references and uses the Qt prebuild libraries (.dll or so). To build a standalone executable with all libraries included, you need to include a static version of the Qt libraries.  
+
+1. Step: Qt source files need to be installed (&rarr; `QT Maintenance tool`)  
+2. Step: Edit `qmake.conf` (in folder *.../Qt/5.x/Src/qtbase/mkspecs/win32-g++/*)  
+   Add:  
+   ```c
+   QMAKE_FLAGS += -static -static-libgcc
+   QMAKE_CFLAGS_RELEASE -= -O2
+   QMAKE_CFLAGS_RELEASE += -Os -momit-leaf-frame-pointer
+   DEFINES += QT_STATIC_BUILD
+   ```
+3. Step: Open *Qt environment prompt* from StartMenu and go to 'Src' folder  
+4. Step: Configure the new static Qt5 build with the commands  
+   `configure -static -platform win32-g++ -prefix "C:\Qt\Qt5_static" -debug-and-release -opensource -confirm-license -nomake examples -nomake tests -nomake tools -opengl desktop -no-angle -qt-sql-sqlite -make libs -qt-zlib -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype`
+5. Step: Run commands:
+   `mingw32-make -k -j4`  
+   and
+   `mingw32-make -k install`  
 
 &nbsp;  
 

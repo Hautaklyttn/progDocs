@@ -13,8 +13,13 @@ layout: default
 
 ### 1. Basics   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 Qt5 / Qt Quick / QML</font>](#ch1-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1.1 Basic QML concepts</font>](#ch8-1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1.1 Basic QML concepts</font>](#ch1-1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1.2 Properties</font>](#ch1-1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1.3 `Signals`</font>](#ch1-1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Application Basics</font>](#ch1-2)  
+
+### 2. How To's   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Importing a JS resource from another JS resource</font>](#ch2-1)  
 
 &nbsp;
 
@@ -268,7 +273,80 @@ Button {
 
 > (!) Aliases are only activated once the component completes its initialization. An error is generated when an uninitialized alias is referenced. Likewise, aliasing an aliasing property will also result in an error.
 
+&nbsp; 
 
+<a name="ch1-1-3"></a>
+#### 1.1.3 `Signals`  
+
+1. **Adding Signals to Custom QML Types**  
+
+    Signals can be added to custom QML types through the *signal* keyword.  
+    The syntax for defining a new signal is:
+
+    ```js
+    signal <name> [([<type> <parameter name>[, ...]])]
+    ```
+
+    A signal is emitted by invoking the signal as a method.  
+
+    For example, say the code below is defined in a file named *xy.qml*. The root *Rectangle* object has an *activated* signal. When the child *MouseArea* is clicked, it emits the parent's *activated* signal with the coordinates of the mouse click:
+
+    ```js
+    // Xy.qml
+    Rectangle {
+        id: root
+
+        signal activated(real xPosition, real yPosition)
+
+        property int side: 100
+        width: side; height: side
+
+        MouseArea {
+            anchors.fill: parent
+            onPressed: root.activated(mouse.x, mouse.y)
+        }
+    }
+    ```
+
+    Now any objects of the *Xy* can connect to the *activated* signal using an *onActivated* signal handler:  
+
+    ```js
+    // myapplication.qml
+    Xy {
+        onActivated: console.log("Activated at " + xPosition + "," + yPosition)
+    }
+    ```
+    &nbsp;  
+2. **Connecting Signals to Methods and Signals**  
+    Signal objects have a *connect()* method to connect a signal either to a method or another signal. When a signal is connected to a method, the method is automatically invoked whenever the signal is emitted. This mechanism enables a signal to be received by a method instead of a signal handler.  
+    &nbsp;
+    Below, the *messageReceived* signal is connected to three methods using the *connect()* method:  
+    ```js
+    Rectangle {
+        id: relay
+
+        signal messageReceived(string person, string notice)
+
+        Component.onCompleted: {
+            relay.messageReceived.connect(sendToPost)
+            relay.messageReceived.connect(sendToTelegraph)
+            relay.messageReceived.connect(sendToEmail)
+            relay.messageReceived("Tom", "Happy Birthday")
+        }
+
+        function sendToPost(person, notice) {
+            console.log("Sending to post: " + person + ", " + notice)
+        }
+        function sendToTelegraph(person, notice) {
+            console.log("Sending to telegraph: " + person + ", " + notice)
+        }
+        function sendToEmail(person, notice) {
+            console.log("Sending to email: " + person + ", " + notice)
+        }
+    }
+    ```  
+    In many cases it is sufficient to receive signals through signal handlers rather than using the *connect()* function. However, using the *connect* method allows a signal to be received by multiple methods as shown above, which would not be possible with signal handlers as they must be uniquely named. Also, the *connect* method is useful when connecting signals to dynamically created objects.  
+    
 
 &nbsp; 
 
@@ -316,6 +394,29 @@ abgeleitet von der 'Urklasse' *QObject*, stellt eine Instanz der Klasse QWidget 
 
 &nbsp;
 
-- What does *moc* look for?
+- What does *moc* look for?  
+
+&nbsp;
+
+&nbsp;
+
+
+# How To's
+
+<a name="ch2-1"></a>
+### 2.1 Importing a JS resource from another JS resource  
+
+1. A JavaScript resource may import another in the following way:  
+    ```js
+    .import "filename.js as <qualifier>"
+    ``` 
+    (!) Dieser Weg ist nicht praktikabel, wenn zwischen den Files wechselseitige Abhängigkeiten bestehen (z.B. Methodenaufrufe), da die Files sich gegenseitig importieren müssten (&rarr; Schleife!).  
+    &nbsp;  
+2. It is possible to make functions available in the importing context (in the QML file) without needing to qualify them. In this circumstance the `Qt.include(<js_file>)` function may be used to include one JavaScript file from another. This copies all functions from the other file into the current files namespace, but ignores all *pragmas* and *imports* defined in that file.  
+    ```js
+    Qt.include(<js_file>)
+    ```
+
+&nbsp;  
 
 [Back](../)

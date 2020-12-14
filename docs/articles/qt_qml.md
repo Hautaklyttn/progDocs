@@ -21,6 +21,15 @@ layout: default
 ### 2. How To's   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Importing a JS resource from another JS resource</font>](#ch2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Deploying a `static` Application on Windows</font>](#ch2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Registering C++ Types with the QML Type System</font>](#ch2-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 Embedding C++ Objects into QML with Context Properties</font>](#ch2-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Dynamic QML element creation</font>](#ch2-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.6 Typecast in Qt</font>](#ch2-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.7 Access QML properties from C++</font>](#ch2-7)  
+
+### 3. QML Elements   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 `Repeater`</font>](#ch3-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 `ApplicationWindow`</font>](#ch3-2)  
 
 &nbsp;
 
@@ -98,6 +107,19 @@ The **Qt Essentials modules** are mandatory for any Qt-enabled platform. They of
 &nbsp; 
 
 ![0c](../assets/pics/qt_core.png)  
+
+&nbsp; 
+
+#### \<QtGlobal\>  
+The *\<QtGlobal\>* header file includes the fundamental global declarations. It is included by most other Qt header files.  
+
+The global declarations include *types*, *functions* and *macros*.  
+
+1. The *types* are partly convenience definitions for basic types (e.g. *qint8*, which is a signed char guaranteed top be 8-bit on all platforms supported by Qt).
+2. The *functions* are related to generating messages, Qt version handling and comparing or adjusting object values.  
+   E.g. `bool qputenv(*varName, &value)`  
+   This function sets the \<value\> of the environment variable named \<varName\>. It will create the variable if it does not exist.  
+3. Some of the declared *macros* enable programmers to add compiler or platform specific code to their applications, while others are convenience macros for larger operations.  
 
 &nbsp; 
 
@@ -451,10 +473,232 @@ By default the Qt5 libraries distributed from qt.io are dynamically linked. This
 3. Step: Open *Qt environment prompt* from StartMenu and go to 'Src' folder  
 4. Step: Configure the new static Qt5 build with the commands  
    `configure -static -platform win32-g++ -prefix "C:\Qt\Qt5_static" -debug-and-release -opensource -confirm-license -nomake examples -nomake tests -nomake tools -opengl desktop -no-angle -qt-sql-sqlite -make libs -qt-zlib -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype`
-5. Step: Run commands:
-   `mingw32-make -k -j4`  
-   and
-   `mingw32-make -k install`  
+5. Step: Run commands: `mingw32-make -k -j4` and `mingw32-make -k install`  
+
+&nbsp;  
+
+<a name="ch2-3"></a>
+### 2.3 Registering C++ Types with the QML Type System  
+
+A *QObject*-derived class can be registered with the QML type system to enable the type to be used as a data type from within QML code.  
+
+Registering an instantiable type enables a C++ class to be used as the definition of a QML object type, allowing it to be used in object declarations from QML code to create objects of this type. For example, suppose there is a *MessageClass* class with *author* and *creationDate* properties:  
+
+```js
+class MessageClass : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QString author READ author WRITE setAuthor NOTIFY authorChanged)
+    Q_PROPERTY(QDateTime creationDate READ creationDate WRITE setCreationDate NOTIFY creationDateChanged)
+    // ...
+public:
+    // ...
+};
+```
+
+The following registers a C++ class *MessageClass* as a QML type named *Message* for version 1.0 of a type namespace called "message_NS":  
+```js
+qmlRegisterType<MessageClass>("message_NS", 1, 0, "Message");   
+```
+
+The type can be used in an object declaration from QML, and its properties can be read and written to, as per the example below:  
+```js
+Message {
+    author: "Amelie"
+    creationDate: new Date()
+    //...
+}
+```
+
+&nbsp;  
+
+<a name="ch2-4"></a>
+### 2.4 Embedding C++ Objects into QML with Context Properties  
+
+When loading a QML object into a C++ application, it can be useful to directly embed some C++ data that can be used from within the QML code. This makes it possible, for example, to invoke a C++ method on the embedded object, or use a C++ object instance as a data model for a QML view.  
+
+The ability to inject C++ data into a QML object is made possible by the QQmlContext class. This class exposes data to the context of a QML object so that the data can be referred to directly from within the scope of the QML code.
+
+```js
+class ApplicationData : public QObject
+{
+    Q_OBJECT
+public:
+    Q_INVOKABLE QDateTime getCurrentDateTime() const {
+        return QDateTime::currentDateTime();
+    }
+};
+```
+
+```js
+int main(int argc, char *argv[]) {
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine engine(Q_NULLPTR);
+
+    ApplicationData data;
+    engine.rootContext()->setContextProperty("applicationData", &data);
+
+    engine.load("qrc:/qml/main.qml");
+
+    return app.exec();
+}
+```
+
+```js
+// MyItem.qml
+import QtQuick 2.0
+
+Text { text: applicationData.getCurrentDateTime() }
+```
+
+&nbsp;  
+
+<a name="ch2-5"></a>
+### 2.5 Dynamic QML element creation  
+
+```js
+// Rect.qml
+
+Rectangle {
+    width: 100
+    height: 50
+    color: "blue"
+
+    property string name "";
+    ...
+}
+```
+
+```js
+...
+function createRect()
+{
+    var component = Qt.createComponent("Rect.qml");
+    var rect = component.createObject(parent, {"x":50, "y":10});
+
+    if (rect != null) {
+        rect.name = "test";
+        rect.x = ...
+        rect.y = ...
+    }
+}
+```
+
+&nbsp;  
+
+<a name="ch2-6"></a>
+### 2.6 Typecast in Qt  
+
+In computer programming, run-time type information or run-time type identification (RTTI) is a feature of the C++ programming language that exposes information about an objects data type at runtime. Run-time type information can apply to simple data types, such as integers and characters, or to generic types.  
+
+*[C++]*  
+RTTI in C++ can be used to do safe typecasts using the `dynamic_cast<>` operator, and to manipulate type information at runtime, using the `typeid` operator and `std::type_info` class. RTTI is available only for classes that are polymorphic, which means they have at least one virtual method.  
+
+*[Qt]*  
+`qobject_cast<>` is the same thing as `dynamic_cost<>` but works only for children of `QObject`. It doesn't require RTTI and it works much faster, because it is not possible to use 'QObject' in multiple inheritance.  
+
+&nbsp;  
+
+<a name="ch2-7"></a>
+### 2.7 Access QML properties from C++  
+
+Two steps:  
+1. Get the root object of your QML scene through the 'QQMLApplication' object.  
+2. This step can be omitted for 'root' objects, but for 'QML objects', in general, you will need to have the `objectName` property set and then you can find any children with the following method:  
+    ```js
+    QList QObject::findChildren(const QString &name = QString(), QT::FindChildOptions options=Qt::FindChildrenRecursively())
+    ```
+
+&nbsp;  
+
+On *[C++]* side  
+```js
+#include ...
+
+int main(int argc, char* argv[]) {
+    QGuiApplication app(argc,argv);
+    QQmlApplicationEngine engine;
+    engine.load(QUrl(QStringLiteral("qrc://main.qml")));
+
+    // Get access to the root object
+    QObject *rootObject = engine.rootObject().first();
+    QObject *qmlObject = rootObject->findChild<QObject*>("mainWindow");
+
+    // Set or Get the property value from root object
+    rootObject->setProperty("visible", true);
+    qDebug() << rootObject->property("visible");
+
+    // Set or Get the property value from any qml object
+    qmlObject->setProperty("visible", true);
+    qDebug() << qmlObject->property("visible");
+    return app.exec();
+}
+```
+
+&nbsp;  
+
+On *[QML]* side  
+You will also need to have the `objectName` property of your qml objects set if you wish to access more than just the root item as follows:
+```js
+import QtQuick 2.2
+import QtQuick.Window 2.1
+
+Window {
+    id: mainWindow
+    objectName: "mainWindow"
+    ...
+}
+```
+
+This can be done for any QML object. The key is `objectName` in here.
+&nbsp;
+
+**Special Case: Access QML object previously loaded with 'Loader'**  
+> The loaded object can be accessed using the 'item' property.
+
+Subsearch for an object (here called "testItem") inside a loaded item can be done with:  
+```js
+QObject *loader = engine.rootObject().at(0)->findChild<QObject*>("loader");
+QObject *item = qvariant_cast<QObject*>(QQmlProperty::read(loader, "item"));
+QObject *testItem = item->findChild<QObject*>("testItem");
+```
+
+&nbsp;
+
+&nbsp;
+
+
+# QML Elements
+
+<a name="ch3-1"></a>
+### 3.1 `Repeater`  
+
+The repeater is used to create a large number (here: 15) of the same kind (here: Rectangle).
+
+```js
+Repeater {
+    model: 15
+    Rectangle {
+        ...
+    }
+
+}
+```
+
+&nbsp;  
+
+<a name="ch3-2"></a>
+### 3.2 `ApplicationWindow`  
+
+*ApplicationWindow* is a window that adds convenience for positioning items such as *MenuBar*, *ToolBar* or *StatusBar* in a platform independent manner.  
+
+```js
+ApplicationWindow {
+    id: window
+    ...
+}
+```
 
 &nbsp;  
 

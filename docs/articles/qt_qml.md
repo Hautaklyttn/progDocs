@@ -433,6 +433,51 @@ abgeleitet von der 'Urklasse' *QObject*, stellt eine Instanz der Klasse QWidget 
 
 - What does *moc* look for?  
 
+```js
+class MyClass::public QObject {         // make sure that you inherit QOBJECT first (could be indirect)
+    Q_OBJECT                            // The QOBJECT macro, usually first
+    Q_CLASSINFO ("author", "John Doe")  // General info about the class
+    ...
+    publich slots:
+        void setFoo(...);
+    signals:
+        void fooChanged(...);
+    ...
+}
+```
+
+- `Q_OBJECT` macro  
+  The 'moc' tool reads a C++ header file. If it finds one or more class declarations that contain the 'Q_OBJECT' macro, it produces a C++ source file containing the meta-object code for those classes. Among other things, meta-object code is required for the signals and slots mechanism, the run-time type information and the dynamic property system.  
+
+- 'Signal'/'Slot' mechanism  
+  Ein Objekt emittiert ein Signal. Dies kann ein vordefiniertes Signal aus der jeweiligen Klassendefinition sein oder manuell durch den Befehl 'emit()'. Es spielt für das emittierende Objekt keine Rolle, wer der Empfänger und ob eine Reaktion stattfindet.  
+  Zur Interaktion muss ein 'Signal' mit einem 'Slot' verbunden werden. Dies geschieht über den Befehl 'connect()':
+  ```js
+  bool QObject::connect(QObject *sender, char* signal_n, QObject *receiver, char *slot_n);
+  ```
+  'sender' und 'signal' spezifizieren das sendende Objekt und seine Signal-Methode, 'receiver' und 'slot' spezifizieren das empfangene Objekt und seine Slot-Methode.  
+  Die Aktion beim Eintreffen eines Signals nennt sich Slot. Dieser Slot muss im jeweiligen Empfängerobjekt definiert sein. Außerdem müssen etwaige Parameter (sozusagen Nachrichten) in Signal und Slot übereinstimmen. Ansonsten können beliebig viele Signale mit beliebig vielen Slots verbunden werden.  
+
+&nbsp;
+
+![emu](../assets/pics/qobject_hierarchy.png)  
+
+&nbsp;  
+
+**QWidget** class  
+
+The 'QWidget' class is the base class of all user interface objects. The  widget is the atom of the user interface.: it receives mouse, keyboard and other events from the window system and pyints a representation of itself on the screen. A widget is clipped by its parent and by the widget in front of it.  
+
+A widget that is embedded in a parent widget is called a window. Ususally windows have a frame and a title bar. In Qt, QMainWindow class and the various subclasses of 'QDialog' are the most common window types.  
+
+Every widget's constructor accepts one or two standard arguments:  
+1. `QWidget *parent = 0` is the parent of the new widget. If it is 0, the new widget will be a window. If not, it will be a child of 'parent' and be constrained by 'parents' geometry.  
+2. `Qt::WindowFlags f = 0` sets the window flags. The default is suitable for almost all widgets, but to get, for example. a window without a window system frame, you must use special flags.  
+
+&nbsp;
+
+![emu](../assets/pics/qwidget_hierarchy.png)  
+
 &nbsp;
 
 &nbsp;

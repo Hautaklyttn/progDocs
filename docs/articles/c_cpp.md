@@ -50,7 +50,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.3 Das Schlüsselwort `extern`</font>](#ch5-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.4 Das Schlüsselwort `static`</font>](#ch5-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.5 `printf` Formatierungszeichen</font>](#ch5-5)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.6 `True` and `False` in C</font>](#ch5-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.6 `True` and `False` in C</font>](#ch5-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.7 Konstruktor in C++</font>](#ch5-7)  
 
 ### 6. Bibliotheken   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 String</font>](#ch6-1)  
@@ -915,6 +916,20 @@ if (a != 0)
 // just as
 if (a)
 ```
+
+&nbsp;  
+
+<a name="ch5-7"></a>
+### 5.7 Konstruktor in C++  
+
+```cpp
+QwinHost::QWinHost(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f), wndproc(0), own_hwnd(false) { 
+  ...
+}
+```  
+
+Memberlisten:  
+Initialisieren Sie Klassenmember aus Konstruktorargumenten durch die Verwendung einer Memberinitialisierungsliste. Bei dieser Methode wird die direkte Initialisierung verwendet, die effizienter als die Verwendung von Zuweisungsoperatoren im Konstruktortextteil ({...}) ist.
 
 &nbsp;
 

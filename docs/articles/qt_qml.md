@@ -26,10 +26,16 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Dynamic QML element creation</font>](#ch2-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.6 Typecast in Qt</font>](#ch2-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.7 Access QML properties from C++</font>](#ch2-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.8 Access QML properties in a loaded QML widget using C++</font>](#ch2-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.9 Animation with `Behaviour`</font>](#ch2-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.10 Farbverläufe</font>](#ch2-10)  
 
 ### 3. QML Elements   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 `Repeater`</font>](#ch3-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 `ApplicationWindow`</font>](#ch3-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 `QThread` (*Best Use*)</font>](#ch3-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 `WorkerScript` (=Script in 2nd Thread)</font>](#ch3-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.5 `Text` element</font>](#ch3-5)  
 
 &nbsp;
 
@@ -433,51 +439,6 @@ abgeleitet von der 'Urklasse' *QObject*, stellt eine Instanz der Klasse QWidget 
 
 - What does *moc* look for?  
 
-```js
-class MyClass::public QObject {         // make sure that you inherit QOBJECT first (could be indirect)
-    Q_OBJECT                            // The QOBJECT macro, usually first
-    Q_CLASSINFO ("author", "John Doe")  // General info about the class
-    ...
-    publich slots:
-        void setFoo(...);
-    signals:
-        void fooChanged(...);
-    ...
-}
-```
-
-- `Q_OBJECT` macro  
-  The 'moc' tool reads a C++ header file. If it finds one or more class declarations that contain the 'Q_OBJECT' macro, it produces a C++ source file containing the meta-object code for those classes. Among other things, meta-object code is required for the signals and slots mechanism, the run-time type information and the dynamic property system.  
-
-- 'Signal'/'Slot' mechanism  
-  Ein Objekt emittiert ein Signal. Dies kann ein vordefiniertes Signal aus der jeweiligen Klassendefinition sein oder manuell durch den Befehl 'emit()'. Es spielt für das emittierende Objekt keine Rolle, wer der Empfänger und ob eine Reaktion stattfindet.  
-  Zur Interaktion muss ein 'Signal' mit einem 'Slot' verbunden werden. Dies geschieht über den Befehl 'connect()':
-  ```js
-  bool QObject::connect(QObject *sender, char* signal_n, QObject *receiver, char *slot_n);
-  ```
-  'sender' und 'signal' spezifizieren das sendende Objekt und seine Signal-Methode, 'receiver' und 'slot' spezifizieren das empfangene Objekt und seine Slot-Methode.  
-  Die Aktion beim Eintreffen eines Signals nennt sich Slot. Dieser Slot muss im jeweiligen Empfängerobjekt definiert sein. Außerdem müssen etwaige Parameter (sozusagen Nachrichten) in Signal und Slot übereinstimmen. Ansonsten können beliebig viele Signale mit beliebig vielen Slots verbunden werden.  
-
-&nbsp;
-
-![emu](../assets/pics/qobject_hierarchy.png)  
-
-&nbsp;  
-
-**QWidget** class  
-
-The 'QWidget' class is the base class of all user interface objects. The  widget is the atom of the user interface.: it receives mouse, keyboard and other events from the window system and pyints a representation of itself on the screen. A widget is clipped by its parent and by the widget in front of it.  
-
-A widget that is embedded in a parent widget is called a window. Ususally windows have a frame and a title bar. In Qt, QMainWindow class and the various subclasses of 'QDialog' are the most common window types.  
-
-Every widget's constructor accepts one or two standard arguments:  
-1. `QWidget *parent = 0` is the parent of the new widget. If it is 0, the new widget will be a window. If not, it will be a child of 'parent' and be constrained by 'parents' geometry.  
-2. `Qt::WindowFlags f = 0` sets the window flags. The default is suitable for almost all widgets, but to get, for example. a window without a window system frame, you must use special flags.  
-
-&nbsp;
-
-![emu](../assets/pics/qwidget_hierarchy.png)  
-
 &nbsp;
 
 &nbsp;
@@ -709,6 +670,74 @@ QObject *item = qvariant_cast<QObject*>(QQmlProperty::read(loader, "item"));
 QObject *testItem = item->findChild<QObject*>("testItem");
 ```
 
+&nbsp;  
+
+<a name="ch2-8"></a>
+### 2.8 Access QML properties in a loaded QML widget using C++  
+
+From the Qt documentation:  
+>"The loaded object can be accessed using the `Item` property."  
+
+&nbsp;
+
+'Subsearch' inside a loaded item can be done like this (here for property *"whiteArea"*):  
+```c
+QObject* loader = engine.rootObject().at(0)->findChild<QObject*>("loader");
+QObject* item = qvariant_cast<QObject*>(QQmlProperty::read(loader, "item"));
+QObject* whiteArea = item->findChild<QObject*>("whiteArea");
+```
+
+&nbsp;  
+
+<a name="ch2-9"></a>
+### 2.9 Animation with `Behaviour`  
+
+> This is only one of several ways of decalring an animation in QML.  
+
+An animation defines how a property change is distributed over a duration. To enable this, we use an anmiation type called property behaviour. The 'Behaviour' does specify an animation for a defined property for every change applied to that property.  
+
+In short: Every time the property changes, the animation is run.  
+
+```c
+Image {
+    id: root
+    Image {
+        id: wheel
+        Behaviour on rotation {
+            NumberAnimation {
+                duration: 250
+            }
+        }
+    }
+
+}
+```
+
+Now whenever the property `rotation` of the wheel changes, it will be animated using a `NumberAnimation` with a duration of 250ms. So each 90 degree turn will take 250ms.  
+
+&nbsp;  
+
+<a name="ch2-10"></a>
+### 2.10 Farbverläufe  
+
+Besides a fill color and a border, the rectangle also supports custom gradients.  
+
+A gradient is defined by a series of gradient stops. Each stop has a position and a color. The position marks the position on the y-axis (0=top, 1=bottom). The color of the ``GradientStop`` marks the color at that position.  
+
+```c
+Rectangle {
+    id: rect1
+    x: 12; y: 12
+    width: 176; height: 96
+    gradient: Gradient {
+        GradientStop{position:0.0;color:"white"}
+        GradientStop{position:1.0;color:"black"}
+    }
+    border.color: "slategray"
+}
+```
+Note: A rectange with no width/height set will not be visible. This happens often when you have several rectangles width (height) dependending on each other and something went wrong in your composition logic. So watch out!
+
 &nbsp;
 
 &nbsp;
@@ -744,6 +773,138 @@ ApplicationWindow {
     ...
 }
 ```
+
+&nbsp;  
+
+<a name="ch3-3"></a>
+### 3.3 `QThread` (*Best Use*)  
+
+The main thing to keep in mind when using a QThread is that it's not  a thread. It's a wrapper around a thread object. This should immediately show why the recommended way of using QThreads in the documentation, namely to sub-class it and implement your own `run()` command is very wrong. A QThread should be used much like a regular thread instance:  
+1. Prepare an object (QObject) class with all your desired functionality in it.  
+2. Create a new QThread instance, push the QObject onto it using `moveToThread(QThread*)` of the QObject instance.  
+3. Call `start()` on the QThread instance.  
+
+That's all. You set up the proper signal/slot connections to make it quit properly and such and that's it.  
+
+Basic example:  
+```c
+class Worker : public QObject {
+    QOBJECT
+
+public:
+    Worker();
+    ~Worker();
+public slots:
+    void process();
+signals:
+    void finished();
+    void error(QString err);
+private:
+    // add your variables here    
+}
+```
+
+We add at least one public slot which will be used to trigger the instance and make it start processing data once the thread has started. Now, let's see what the implementation for this basic class look like.  
+
+```c
+Worker::Worker() {
+    // you could copy data from constructor
+    // arguments to internal variables here
+}
+
+Worker::~Worker() {
+    // free resources
+}
+
+//Start processing data
+void Worker::process(){
+    // allocate resources using "new" here
+    qDebug("Hello World!");
+    emit finished();
+}
+```
+
+While this worker class doesn't do anything special, it nevertheless contains all the required elements. It starts processing when its main function, in this case `process()`, is called and when it is  done it emits the signal ``finished()`` which will then be used to trigger the shutdown of the QThread instance it is contained in.  
+
+One extremely important thing to note here is that you should NEVER allocate heap objects (using `new`) in the  constructor of the QObject class as this allocation is then performed on the main thread and not on the QThread instance! This will make your code fail to work. Instead, allocate such resources in the main function slot such as `process()`. In this case, when that is called, the object will be in the new thread instance and thus it will own the resource.  
+
+Now let's see how to use this new construction by creating a new *Worker* instance and putting it on a *QThread* instance:  
+```c
+QThread* thread = new QThread;
+Worker* worker = new Worker();
+worker->moveToThread(thread);
+
+connect(worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+connect(thread, SIGNAL(started()), worker, SLOT(process()));
+connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+thread->start();
+```
+
+The `connect()` series here is the most crucial part. The first `connect()` line hooks up the error message signal from the worker to an error processing function in the main thread. The second connects the thread's `started()` signal to the `processing()` slot in the worker, causing it to start.  
+
+Then the clean-up: when the worker instance emits `finished()`, as we did in the example. it will signal the thread to quit, i.e. shut down. We then mark the worker instance using the same `finished()` signal for deletion. Finally, to prevent nasty crashes because the thread hasn't fully shut down yet when it's deleted, we connect `finished()` of the thread (not the worker!) to its own `deleteLater()` slot. This will cause the thread to be deleted only after it has fully shut down.  
+
+- **Per-thread event loop**  
+  QThread objects can start thread-local event loops running in th threads they represent. Therefore, we say that the main event loop is the one created by the thread which invoked `main()` and started with `QCoreApplication::exec()` (which must be called from that thread). This is also called the GUI thread, because it's the only thread in which GUI-related operations are allowed. A QThread local event loop can be started by calling  
+  ```c
+  QThread::exec()
+  ```
+  &nbsp;
+  Exactly like *QCoreApplication* `QThread` has also the `QThread::quit()` and `QThread::exit()` methods to stop the event loop.  
+  &nbsp;
+  A thread event loop delivers events for all QObjects that are <u>living</u> in that thread; this includes by default, all objects that are created into that thread, or that were moved to that thread.  
+  &nbsp;
+  Use `QThread::exec()` when you want to run the event loop Qt provides for you in the QThread class. If you don't call `exec()`, you need to create your own event loop that processes Qt events.  
+
+- **Inter-Thread communication**  
+  With Qt, the easiest way to send information between threads is to use signals and slots. Qt automatically uses queued signals for connections between threads which ensures that a signal can be emitted from one thread, but the slot will be executed in the thread of the receiver object.  
+  &nbsp;
+  If the data being sent between threads (work to be done or status information) is something that Qt can automatically queue (e.g. QStrings, built-in types like 'int' or 'double'), then passing the info as the arguments to the signal/slot is the best way to send the info.  
+  &nbsp;
+  If large or complex data is being shared, then you either need to use `qRegisterMetaType` to allow Qt to copy the data, or pass a pointer to a thread-safe object. The threads do share an address space, so you can share pointers; just make sure that one thread's interaction with the shared object won't interfere with another thread's interaction (&rarr; 'thread-safe' objects).  
+  &nbsp;
+  You should never access members or directly call functions of an object which is in another thread. The only safe way is to access them through signal/slots mechanism. You can have a signal in `Thread B` and convert it to a slot in *Thread A* which returns the value:  
+  ```c
+  connect(objInThrB, SIGNAL(getFinished()), objInThrA, SLOT(isFinished(), Qt::BlockQueuedConnection));
+  ```
+  This way when you emit the signal in 'Thread B' like  
+  `bool ret = getFinished();`  
+  the slot in 'Thread A' would be called when control returns to the event loop of 'Thread A' and the value would be returned. 'Thread B' waits for the slot to be called because of the connection type `BlockQueuedConnection`. So be aware not to block the application main thread using this kind of blocking connection.  
+
+&nbsp;  
+
+<a name="ch3-4"></a>
+### 3.4 `WorkerScript` (=Script in 2nd Thread)  
+
+
+
+&nbsp;  
+
+<a name="ch3-5"></a>
+### 3.5 `Text` element  
+To display text you can use the text element. Its most notable property is the text property of type string. The element calculates its initial width and height based on the given text and the font used. The font can be influenced using the 'font' property group (e.g. `font.family`, `font.pixelSize`,...). To change the colour of the text just use the 'color' property.  
+
+```c
+Text {
+    width: 40; height: 120
+    color: "#303030"
+    font.family: "Ubuntu"
+    font.PixelSize: 28
+    text 'A very long text'
+
+    style: Text.sunken                 // sunken text
+    styleColor: "#FF4444"              // red text
+
+    verticalAlignment: Text.AlignTop   // align text to the top
+}
+```
+
+To further enhance the text rendering you can use the style and styleColor property which allows you to render the text in outline, raised and sunken mode.  
+
+A text element only displays the given text. It does not render any background decoration. Besides the rendered text, the Text element is transparent. It's part of your overall design to provide a sensible background to the text element.
 
 &nbsp;  
 

@@ -25,7 +25,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.2 `enum`</font>](#ch1-9-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.3 `struct`</font>](#ch1-9-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.4 `union`</font>](#ch1-9-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10 Precompiled Header</font>](#ch1-10)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10 Precompiled Header</font>](#ch1-10)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.11 *Header Guard* (oder 'Include Guard')</font>](#ch1-11)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -400,6 +401,34 @@ Die Eigenschaft einer 'Union' mehrere Variablen innerhalb des gleichen Speicherb
 In computer programming, a *precompiled header* is a (C or C++) header file that is compiled into an intermediate form, that is <u>faster to process for the compiler</u>.  
 
 Usage of *precompiled headers* may significantly reduce compilation time, especially when applied to large header files or header failes that include many other header files.
+
+&nbsp;
+
+<a name="ch1-11"></a>
+### 1.11 *Header Guard* (oder 'Include Guard')  
+
+> "*Header Guards* are little pieces of code that protect the contents of a header file from being included more than once."  
+
+Header guards are implemented through the use of preprocessor directives. The C/C++ preprocessor directives all start with the `#` character. You are already familiar with some ('#include' / '#define'). The preprocessor performs some simple textual replacements on a file before handing it off to the compiler.  
+
+Some of the preprocessor directives are conditional. The `#ifdef SYMBOL` directive is true when *SYMBOL* has been defined in the code seen so far. If the directive is true, then the statements that come between the `#ifdef` and `#endif` directive later on will be used in the program. If the `#ifdef` is false, then the statements from that point on will be ignored and not sent to the compiler.  
+
+Header guards are implemented by using three preprocessor directives in a header file. Two are placed at the beginning of the file, before any pertinent code. The last is placed at the end of the file. The first header guard line is of the form  
+```c
+#ifndef MY_SYMBOL_H
+```  
+and is followed immediately by the line  
+```c
+#define MY_SYMBOL_H
+```
+
+The line  
+```c
+#endif /* MY_SYMBOL_H */
+```
+is placed at the end of the file.  
+
+The symbol used is not crucial, but it must be unique. It is traditional to use all capital letters for the symblo. Only letters, numbers and the underscore character can be used in the symbols. No other punctuation is allowed. A very common symbol is to use the name of the header file, converting the `.h` suffix to a `_H`.
 
 &nbsp;
 

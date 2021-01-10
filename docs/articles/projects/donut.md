@@ -48,13 +48,20 @@ So we have a circle of radius R1 centered at point (R2,0,0), drawn on the xy-pla
 
 ![0x](../../assets/pics/calc_donut_02.png)  
 
+&nbsp;
+
+
 Now we take that circle and rotate it around the y-axis by another angle — let’s call it φ. To rotate an arbitrary 3D point around one of the cardinal axes, the standard technique is to multiply by a rotation matrix. So if we take the previous points and rotate about the y-axis we get:  
 
 ![0x](../../assets/pics/calc_donut_03.png)  
 
+&nbsp;
+
 But wait: we also want the whole donut to spin around on at least two more axes for the animation. They were called A and B in the original code: it was a rotation about the x-axis by A and a rotation about the z-axis by B. This is a bit hairier, so I’m not even going write the result yet, but it’s a bunch of matrix multiplies.  
 
 ![0x](../../assets/pics/calc_donut_04.png)  
+
+&nbsp;
 
 Churning through the above gets us an (x,y,z) point on the surface of our torus, rotated around two axes, centered at the origin. To actually get screen coordinates, we need to:  
 
@@ -71,6 +78,8 @@ Now, we could implement a 3x3 matrix multiplication routine in our code and impl
 
 ![0x](../../assets/pics/calc_donut_06.png)  
 
+&nbsp;
+
 Well, that looks pretty hideous, but we we can precompute some common subexpressions (e.g. all the sines and cosines, and **R2 + R1\*cos θ**) and reuse them in the code. In fact I came up with a completely different factoring in the original code but that’s left as an exercise for the reader. (The original code also swaps the sines and cosines of A, effectively rotating by 90 degrees, so I guess my initial derivation was a bit different but that’s OK).  
 
 Now we know where to put the pixel, but we still haven’t even considered which shade to plot. To calculate illumination, we need to know the surface normal — the direction perpendicular to the surface at each point. If we have that, then we can take the dot product of the surface normal with the light direction, which we can choose arbitrarily. That gives us the cosine of the angle between the light direction and the surface direction: If the dot product is >0, the surface is facing the light and if it’s <0, it faces away from the light. The higher the value, the more light falls on the surface.  
@@ -80,6 +89,8 @@ The derivation of the surface normal direction turns out to be pretty much the s
 So our surface normal (Nx, Ny, Nz) is derived the same as above, except the point we start with is just (cos θ, sin θ, 0). Then we apply the same rotations:  
 
 ![0x](../../assets/pics/calc_donut_07.png)  
+
+&nbsp;
 
 So which lighting direction should we choose? How about we light up surfaces facing behind and above the viewer: **(0,1,−1)**. Technically this should be a normalized unit vector, and this vector has a magnitude of √2. That’s okay – we will compensate later. Therefore we compute the above (x,y,z), throw away the x and get our luminance L = y-z.  
 
@@ -183,7 +194,13 @@ render_frame(float A, float B) {
 }
 ```  
 
+&nbsp;
+
+
 ***  
+
+&nbsp;
+
 
 The Javascript source for both the ASCII and canvas rendering is  
 

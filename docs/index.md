@@ -20,8 +20,12 @@ layout: home
 
 [misc](./articles/misc.html)  
 
+&nbsp;
+
 ***  
+
+&nbsp;
 
 projects  
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">*Revolving Donut*</font>](./articles/projects/donut.html)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Revolving Donut</font>](./articles/projects/donut.html)  

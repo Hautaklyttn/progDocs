@@ -11,6 +11,9 @@ layout: default
 
 &nbsp; 
 
+Originally from [here](https://www.a1k0n.net/2011/07/20/donut-math.html).  
+
+
 ![0x](../../assets/pics/rev_donut.png)  
 
 &nbsp; 

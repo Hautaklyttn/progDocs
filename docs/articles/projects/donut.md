@@ -18,7 +18,7 @@ Originally from [here](https://www.a1k0n.net/2011/07/20/donut-math.html).
 
 &nbsp; 
 
-At its core, it’s a framebuffer and a Z-buffer into which I render pixels. Since it’s just rendering relatively low-resolution ASCII art, I massively cheat. All it does is plot pixels along the surface of the torus at fixed-angle increments, and does it densely enough that the final result looks solid. The “pixels” it plots are ASCII characters corresponding to the illumination value of the surface at each point: ``.,-~:;=!*#$@`` from dimmest to brightest. No raytracing required.  
+At its core, it’s a framebuffer and a [Z-buffer](https://en.wikipedia.org/wiki/Z-buffering) into which I render pixels. Since it’s just rendering relatively low-resolution ASCII art, I massively cheat. All it does is plot pixels along the surface of the torus at fixed-angle increments, and does it densely enough that the final result looks solid. The “pixels” it plots are ASCII characters corresponding to the illumination value of the surface at each point: ``.,-~:;=!*#$@`` from dimmest to brightest. No raytracing required.  
 
 So how do we do that? Well, let’s start with the basic math behind 3D perspective rendering. The following diagram is a side view of a person sitting in front of a screen, viewing a 3D object behind it.  
 
@@ -34,7 +34,7 @@ To render a 3D object onto a 2D screen, we project each point (x,y,z) in 3D-spac
 
 So to project a 3D coordinate to 2D, we scale a coordinate by the screen distance z’. Since z’ is a fixed constant, and not functionally a coordinate, let’s rename it to K1, so our projection equation becomes **(x′,y′)=(K1\*x/z,K1\*y/z)**. We can choose K1 arbitrarily based on the field of view we want to show in our 2D window. For example, if we have a 100x100 window of pixels, then the view is centered at (50,50); and if we want to see an object which is 10 units wide in our 3D space, set back 5 units from the viewer, then K1 should be chosen so that the projection of the point x=10, z=5 is still on the screen with x’ < 50: 10K1/5 < 50, or K1 < 25.
 
-When we’re plotting a bunch of points, we might end up plotting different points at the same (x’,y’) location but at different depths, so we maintain a z-buffer which stores the z coordinate of everything we draw. If we need to plot a location, we first check to see whether we’re plotting in front of what’s there already. It also helps to compute z-1 =1z and use that when depth buffering because:
+When we’re plotting a bunch of points, we might end up plotting different points at the same (x’,y’) location but at different depths, so we maintain a z-buffer which stores the z coordinate of everything we draw. If we need to plot a location, we first check to see whether we’re plotting in front of what’s there already. It also helps to compute z^-1 =1/z and use that when depth buffering because:
 
 - z^-1 = 0 corresponds to infinite depth, so we can pre-initialize our z-buffer to 0 and have the background be infinitely far away  
 - we can re-use z^-1 when computing x’ and y’: Dividing once and multiplying by z^-1 twice is cheaper than dividing by z twice.  
@@ -54,7 +54,7 @@ So we have a circle of radius R1 centered at point (R2,0,0), drawn on the xy-pla
 &nbsp;
 
 
-Now we take that circle and rotate it around the y-axis by another angle — let’s call it φ. To rotate an arbitrary 3D point around one of the cardinal axes, the standard technique is to multiply by a rotation matrix. So if we take the previous points and rotate about the y-axis we get:  
+Now we take that circle and rotate it around the y-axis by another angle — let’s call it φ. To rotate an arbitrary 3D point around one of the cardinal axes, the standard technique is to multiply by a [rotation matrix](https://de.wikipedia.org/wiki/Drehmatrix). So if we take the previous points and rotate about the y-axis we get:  
 
 ![0x](../../assets/pics/calc_donut_03.png)  
 
@@ -85,7 +85,7 @@ Now, we could implement a 3x3 matrix multiplication routine in our code and impl
 
 Well, that looks pretty hideous, but we we can precompute some common subexpressions (e.g. all the sines and cosines, and **R2 + R1\*cos θ**) and reuse them in the code. In fact I came up with a completely different factoring in the original code but that’s left as an exercise for the reader. (The original code also swaps the sines and cosines of A, effectively rotating by 90 degrees, so I guess my initial derivation was a bit different but that’s OK).  
 
-Now we know where to put the pixel, but we still haven’t even considered which shade to plot. To calculate illumination, we need to know the surface normal — the direction perpendicular to the surface at each point. If we have that, then we can take the dot product of the surface normal with the light direction, which we can choose arbitrarily. That gives us the cosine of the angle between the light direction and the surface direction: If the dot product is >0, the surface is facing the light and if it’s <0, it faces away from the light. The higher the value, the more light falls on the surface.  
+Now we know where to put the pixel, but we still haven’t even considered which shade to plot. To calculate illumination, we need to know the [surface normal](https://en.wikipedia.org/wiki/Normal_(geometry)) — the direction perpendicular to the surface at each point. If we have that, then we can take the [dot product](https://de.wikipedia.org/wiki/Skalarprodukt) of the surface normal with the light direction, which we can choose arbitrarily. That gives us the cosine of the angle between the light direction and the surface direction: If the dot product is >0, the surface is facing the light and if it’s <0, it faces away from the light. The higher the value, the more light falls on the surface.  
 
 The derivation of the surface normal direction turns out to be pretty much the same as our derivation of the point in space. We start with a point on a circle, rotate it around the torus’s central axis, and then make two more rotations. The surface normal of the point on the circle is fairly obvious: it’s the same as the point on a unit (radius=1) circle centered at the origin.  
 

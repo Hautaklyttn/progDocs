@@ -18,4 +18,10 @@ layout: home
 
 [qt and qml](./articles/qt_qml.html)
 
-[misc](./articles/misc.html)
+[misc](./articles/misc.html)  
+
+***  
+
+projects  
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">*Revolving Donut*</font>](./articles/projects/donut.html)  

@@ -877,9 +877,116 @@ Then the clean-up: when the worker instance emits `finished()`, as we did in the
 &nbsp;  
 
 <a name="ch3-4"></a>
-### 3.4 `WorkerScript` (=Script in 2nd Thread)  
+### 3.4 `WorkerScript` <font size="-1">(=Script runs in 2nd Thread)</font>  
 
+This QML type enables the use of Threads in a Qt Quick Application. Use 'WorkerScript' to run operations in a new thread. This is useful for running operations in the background so that the main GUI thread is not blocked.  
 
+Messages can be passed between the new thread and the parent thread using `sendMessage()` and the `onMessage()` handler.  
+&nbsp;
+
+**Example**  
+
+File ``ListModel.qml``  
+```c
+import Qt.Quick 2.0  
+
+Rectangle {
+    ...
+    ListView {
+        model: listModel
+        delegate: Component {
+            Text {text: time}
+        }
+        ListModel {id: ListModel}
+        WorkerScript {
+            id: worker
+            source: "dataLoader.js"
+        }
+        Timer {
+            id: Timer
+            interval: 2000; repeat: true
+            running: true
+
+            onTriggered: {
+                var msg={'action':'appendCurrentTime',
+                         'model' : ListModel};
+                worker.sendMessage(msg);
+            }
+        }
+    }
+}
+```
+File `dataLoader.js`  (== 2nd Thread)  
+```js
+WorkerScript.onMessage = function(msg) {
+    if (msg.action == 'appendCurrentTime') {
+        var data = {'time':new Date().toTimeString()};
+        msg.model.append(data);
+        msg.model.sync();        //updated the changes to list
+    }
+}
+```
+&nbsp;
+
+**Restrictions**  
+Since the WorkerScript.onMessage() function is run in a separate thread, the JAvaScript file is evaluated in a context separate from the main QML engine. This means that unlike an ordinary JavaScript file that is imported into QML, the script <u>cannot</u> access the properties, methods or other attributes of the QML item, nor can it access any context properties set on the QML object through 'QQMLContext'.  
+
+Worker scripts that are plain JavaScript sources can not use `.import` syntax.  
+
+There are restrictions on the types of values that can be passed to and from the worker script:  
+- The 'message' object may only contain values of the following types:  
+  - boolean, number, strings
+  - JavaScript objects and arrays
+  - 'ListModel' objects (any other type of `QObject*` is <u>not</u> allowed)
+
+> All objects and arrays are copied to the 'message'. With the exception of 'ListModel' objects, any modifications by the other thread to an object passed in 'message' will not be reflected in the original object.  
+
+**Example**  
+
+```c
+import QT.Quick 2.0
+
+...
+WorkerScript {
+    id: myWorker
+    source: "workerscript.js"
+
+    onMessage: { //3. Inhalt wird aufgerufen von Aktion im 2nd Thread ('workerscript.js')
+        if (messageObject.result == -1) {
+            resultText.text = "..";
+        else
+            resultText.text = messageObject.result;
+        }
+    }
+}
+...
+MouseArea {
+    onValueChanged:{
+        resultText.text = ".."
+        myWorker.sendMessage(row: .., column: ..); //1. Aufruf geht an 'workerscript.js'
+    }
+}
+
+Text {
+    id: ResultText
+    ...
+}
+```
+
+`workerscript.js`  (== 2nd Thread)  
+```js
+function triangle (row, column) {
+    ...
+    return triangle(row-1, column-1)+triangle(row-1,column);
+}
+
+WorkerScript.onMessage = function(message) {  //2. Send result back to main thread ('onMessage' part)
+    var calcResult = triangle(message.row, message.column);
+    WorkerScript.sendMessage({row: message.row,
+                              column: message.column,
+                              result: calcResult});
+}
+```
 
 &nbsp;  
 

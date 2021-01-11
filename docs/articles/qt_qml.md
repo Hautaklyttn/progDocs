@@ -26,9 +26,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Dynamic QML element creation</font>](#ch2-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.6 Typecast in Qt</font>](#ch2-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.7 Access QML properties from C++</font>](#ch2-7)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.8 Access QML properties in a loaded QML widget using C++</font>](#ch2-8)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.9 Animation with `Behaviour`</font>](#ch2-9)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.10 Farbverläufe</font>](#ch2-10)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.8 Animation with `Behaviour`</font>](#ch2-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.9 Farbverläufe</font>](#ch2-9)  
 
 ### 3. QML Elements   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 `Repeater`</font>](#ch3-1)  
@@ -660,7 +659,7 @@ Window {
 This can be done for any QML object. The key is `objectName` in here.
 &nbsp;
 
-**Special Case: Access QML object previously loaded with 'Loader'**  
+**Special Case: Access QML properties in a loaded QML widget using C++**  
 > The loaded object can be accessed using the 'item' property.
 
 Subsearch for an object (here called "testItem") inside a loaded item can be done with:  
@@ -673,24 +672,7 @@ QObject *testItem = item->findChild<QObject*>("testItem");
 &nbsp;  
 
 <a name="ch2-8"></a>
-### 2.8 Access QML properties in a loaded QML widget using C++  
-
-From the Qt documentation:  
->"The loaded object can be accessed using the `Item` property."  
-
-&nbsp;
-
-'Subsearch' inside a loaded item can be done like this (here for property *"whiteArea"*):  
-```c
-QObject* loader = engine.rootObject().at(0)->findChild<QObject*>("loader");
-QObject* item = qvariant_cast<QObject*>(QQmlProperty::read(loader, "item"));
-QObject* whiteArea = item->findChild<QObject*>("whiteArea");
-```
-
-&nbsp;  
-
-<a name="ch2-9"></a>
-### 2.9 Animation with `Behaviour`  
+### 2.8 Animation with `Behaviour`  
 
 > This is only one of several ways of decalring an animation in QML.  
 
@@ -717,8 +699,8 @@ Now whenever the property `rotation` of the wheel changes, it will be animated u
 
 &nbsp;  
 
-<a name="ch2-10"></a>
-### 2.10 Farbverläufe  
+<a name="ch2-9"></a>
+### 2.9 Farbverläufe  
 
 Besides a fill color and a border, the rectangle also supports custom gradients.  
 

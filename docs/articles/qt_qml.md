@@ -15,7 +15,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 Qt5 / Qt Quick / QML</font>](#ch1-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1.1 Basic QML concepts</font>](#ch1-1-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1.2 Properties</font>](#ch1-1-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1.3 `Signals`</font>](#ch1-1-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1.3 `Signals` and `Slots`</font>](#ch1-1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Application Basics</font>](#ch1-2)  
 
 ### 2. How To's   
@@ -318,79 +318,298 @@ height: Qt.binding(function() {return <js_var>})
 &nbsp; 
 
 <a name="ch1-1-3"></a>
-#### 1.1.3 `Signals`  
+#### 1.1.3 `Signals` and `Slots`  
 
-1. **Adding Signals to Custom QML Types**  
+Signals and slots are used for communication between objects. The signals and slots mechanism is a central feature of Qt and probably the part that differs most from the features provided by other frameworks. Signals and Slots are made possible by Qt's *meta-object system*.  
 
-    Signals can be added to custom QML types through the *signal* keyword.  
-    The syntax for defining a new signal is:
+**Introduction**  
 
-    ```js
-    signal <name> [([<type> <parameter name>[, ...]])]
-    ```
+In GUI programming, when we change one widget, we often want another widget to be notified. More generally, we want objects of any kind to be able to communicate with one another. For example, if a user clicks a Close button, we probably want the window's close() function to be called.
 
-    A signal is emitted by invoking the signal as a method.  
+Older toolkits achieve this kind of communication using callbacks. A callback is a pointer to a function, so if you want a processing function to notify you about some event you pass a pointer to another function (the callback) to the processing function. The processing function then calls the callback when appropriate. Callbacks have two fundamental flaws: Firstly, they are not type-safe. We can never be certain that the processing function will call the callback with the correct arguments. Secondly, the callback is strongly coupled to the processing function since the processing function must know which callback to call.  
 
-    For example, say the code below is defined in a file named *xy.qml*. The root *Rectangle* object has an *activated* signal. When the child *MouseArea* is clicked, it emits the parent's *activated* signal with the coordinates of the mouse click:
+**Signals and Slots**  
 
-    ```js
-    // Xy.qml
-    Rectangle {
-        id: root
-
-        signal activated(real xPosition, real yPosition)
-
-        property int side: 100
-        width: side; height: side
-
-        MouseArea {
-            anchors.fill: parent
-            onPressed: root.activated(mouse.x, mouse.y)
-        }
-    }
-    ```
-
-    Now any objects of the *Xy* can connect to the *activated* signal using an *onActivated* signal handler:  
-
-    ```js
-    // myapplication.qml
-    Xy {
-        onActivated: console.log("Activated at " + xPosition + "," + yPosition)
-    }
-    ```
-    &nbsp;  
-2. **Connecting Signals to Methods and Signals**  
-    Signal objects have a *connect()* method to connect a signal either to a method or another signal. When a signal is connected to a method, the method is automatically invoked whenever the signal is emitted. This mechanism enables a signal to be received by a method instead of a signal handler.  
-    &nbsp;
-    Below, the *messageReceived* signal is connected to three methods using the *connect()* method:  
-    ```js
-    Rectangle {
-        id: relay
-
-        signal messageReceived(string person, string notice)
-
-        Component.onCompleted: {
-            relay.messageReceived.connect(sendToPost)
-            relay.messageReceived.connect(sendToTelegraph)
-            relay.messageReceived.connect(sendToEmail)
-            relay.messageReceived("Tom", "Happy Birthday")
-        }
-
-        function sendToPost(person, notice) {
-            console.log("Sending to post: " + person + ", " + notice)
-        }
-        function sendToTelegraph(person, notice) {
-            console.log("Sending to telegraph: " + person + ", " + notice)
-        }
-        function sendToEmail(person, notice) {
-            console.log("Sending to email: " + person + ", " + notice)
-        }
-    }
-    ```  
-    In many cases it is sufficient to receive signals through signal handlers rather than using the *connect()* function. However, using the *connect* method allows a signal to be received by multiple methods as shown above, which would not be possible with signal handlers as they must be uniquely named. Also, the *connect* method is useful when connecting signals to dynamically created objects.  
-    
+In Qt, we have an alternative to the callback technique: We use signals and slots. A signal is emitted when a particular event occurs. Qt's widgets have many predefined signals, but we can always subclass widgets to add our own signals to them. A slot is a function that is called in response to a particular signal. Qt's widgets have many pre-defined slots, but it is common practice to subclass widgets and add your own slots so that you can handle the signals that you are interested in.  
 
 &nbsp; 
+
+![0x](../assets/pics/signalsSlots.png)  
+
+&nbsp; 
+
+The signals and slots mechanism is type safe: The signature of a signal must match the signature of the receiving slot. (In fact a slot may have a shorter signature than the signal it receives because it can ignore extra arguments.) Since the signatures are compatible, the compiler can help us detect type mismatches. Signals and slots are loosely coupled: A class which emits a signal neither knows nor cares which slots receive the signal. Qt's signals and slots mechanism ensures that if you connect a signal to a slot, the slot will be called with the signal's parameters at the right time. Signals and slots can take any number of arguments of any type. They are completely type safe.
+
+All classes that inherit from QObject or one of its subclasses (e.g., QWidget) can contain signals and slots. Signals are emitted by objects when they change their state in a way that may be interesting to other objects. This is all the object does to communicate. It does not know or care whether anything is receiving the signals it emits. This is true information encapsulation, and ensures that the object can be used as a software component.
+
+Slots can be used for receiving signals, but they are also normal member functions. Just as an object does not know if anything receives its signals, a slot does not know if it has any signals connected to it. This ensures that truly independent components can be created with Qt.
+
+You can connect as many signals as you want to a single slot, and a signal can be connected to as many slots as you need. It is even possible to connect a signal directly to another signal. (This will emit the second signal immediately whenever the first is emitted.)
+
+Together, signals and slots make up a powerful component programming mechanism.  
+
+&nbsp;
+
+**Signals**  
+
+Signals are emitted by an object when its internal state has changed in some way that might be interesting to the object's client or owner. Only the class that defines a signal and its subclasses can emit the signal.
+
+When a signal is emitted, the slots connected to it are usually executed immediately, just like a normal function call. When this happens, the signals and slots mechanism is totally independent of any GUI event loop. Execution of the code following the emit statement will occur once all slots have returned. The situation is slightly different when using queued connections; in such a case, the code following the emit keyword will continue immediately, and the slots will be executed later.
+
+If several slots are connected to one signal, the slots will be executed one after the other, in the order they have been connected, when the signal is emitted.
+
+Signals are automatically generated by the moc and must not be implemented in the .cpp file. They can never have return types (i.e. use void).
+
+A note about arguments: Our experience shows that signals and slots are more reusable if they do not use special types. If QScrollBar::valueChanged() were to use a special type such as the hypothetical QScrollBar::Range, it could only be connected to slots designed specifically for QScrollBar. Connecting different input widgets together would be impossible.  
+
+&nbsp;
+
+**Slots**
+
+A slot is called when a signal connected to it is emitted. Slots are normal C++ functions and can be called normally; their only special feature is that signals can be connected to them.
+
+Since slots are normal member functions, they follow the normal C++ rules when called directly. However, as slots, they can be invoked by any component, regardless of its access level, via a signal-slot connection. This means that a signal emitted from an instance of an arbitrary class can cause a private slot to be invoked in an instance of an unrelated class.
+
+You can also define slots to be virtual, which we have found quite useful in practice.
+
+Compared to callbacks, signals and slots are slightly slower because of the increased flexibility they provide, although the difference for real applications is insignificant. In general, emitting a signal that is connected to some slots, is approximately ten times slower than calling the receivers directly, with non-virtual function calls. This is the overhead required to locate the connection object, to safely iterate over all connections (i.e. checking that subsequent receivers have not been destroyed during the emission), and to marshall any parameters in a generic fashion. While ten non-virtual function calls may sound like a lot, it's much less overhead than any new or delete operation, for example. As soon as you perform a string, vector or list operation that behind the scene requires new or delete, the signals and slots overhead is only responsible for a very small proportion of the complete function call costs.
+
+The same is true whenever you do a system call in a slot; or indirectly call more than ten functions. On an i586-500, you can emit around 2,000,000 signals per second connected to one receiver, or around 1,200,000 per second connected to two receivers. The simplicity and flexibility of the signals and slots mechanism is well worth the overhead, which your users won't even notice.
+
+Note that other libraries that define variables called signals or slots may cause compiler warnings and errors when compiled alongside a Qt-based application. To solve this problem, #undef the offending preprocessor symbol.  
+
+&nbsp; 
+
+**A Small Example**  
+
+A minimal C++ class declaration might read:
+```c
+class Counter
+{
+public:
+    Counter() { m_value = 0; }
+
+    int value() const { return m_value; }
+    void setValue(int value);
+
+private:
+    int m_value;
+};
+```
+
+A small QObject-based class might read:  
+
+```c
+#include <QObject>
+
+class Counter : public QObject
+{
+    Q_OBJECT
+
+public:
+    Counter() { m_value = 0; }
+
+    int value() const { return m_value; }
+
+public slots:
+    void setValue(int value);
+
+signals:
+    void valueChanged(int newValue);
+
+private:
+    int m_value;
+};
+```
+
+The QObject-based version has the same internal state, and provides public methods to access the state, but in addition it has support for component programming using signals and slots. This class can tell the outside world that its state has changed by emitting a signal, **valueChanged()**, and it has a slot which other objects can send signals to.
+
+All classes that contain signals or slots must mention Q_OBJECT at the top of their declaration. They must also derive (directly or indirectly) from QObject.
+
+Slots are implemented by the application programmer. Here is a possible implementation of the **Counter::setValue()** slot:
+
+```c
+void Counter::setValue(int value)
+{
+    if (value != m_value) {
+        m_value = value;
+        emit valueChanged(value);
+    }
+}
+```
+
+The **emit** line emits the signal **valueChanged()** from the object, with the new value as argument.
+
+In the following code snippet, we create two **Counter** objects and connect the first object's **valueChanged()** signal to the second object's **setValue()** slot using QObject::connect():
+
+```c
+    Counter a, b;
+    QObject::connect(&a, SIGNAL(valueChanged(int)),
+                     &b, SLOT(setValue(int)));
+
+    a.setValue(12);     // a.value() == 12, b.value() == 12
+    b.setValue(48);     // a.value() == 12, b.value() == 48
+```
+
+Calling **a.setValue(12)** makes **a** emit a **valueChanged(12)** signal, which **b** will receive in its **setValue()** slot, i.e. **b.setValue(12)** is called. Then **b** emits the same **valueChanged()** signal, but since no slot has been connected to b's **valueChanged()** signal, the signal is ignored.
+
+Note that the **setValue()** function sets the value and emits the signal only if **value != m_value**. This prevents infinite looping in the case of cyclic connections (e.g., if **b.valueChanged()** were connected to **a.setValue()**).
+
+By default, for every connection you make, a signal is emitted; two signals are emitted for duplicate connections. You can break all of these connections with a single disconnect() call. If you pass the Qt::UniqueConnection type, the connection will only be made if it is not a duplicate. If there is already a duplicate (exact same signal to the exact same slot on the same objects), the connection will fail and connect will return false
+
+This example illustrates that objects can work together without needing to know any information about each other. To enable this, the objects only need to be connected together, and this can be achieved with some simple QObject::connect() function calls, or with uic's automatic connections feature.
+
+&nbsp;
+
+**Building the Example**  
+
+The C++ preprocessor changes or removes the **signals**, **slots**, and **emit** keywords so that the compiler is presented with standard C++.
+
+By running the moc on class definitions that contain signals or slots, a C++ source file is produced which should be compiled and linked with the other object files for the application. If you use qmake, the makefile rules to automatically invoke moc will be added to your project's makefile.
+
+&nbsp;
+
+**A Real Example**  
+
+Here is a simple commented example of a widget.
+
+```c
+#ifndef LCDNUMBER_H
+#define LCDNUMBER_H
+
+#include <QFrame>
+
+class LcdNumber : public QFrame
+{
+    Q_OBJECT
+```
+
+LcdNumber inherits QObject, which has most of the signal-slot knowledge, via QFrame and QWidget. It is somewhat similar to the built-in QLCDNumber widget.
+
+The Q_OBJECT macro is expanded by the preprocessor to declare several member functions that are implemented by the moc; if you get compiler errors along the lines of "undefined reference to vtable for LcdNumber", you have probably forgotten to run the moc or to include the moc output in the link command.
+
+```c
+public:
+    LcdNumber(QWidget *parent = 0);
+```
+
+It's not obviously relevant to the moc, but if you inherit QWidget you almost certainly want to have the parent argument in your constructor and pass it to the base class's constructor.
+
+Some destructors and member functions are omitted here; the moc ignores member functions.
+
+```c
+signals:
+    void overflow();
+```
+
+LcdNumber emits a signal when it is asked to show an impossible value.
+
+If you don't care about overflow, or you know that overflow cannot occur, you can ignore the overflow() signal, i.e. don't connect it to any slot.
+
+If on the other hand you want to call two different error functions when the number overflows, simply connect the signal to two different slots. Qt will call both (in the order they were connected).
+
+```c
+public slots:
+    void display(int num);
+    void display(double num);
+    void display(const QString &str);
+    void setHexMode();
+    void setDecMode();
+    void setOctMode();
+    void setBinMode();
+    void setSmallDecimalPoint(bool point);
+};
+
+#endif
+```
+
+A slot is a receiving function used to get information about state changes in other widgets. LcdNumber uses it, as the code above indicates, to set the displayed number. Since display() is part of the class's interface with the rest of the program, the slot is public.
+
+Several of the example programs connect the valueChanged() signal of a QScrollBar to the display() slot, so the LCD number continuously shows the value of the scroll bar.
+
+Note that display() is overloaded; Qt will select the appropriate version when you connect a signal to the slot. With callbacks, you'd have to find five different names and keep track of the types yourself.
+
+Some irrelevant member functions have been omitted from this example.  
+
+&nbsp;
+
+**Signals And Slots With Default Arguments**  
+
+The signatures of signals and slots may contain arguments, and the arguments can have default values. Consider QObject::destroyed():
+
+```c
+void destroyed(QObject* = 0);
+```
+
+When a QObject is deleted, it emits this QObject::destroyed() signal. We want to catch this signal, wherever we might have a dangling reference to the deleted QObject, so we can clean it up. A suitable slot signature might be:
+
+```c
+void objectDestroyed(QObject* obj = 0);
+```
+
+To connect the signal to the slot, we use QObject::connect() and the SIGNAL() and SLOT() macros. The rule about whether to include arguments or not in the SIGNAL() and SLOT() macros, if the arguments have default values, is that the signature passed to the SIGNAL() macro must not have fewer arguments than the signature passed to the SLOT() macro.
+
+All of these would work:
+
+```c
+connect(sender, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(Qbject*)));
+connect(sender, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed()));
+connect(sender, SIGNAL(destroyed()), this, SLOT(objectDestroyed()));
+```
+
+But this one won't work:
+
+```c
+connect(sender, SIGNAL(destroyed()), this, SLOT(objectDestroyed(QObject*)));
+```
+
+...because the slot will be expecting a QObject that the signal will not send. This connection will report a runtime error.
+
+&nbsp;
+
+**Advanced Signals and Slots Usage**  
+
+For cases where you may require information on the sender of the signal, Qt provides the QObject::sender() function, which returns a pointer to the object that sent the signal.
+
+The QSignalMapper class is provided for situations where many signals are connected to the same slot and the slot needs to handle each signal differently.
+
+Suppose you have three push buttons that determine which file you will open: "Tax File", "Accounts File", or "Report File".
+
+In order to open the correct file, you use QSignalMapper::setMapping() to map all the clicked() signals to a QSignalMapper object. Then you connect the file's QPushButton::clicked() signal to the QSignalMapper::map() slot.
+
+```c
+    signalMapper = new QSignalMapper(this);
+    signalMapper->setMapping(taxFileButton, QString("taxfile.txt"));
+    signalMapper->setMapping(accountFileButton, QString("accountsfile.txt"));
+    signalMapper->setMapping(reportFileButton, QString("reportfile.txt"));
+
+    connect(taxFileButton, SIGNAL(clicked()),
+        signalMapper, SLOT (map()));
+    connect(accountFileButton, SIGNAL(clicked()),
+        signalMapper, SLOT (map()));
+    connect(reportFileButton, SIGNAL(clicked()),
+        signalMapper, SLOT (map()));
+```
+
+Then, you connect the mapped() signal to readFile() where a different file will be opened, depending on which push button is pressed.
+
+```c
+    connect(signalMapper, SIGNAL(mapped(QString)),
+        this, SLOT(readFile(QString)));
+```
+
+Note: The following code will compile and run, but due to signature normalization, the code will be slower.
+
+```c
+    //slower due to signature normalization at runtime
+
+    connect(signalMapper, SIGNAL(mapped(const QString &)),
+        this, SLOT(readFile(const QString &)));
+```
+
+&nbsp;
+
+&nbsp;
 
 <a name="ch1-2"></a>
 ### 1.2 Application Basics  

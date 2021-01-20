@@ -60,6 +60,7 @@ layout: default
 ### 7. How To's & Special Syntax   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.1 Emulation</font>](#ch7-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2 `#define DECLARE_HANDLE(n)` (Windows API Code)</font>](#ch7-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.3 Code optimization turned off for debugging in 'Release' version</font>](#ch7-3)  
 
 ### 8. ...
 
@@ -1128,6 +1129,21 @@ hwnd = hbmp;    // gives compiler error.
 It's a fairly classic technique to ensure that you get unique types for something that the API supplier don't want to provide the true declaration for. 
 
 Handles don't actually point to anything in memory; they are just used to refer to objects (files, resource, semaphores, windows) when making calls to the Windows API. While they're nothing more than just indexes into kernel's object tables, the developers decided that they make it a pointer to an unused structure which would make them "opaque" and cause less confusion between other types. The *DECLARE_HANDLE* is a function macro that does just that - declaring opaque types for handles.
+
+&nbsp; 
+
+<a name="ch7-3"></a>
+### 7.3 Code optimization turned off for debugging in 'Release' version  
+When we compile a program, we often need to choose one of possible "configurations". Visual Studio creates two of those for a new C++ project, called "Debug" and "Release". As their names imply, the first one is mostly intended to be used during development and debugging, while the other should be used to generate the final binary of the program to be distributed to the external users. Each of these configurations actually sets multiple parameters of the project and you can change them.  
+Debug configuration is all about having the optimizations disabled (which allows full debugging functionality and also makes the compilation time short), while Release has the optimizations enabled (which obviously makes the program run faster).  
+
+Some bugs just don't happen in Debug, e.g. due to uninitialized memory containing consistent 0xCCCCCCCC instead of garbage data, or a race condition between threads not occurring because of a different time it takes to execute certain functions. In any case, sometimes we need to **investigate bugs occurring in Release configuration**. Not all hope is lost then, because in Visual Studio the debugger still works, just not as reliably as in Debug. So here the following line of code comes handy:  
+
+```c
+#pragma optimize("", off)
+```
+
+The custom Microsoft preprocessor macro above, put at the beginning of a .cpp file or just before your function of interest, disables all the compiler optimizations from this point until the end of the file. This is making its debugging nice and smooth, while the rest of the program behaves as before.
 
 &nbsp;  
 

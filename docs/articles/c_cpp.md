@@ -27,6 +27,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.4 `union`</font>](#ch1-9-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10 Precompiled Header</font>](#ch1-10)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.11 *Header Guard* (oder 'Include Guard')</font>](#ch1-11)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 *Calling Convention* (`__stdcall`)</font>](#ch1-12)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -431,6 +432,27 @@ The line
 is placed at the end of the file.  
 
 The symbol used is not crucial, but it must be unique. It is traditional to use all capital letters for the symblo. Only letters, numbers and the underscore character can be used in the symbols. No other punctuation is allowed. A very common symbol is to use the name of the header file, converting the `.h` suffix to a `_H`.
+
+
+&nbsp;
+
+<a name="ch1-12"></a>
+### 1.12 *Calling Convention* (`__stdcall`)  
+```c
+#define CALLBACK __stdcall
+#define WINAPI __stdcall
+#define WINAPIV __cdecl
+#define APIENTRY WINAPI
+```
+All functions in C/C++ have a particular calling convention. The point of a calling convention is to establish how data is passed between the caller and callee and who is responsible for operations such as cleaning out the call stack.  
+
+The most popular calling conventions on windows are  
+- __stdcall, Pushes parameters on the stack, in reverse order (right to left)
+- __cdecl, Pushes parameters on the stack, in reverse order (right to left)
+- __clrcall, Load parameters onto CLR expression stack in order (left to right).
+- __fastcall, Stored in registers, then pushed on stack
+- __thiscall, Pushed on stack; this pointer stored in ECX
+
 
 &nbsp;
 

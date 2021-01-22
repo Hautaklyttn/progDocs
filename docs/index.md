@@ -29,3 +29,4 @@ layout: home
 projects  
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Revolving Donut</font>](./articles/projects/donut.html)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Code Walkthrough: Diablo 1</font>](./articles/projects/code_walkthrough_diablo.html)  

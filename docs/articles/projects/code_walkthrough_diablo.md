@@ -8,9 +8,11 @@ layout: default
 
 # Diablo 1 <font size="-1">(1996 - Blizzard North)</font>  
 
-<font size="-1">&rarr; Code taken from</font> [<font size="-1">here.</font>](https://github.com/diasurgical/devilution)  
+<font size="-1">&rarr; Code taken from</font>[<font size="-1"> here.</font>](https://github.com/diasurgical/devilution)  
 
 ---  
+
+&nbsp;
 
 ## Code Walkthrough  
 

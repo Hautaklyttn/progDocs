@@ -6,7 +6,7 @@ layout: default
 
 &nbsp;
 
-# Diablo 1 <font size="-1">(1996 - Blizzard North)</font>  
+# Diablo <font size="-1">(1996 - Blizzard North)</font>  
 
 ![d1](../../assets/pics/diablo_cover.png)    
 

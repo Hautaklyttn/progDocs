@@ -6,20 +6,21 @@ layout: default
 
 &nbsp;
 
-# Diablo 1 <font size=-1>(1996 - Blizzard North)</font>
+# Diablo 1 <font size="-1">(1996 - Blizzard North)</font>
 ---
 
 ## Code Walkthrough  
 
 &nbsp;
 
-### **Entry Point** <font size=-1>(Function **WinMain ()**)</font> 
+### **Entry Point** <font size="-1">(Function **WinMain ()**)</font> 
 
 **File**:  
-&nbsp;&nbsp;&nbsp;*diablo.cpp*
+&nbsp;&nbsp;&nbsp;*diablo.cpp*  
+
 **Function**:   
 *int APIENTRY **WinMain** (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)*  
-&nbsp;
+
 **Purpose**:  
 - Checking environment
 - Initializes system
@@ -36,8 +37,7 @@ layout: default
 &nbsp;  
 
 **'APIENTRY'**  
-APIENTRY is an alias for *WINAPI*. *WINAPI* itself is a definition for the type of *calling convention* used for windows API calls, the *__stdcall*.  
-More info [here](../c_cpp.html#ch1-12).  
+APIENTRY is an alias for *WINAPI*. *WINAPI* itself is a definition for the type of *calling convention* used for windows API calls, the *__stdcall*. More info [here](../c_cpp.html#ch1-12).  
 
 &nbsp;
 
@@ -46,7 +46,7 @@ More info [here](../c_cpp.html#ch1-12).
 ```c
 diablo_reload_process(HINSTANCE hInstance);
 ```
-Defined in *diablo.cpp*.
+Defined in *diablo.cpp*.  
 ...tbd...
 
 ```c
@@ -70,13 +70,13 @@ Function initializes the hash table (``DWORD hashtable[5][256];``) with predefin
 ```c
 fault_get_filter();
 ```
-Defined in *fault.cpp*.
+Defined in *fault.cpp*.  
 Function returns value of *lpTopLevelExceptionFilter*.
 
 ```c
 bNoEvent = diablo_get_not_running();
 ```
-Defined in *diablo.cpp*.
+Defined in *diablo.cpp*.  
 Function checks if event "DiabloEvent" (created here by CreateEvent (NULL, FALSE, FALSE, "DiabloEvent") ) was already created, which means the game is already running and returns 0 in case it does already run.
 
 ```c

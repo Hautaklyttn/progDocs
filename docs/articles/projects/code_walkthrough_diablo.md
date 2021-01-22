@@ -6,20 +6,23 @@ layout: default
 
 &nbsp;
 
-# Diablo 1 <font size="-1">(1996 - Blizzard North)</font>
+# Diablo 1 <font size="-1">(1996 - Blizzard North)</font>  
+
+<font size="-1">&rarr; Code taken from [here](https://github.com/diasurgical/devilution).</font>
+
 ---
 
 ## Code Walkthrough  
 
 &nbsp;
 
-### **Entry Point** <font size="-1">(Function **WinMain ()**)</font> 
+### **- Entry Point -**  
 
 **File**:  
 &nbsp;&nbsp;&nbsp;*diablo.cpp*  
 
 **Function**:   
-*int APIENTRY **WinMain** (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)*  
+*int APIENTRY **WinMain** <font size="-1">(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)*</font>   
 
 **Purpose**:  
 - Checking environment

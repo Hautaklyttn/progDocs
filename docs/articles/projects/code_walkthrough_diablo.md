@@ -12,7 +12,7 @@ layout: default
 
 ---  
 
-## &rarr; Code walkthrough for compilable Rework of Diablo (*Devilution*) [here](./code_wt_devilution.md).
+### &rarr; Code walkthrough for compilable Rework of Diablo (*Devilution*) [here](./code_wt_devilution.md).
 
 ---
 

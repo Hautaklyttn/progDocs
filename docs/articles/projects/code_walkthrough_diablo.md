@@ -12,15 +12,17 @@ layout: default
 
 ---  
 
+## &rarr; Code walkthrough for compilable Rework of Diablo (*Devilution*) [here](./code_wt_devilution.md).
+
+---
+
 <font size="-1">&rarr; Code taken from <a href="https://github.com/diasurgical/devilution">here.</a></font>  
 
 &nbsp;
 
 ## Code Walkthrough  
 
-&nbsp;
-
-### **- Entry Point -**  
+(only the "Main" function is covered here.)
 
 **File**  
 &nbsp;&nbsp;&nbsp;*diablo.cpp*  
@@ -193,27 +195,3 @@ SaveGamma();
 
 Function saves presently set gamma value to file on disc.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-&nbsp;
-
-![d2](../../assets/pics/diablo_inst.png)    
-
-&nbsp;

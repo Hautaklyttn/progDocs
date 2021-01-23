@@ -45,7 +45,7 @@ layout: default
 
 *'APIENTRY WinMain (..)'*  
 ``APIENTRY`` is an alias for *WINAPI*. *WINAPI* itself is a definition for the type of *calling convention* used for windows API calls, the *__stdcall*. More info [here](../c_cpp.html#ch1-12).  
-The ``WinMain`` char based function was introduced with Windows, in the early 1980's:  
+The ``WinMain`` char based function (alternative to `main()`) was introduced with Windows, in the early 1980's:  
 ```c
 int CALLBACK WinMain(
     HINSTANCE   hInstance,
@@ -71,14 +71,14 @@ diablo_reload_process(HINSTANCE hInstance);
 ```c
 ShowCursor(FALSE);
 ```
-- (Windows function, *winuser.h*)  
+- Windows function, *winuser.h*  
 
 Displays or hides the Windows cursor.
 
 ```c
 srand(GetTickCount());
 ```
-- (*stdlib* function)  
+- *stdlib* function  
 
 *srand* seeds (=initializes) the random number generator. GetTickCount() returns system time with resolution 1 ms.
 
@@ -129,4 +129,91 @@ Function parses the command line options and sets variables accordingly.
 ```c
 init_create_window(nCmdShow);
 ```
+- Defined in *init.cpp*.  
 
+Function first tries to find (function `init_find_mom_parent()`) and close the *Windows* window with name "MOM Parent" (== *MS Office Shortcut Bar*) (function `init_kill_mom_parent()`). and tries to initialize the *Save* directory with checking for sufficient available space (function ``pfile_init_save_directory``() ).  
+Next, memory is reserved for the WinAPI structure `WNDCLASSEXA wcex` and the structure is filled with game window related information. After that, the WinAPI function `RegisterClassEx(&wcex)` is called to register the window class. Final window creation step is to create the window with `CreateWindowEx(..)` and assign it to variable `hwnd`. WinAPI functions `ShowWindow(hWnd, SW_SHOWNORMAL)` and `UpdateWindow(hWnd)` display the window on screen. The init function for *DirectX* `dx_init(hwnd)` is called to set up the graphics pipeline and `BlackPalette()` to set the engines color palette. Function `snd_init(hWnd)` is called to set up the audio pipeline.  
+Function `init_archives()` reserves memory for and assigns to struct ``fileinfo`` the char variables which hold the path to relevant files (e.g. ``diablo_exe_path`` and ``diabdat_mpq_path``). Afterwards depending on the game type ('SPAWN' == Diablo Spawn (freeware) / 'COPYPROT' == Copy Protection (Check for CD)) the paths are set inside the variables. Here also the check for copy protection takes place and error is thrown in case of missing ``diabdat.mpq`` file. Finally, function `init_disable_screensaver(TRUE)` is called to disable the Windows screensaver (if active).  
+
+```c
+ui_sound_init(nCmdShow);
+```
+- Defined in *effects.cpp*.  
+
+Function calls function `priv_sound_init(sfx_UI)`, which initializes the ``sgSFX`` array.  
+
+```c
+UiInitialize();
+```
+- Defined in *diabloui.cpp* (in *DiabloUI*, orig. *DiabloUI.dll*)  
+
+```c
+play_movie("gendata\\logo.smk", TRUE);
+```
+- Defined in *movie.cpp*  
+
+Function starts playback of the given movie (here: *Blizzard* Start-Logo).
+
+```c
+play_movie("gendata\\diablo1.smk", TRUE);
+```
+- Defined in *movie.cpp*  
+
+Function starts playback of the given movie (here: *Diablo Intro-Movie*).  
+
+```c
+SRegSaveValue(APP_NAME, szValueName, 0, 0);
+```
+- Defined in *storm.cpp* (3rd Party, orig. *storm.dll*) 
+
+```c
+UiTitleDialog(7);
+```
+- Defined in *diabloui.cpp* (in *DiabloUI*, orig. *DiabloUI.dll*)  
+
+```c
+mainmenu_loop();
+```
+- Defined in *mainmenu_loop.cpp*.
+
+First function that is called is `mainmenu_refresh_music()` which starts the mainmenu music track. Function `UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30)`  (*DiabloUI* function) loads the main menu (?) and depending on the user selection, the respective submenu function is started. 
+
+
+```c
+UiDestroy();
+```
+- Defined in *diabloui.cpp* (in *DiabloUI*, orig. *DiabloUI.dll*)  
+
+
+
+```c
+SaveGamma();
+```
+- Defined in *palette.cpp*  
+
+Function saves presently set gamma value to file on disc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+&nbsp;
+
+![d2](../../assets/pics/diablo_inst.png)    
+
+&nbsp;

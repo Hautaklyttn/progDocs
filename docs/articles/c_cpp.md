@@ -56,13 +56,14 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.7 Konstruktor in C++</font>](#ch5-7)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.8 Das Schlüsselwort `pragma`</font>](#ch5-8)  
 
-### 6. Bibliotheken   
+### 6. Bibliotheken und API's   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 String</font>](#ch6-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.2 [Win API] `#define DECLARE_HANDLE(n)`</font>](#ch6-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.3 [Win API] `HWND` (Fenster Handle)</font>](#ch6-3)  
 
 ### 7. How To's & Special Syntax   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.1 Emulation</font>](#ch7-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2 `#define DECLARE_HANDLE(n)` (Windows API Code)</font>](#ch7-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.3 Code optimization turned off for debugging in 'Release' version</font>](#ch7-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2 Code optimization turned off for debugging in 'Release' version</font>](#ch7-2)  
 
 ### 8. ...
 
@@ -1079,6 +1080,56 @@ while (ptr != NULL) {
 // Ausgabe: Größte
 ```
 
+&nbsp; 
+
+<a name="ch6-2"></a>
+### 6.2 [Win API] `#define DECLARE_HANDLE(n)`  
+```c
+#define DECLARE_HANDLE(n) typedef struct n##__{int i;}*n
+
+DECLARE_HANDLE(HWND);
+```
+> "##" means connect the parameter.
+
+So the macro equals:
+`typedef struct HWND__{int i;}*HWND`
+
+The main purpose of this construct is to prevent the misuse of handles. If all handles are simply *void \** or *int* or *long long* or some other basic type, there is nothing to prevent you from using one instead of another. A pointer to a struct HWND__ and pointer to struct HBITMAP__ isn't the same thing, so if you have a the following code:  
+```c
+HWND hwnd;
+HBITMAP hbmp;
+
+hbmp = GetBitmap(...);
+hwnd = hbmp;    // gives compiler error. 
+```
+It's a fairly classic technique to ensure that you get unique types for something that the API supplier don't want to provide the true declaration for. 
+
+Handles don't actually point to anything in memory; they are just used to refer to objects (files, resource, semaphores, windows) when making calls to the Windows API. While they're nothing more than just indexes into kernel's object tables, the developers decided that they make it a pointer to an unused structure which would make them "opaque" and cause less confusion between other types. The *DECLARE_HANDLE* is a function macro that does just that - declaring opaque types for handles.
+
+&nbsp; 
+
+<a name="ch6-3"></a>
+### 6.3 [Win API] `HWND` (Fenster Handle)  
+
+Handle `HWND` is declared in *windef.h*:  
+```c
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+
+DECLARE_HANDLE            (HWND);
+DECLARE_HANDLE            (HHOOK);
+
+#endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) */ 
+```
+
+HWND is a "handle to a window" and is part of the Win32 API . HWNDs are essentially pointers (IntPtr) with values that make them (sort of) point to a window-structure data. As they are only intPtr, type safety is not automatically given. To prevent misuse, the following is done &rarr; see [chapter 6.2](#ch6-2) above.   
+
+&nbsp;
+
+- Beziehung zwischen einem C++-Fensterobjekt und einem `HWND`
+  Das Window- Objekt ist ein Objekt der C++- ``CWnd`` Klasse (oder einer abgeleiteten Klasse), die vom Programm direkt erstellt wird. Dies geschieht als Reaktion auf den Konstruktor-und dekonstruktoraufruf Ihres Programms. Das Windows- Fenster hingegen ist ein **undurchsichtiges Handle für eine interne Windows-Datenstruktur**, die einem Fenster entspricht und Systemressourcen beansprucht, wenn Sie vorhanden sind. Ein Windows-Fenster wird durch ein "Fenster Handle" ( ``HWND`` ) identifiziert und wird erstellt, nachdem das- ``CWnd`` Objekt durch einen- ``Create`` Member der-Klasse erstellt wurde ``CWnd`` . Das Fenster kann entweder durch einen Programm Rückruf oder durch eine Benutzeraktion zerstört werden. Das Fenster Handle wird in der m_hWnd Member-Variable des Window-Objekts gespeichert. In der folgenden Abbildung wird die Beziehung zwischen dem C++-Fenster Objekt und dem Windows-Fenster angezeigt.  
+
+  ![hwnd](../assets/pics/hwnd01.png)  
+
 &nbsp;
 
 &nbsp;
@@ -1138,33 +1189,7 @@ Das heisst der spätere Ablauf auf dem Zielsystem wäre dann:
 &nbsp; 
 
 <a name="ch7-2"></a>
-### 7.2 `#define DECLARE_HANDLE(n)` (Windows API Code)  
-```c
-#define DECLARE_HANDLE(n) typedef struct n##__{int i;}*n
-
-DECLARE_HANDLE(HWND);
-```
-> "##" means connect the parameter.
-
-So the macro equals:
-`typedef struct HWND__{int i;}*HWND`
-
-The main purpose of this construct is to prevent the misuse of handles. If all handles are simply *void \** or *int* or *long long* or some other basic type, there is nothing to prevent you from using one instead of another. A pointer to a struct HWND__ and pointer to struct HBITMAP__ isn't the same thing, so if you have a the following code:  
-```c
-HWND hwnd;
-HBITMAP hbmp;
-
-hbmp = GetBitmap(...);
-hwnd = hbmp;    // gives compiler error. 
-```
-It's a fairly classic technique to ensure that you get unique types for something that the API supplier don't want to provide the true declaration for. 
-
-Handles don't actually point to anything in memory; they are just used to refer to objects (files, resource, semaphores, windows) when making calls to the Windows API. While they're nothing more than just indexes into kernel's object tables, the developers decided that they make it a pointer to an unused structure which would make them "opaque" and cause less confusion between other types. The *DECLARE_HANDLE* is a function macro that does just that - declaring opaque types for handles.
-
-&nbsp; 
-
-<a name="ch7-3"></a>
-### 7.3 Code optimization turned off for debugging in 'Release' version  
+### 7.2 Code optimization turned off for debugging in 'Release' version  
 When we compile a program, we often need to choose one of possible "configurations". Visual Studio creates two of those for a new C++ project, called "Debug" and "Release". As their names imply, the first one is mostly intended to be used during development and debugging, while the other should be used to generate the final binary of the program to be distributed to the external users. Each of these configurations actually sets multiple parameters of the project and you can change them.  
 Debug configuration is all about having the optimizations disabled (which allows full debugging functionality and also makes the compilation time short), while Release has the optimizations enabled (which obviously makes the program run faster).  
 

@@ -22,13 +22,13 @@ layout: default
 
 ### **- Entry Point -**  
 
-**File**:  
+**File**  
 &nbsp;&nbsp;&nbsp;*diablo.cpp*  
 
 **Function**:   
-*int APIENTRY **WinMain** <font size="-1">(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)*</font>   
+&nbsp;&nbsp;&nbsp;int APIENTRY **WinMain** <font size="-1">(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)</font>   
 
-**Purpose**:  
+**Purpose**  
 - Checking environment
 - Initializes system
 - Plays Intro
@@ -36,15 +36,26 @@ layout: default
 - Shut Down
 &nbsp;
 
-**Arguments**:
+**Arguments**
 - *hInstance*: A handle to the current instance of the application.
 - *hPrevInstance*: Always null
 - *lpCmdLine*: The command line for the application
 - *nCmdShow*: Initial window state
 &nbsp;  
 
-**'APIENTRY'**  
-APIENTRY is an alias for *WINAPI*. *WINAPI* itself is a definition for the type of *calling convention* used for windows API calls, the *__stdcall*. More info [here](../c_cpp.html#ch1-12).  
+*'APIENTRY WinMain (..)'*  
+``APIENTRY`` is an alias for *WINAPI*. *WINAPI* itself is a definition for the type of *calling convention* used for windows API calls, the *__stdcall*. More info [here](../c_cpp.html#ch1-12).  
+The ``WinMain`` char based function was introduced with Windows, in the early 1980's:  
+```c
+int CALLBACK WinMain(
+    HINSTANCE   hInstance,
+    HINSTANCE   hPrevInstance,
+    LPSTR       lpCmdLine,
+    int         nCmdShow
+    );
+```
+where ``CALLBACK``, ``HINSTANCE`` and ``LPSTR`` are defined by the *\<windows.h\>* header (``LPSTR`` is just char*). With the Microsoft tool chain it makes the linker default to the GUI subsystem, which some see as an advantage. 
+
 
 &nbsp;
 
@@ -53,57 +64,66 @@ APIENTRY is an alias for *WINAPI*. *WINAPI* itself is a definition for the type 
 ```c
 diablo_reload_process(HINSTANCE hInstance);
 ```
-Defined in *diablo.cpp*.  
+- Defined in *diablo.cpp*.  
+
 ...tbd...
 
 ```c
 ShowCursor(FALSE);
 ```
-(Windows function, *winuser.h*)  
+- (Windows function, *winuser.h*)  
+
 Displays or hides the Windows cursor.
 
 ```c
 srand(GetTickCount());
 ```
-(*stdlib* function)  
+- (*stdlib* function)  
+
 *srand* seeds (=initializes) the random number generator. GetTickCount() returns system time with resolution 1 ms.
 
 ```c
 InitHash();
 ```
-Defined in *encrypt.cpp*.  
+- Defined in *encrypt.cpp*.  
+
 Function initializes the hash table (``DWORD hashtable[5][256];``) with predefined numbers.  
 
 ```c
 fault_get_filter();
 ```
-Defined in *fault.cpp*.  
+- Defined in *fault.cpp*.  
+
 Function returns value of *lpTopLevelExceptionFilter*.
 
 ```c
 bNoEvent = diablo_get_not_running();
 ```
-Defined in *diablo.cpp*.  
+- Defined in *diablo.cpp*.  
+
 Function checks if event "DiabloEvent" (created here by CreateEvent (NULL, FALSE, FALSE, "DiabloEvent") ) was already created, which means the game is already running and returns 0 in case it does already run.
 
 ```c
 diablo_find_window(GAME_NAME)
 ```
-Defined in *diablo.cpp*.  
+- Defined in *diablo.cpp*.  
+
 *GAME_NAME* is defined in *defs.h*: `#define GAME_NAME "DIABLO"`  
 Function checks on operation system level (Windows) if the game is already running.  
 
 ```c
 diablo_init_screen();
 ```
-Defined in *diablo.cpp*.  
+- Defined in *diablo.cpp*.  
+
 Function centers the mouse cursor and inits values to 0.
 Clears the in-game message board.
 
 ```c
 diablo_parse_flags(lpCmdLine);
 ```
-Defined in *diablo.cpp*.  
+- Defined in *diablo.cpp*.  
+
 Function parses the command line options and sets variables accordingly.
 
 ```c

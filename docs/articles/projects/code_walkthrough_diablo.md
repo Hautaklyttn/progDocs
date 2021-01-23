@@ -10,11 +10,15 @@ layout: default
 
 ![d1](../../assets/pics/diablo_cover.png)    
 
+&nbsp;
+
 ---  
 
 ### &rarr; Code walkthrough for compilable Rework of Diablo (*Devilution*) [here](./code_wt_devilution.md).
 
 ---
+
+&nbsp;
 
 <font size="-1">&rarr; Code taken from <a href="https://github.com/diasurgical/devilution">here.</a></font>  
 

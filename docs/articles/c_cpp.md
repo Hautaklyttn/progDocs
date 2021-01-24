@@ -28,6 +28,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10 Precompiled Header</font>](#ch1-10)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.11 *Header Guard* (oder 'Include Guard')</font>](#ch1-11)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 *Calling Convention* (`__stdcall`)</font>](#ch1-12)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.13 Namespaces</font>](#ch1-13)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -434,7 +435,6 @@ is placed at the end of the file.
 
 The symbol used is not crucial, but it must be unique. It is traditional to use all capital letters for the symblo. Only letters, numbers and the underscore character can be used in the symbols. No other punctuation is allowed. A very common symbol is to use the name of the header file, converting the `.h` suffix to a `_H`.
 
-
 &nbsp;
 
 <a name="ch1-12"></a>
@@ -454,6 +454,53 @@ The most popular calling conventions on windows are
 - __fastcall, Stored in registers, then pushed on stack
 - __thiscall, Pushed on stack; this pointer stored in ECX
 
+&nbsp;
+
+<a name="ch1-13"></a>
+### 1.13 Namespaces  
+
+In C++, namespaces provide a method for preventing name conflicts in large projects.
+
+Symbols declared inside a namespace block are placed in a named scope that prevents them from being mistaken for identically-named symbols in other scopes. Multiple namespace blocks with the same name are allowed. All declarations within those blocks are declared in the named scope.  
+
+1) Named namespace definition for the namespace ns_name:
+   `namespace ns_name { declarations }`  
+2) Namespace names (along with class names) can appear on the left hand side of the scope resolution operator, as part of qualified name lookup:
+   `ns_name::name`  
+3) using-directive: From the point of view of unqualified name lookup of any name after a using-directive and until the end of the scope in which it appears, every name from ns_name is visible as if it were declared in the nearest enclosing namespace which contains both the using-directive and ns_name:  
+   ``using ns_name::name;``  
+
+&nbsp;
+
+Examples:
+
+```c
+namespace Q {
+  namespace V { // V is a member of Q, and is fully defined within Q
+// namespace Q::V { // C++17 alternative to the above two lines
+    class C { void m(); }; // C is a member of V and is fully defined within V
+                           // C::m is only declared
+    void f(); // f is a member of V, but is only declared here
+  }
+  void V::f() // definition of V's member f outside of V
+              // f's enclosing namespaces are still the global namespace, Q, and Q::V
+  {
+      extern void h(); // This declares ::Q::V::h
+  }
+  void V::C::m() // definition of V::C::m outside of the namespace (and the class body)
+                 // enclosing namespaces are the global namespace, Q, and Q::V
+  {
+  }
+}
+```
+
+- **(!) Define alias for namespace** (e.g. in *defs.h*)  (for use in multiple files):
+  ```c
+  ...
+  #define APPL_BEGIN_NAMESPACE namespace appl {
+  #define APPL_END_NAMESPACE }
+  ...
+  ```
 
 &nbsp;
 

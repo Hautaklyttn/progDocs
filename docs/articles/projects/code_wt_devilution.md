@@ -55,3 +55,10 @@ First function called is `init_create_window()`
 
 Flag *was_window_init* is set to *true*.  
 
+Function call `SFileEnableDirectAccess(TRUE)` results in the action that the *.mpq file* is supposed to be opened locally.  
+Function `init_archives()` 
+   - Reserves memory for and assigns to struct `fileinfo` the char variables which hold the path to relevant files (e.g. `executablefile` and `originalarchivefile`).  
+   - All mpq-file handles (e.g. `diabdat_mpq` or `hellfire_mpq`) are set by calling the `init_test_access(..)` function multiple times.  
+     This function itself calls function `SFileOpenArchive(..)`.  
+      - A file stream object *TFileStream \*pStrean*, an empty archive object *TMPQArchive \*ha* and a buffer for searching the MPQ header *LPBYTE pbHeaderBuffer* are created.
+      - 

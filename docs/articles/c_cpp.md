@@ -56,6 +56,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.6 `True` and `False` in C</font>](#ch5-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.7 Konstruktor in C++</font>](#ch5-7)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.8 Das Schlüsselwort `pragma`</font>](#ch5-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9 `Handle` in C++</font>](#ch5-9)  
 
 ### 6. Bibliotheken und API's   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 String</font>](#ch6-1)  
@@ -1038,7 +1039,36 @@ Initialisieren Sie Klassenmember aus Konstruktorargumenten durch die Verwendung 
 ### 5.8 Das Schlüsselwort ``pragma``  
 
 - `#pragma once`  
-   In the C and C++ programming languages, **pragma once** is a non-standard but widely supported preprocessor directive designed to cause the current source file to be included only once in a single compilation. Thus, ``#pragma once`` serves the same purpose as **include guards**, but with several advantages, including: less code, avoidance of name clashes, and sometimes improvement in compilation speed. On the other hand, ``#pragma once`` is not necessarily available in all compilers and its implementation is tricky and might not always be reliable.
+   In the C and C++ programming languages, **pragma once** is a non-standard but widely supported preprocessor directive designed to cause the current source file to be included only once in a single compilation. Thus, ``#pragma once`` serves the same purpose as **include guards**, but with several advantages, including: less code, avoidance of name clashes, and sometimes improvement in compilation speed. On the other hand, ``#pragma once`` is not necessarily available in all compilers and its implementation is tricky and might not always be reliable.  
+   
+&nbsp;  
+
+<a name="ch5-9"></a>
+### 5.9 `Handle` in C++  
+
+A *handle* is a pointer or index with no visible type attached to it. Usually you see something like:  
+```c
+typedef void* HANDLE;
+HANDLE myHandleToSomething = CreateSomething();
+```
+e.g. HANDLE is a typedef defined in the *winnt.h* file in Visual Studio (Windows)
+
+So in your code you just pass HANDLE around as an opaque value.  
+In the code that uses the object, it casts the pointer to a real structure type and uses it:  
+
+```c
+int doSomething(HANDLE s, int a, int b) {
+     Something* something = reinterpret_cast<Something*>(s);
+     return something->doit(a, b);
+ }
+```
+A handle can be anything from an integer index to a pointer to a resource in kernel space. The idea is that they provide an abstraction of a resource, so you don't need to know much about the resource itself to use it.  
+
+For instance, the HWND in the Win32 API is a handle for a Window. By itself it's useless: you can't glean any information from it. But pass it to the right API functions, and you can perform a wealth of different tricks with it. Internally you can think of the HWND as just an index into the GUI's table of windows (which may not necessarily be how it's implemented, but it makes the magic make sense).  
+
+A Handle can be useful for saving states (among others). If u have data in a structure like an *std::vector*. Your object may be at different memory locations at different times during execution of a program, which means your pointer to that memory will change values. With a handle it never changes, it always references your object. Imagine saving a state of a program (like in a game) - you wouldn't save out a pointer location to data and later import the data again and try to get that address in memory. You can however save out a Handle with your data, and import the data and handle.  
+
+> The key thing is that when you have a "handle", you neither know nor care how that handle actually ends up identifying the thing that it identifies, all you need to know is that it does.
 
 &nbsp;
 

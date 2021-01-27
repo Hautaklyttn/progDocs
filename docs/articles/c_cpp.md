@@ -1,3 +1,5 @@
+{::options parse_block_html="true" /}
+
 ---
 layout: default
 ---
@@ -66,6 +68,7 @@ layout: default
 ### 7. How To's & Special Syntax   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.1 Emulation</font>](#ch7-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2 Code optimization turned off for debugging in 'Release' version</font>](#ch7-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.3 Digital Filter Implementation</font>](#ch7-3)  
 
 ### 8. ...
 
@@ -1276,7 +1279,144 @@ Some bugs just don't happen in Debug, e.g. due to uninitialized memory containin
 #pragma optimize("", off)
 ```
 
-The custom Microsoft preprocessor macro above, put at the beginning of a .cpp file or just before your function of interest, disables all the compiler optimizations from this point until the end of the file. This is making its debugging nice and smooth, while the rest of the program behaves as before.
+The custom Microsoft preprocessor macro above, put at the beginning of a .cpp file or just before your function of interest, disables all the compiler optimizations from this point until the end of the file. This is making its debugging nice and smooth, while the rest of the program behaves as before.  
+
+&nbsp; 
+
+<a name="ch7-3"></a>
+### 7.3 Digital Filter Implementation  
+
+1. **IIR Tiefpass (Tiefpass 1.Ordnung)**  
+  Er verhält sich (mit Ausnahme dass er digital ist) wie ein analoger RC-Tiefpass (aus Widerstand und Kondensator). Es ist sehr schnell berechnet und gut wenn hochfrequente Störungen aus einem Eingabesignal entfernt werden sollen. Zwei Parameter werden benötigt, deren Summe aber 1 ergeben muss. Je höher coeff[1], desto stärker werden Störungen entfernt, desto langsamer ändert sich aber auch die Ausgabe des Filters. Je höher coeffs[0], desto schneller reagiert die Ausgabe, aber es kommt auch mehr Rauschen durch.  
+  <details><summary markdown="span">IIR FILTER EXAMPLE</summary>  
+    ```c  
+        /**
+      * @file iir_filter_example.h
+      *
+      * IIR FILTER EXAMPLE
+      *
+      *
+      **/
+
+      #include <stdlib.h>
+
+      /**
+      * This is the only variable that this filter needs, the coefficients below are
+      * constant.
+      */
+      real_t old_value;
+
+      /**
+      * The coefficients of our filter. We use a simple 1st order low pass here,
+      * so we have two values. The sum of both must be 1. You can add more weight
+      * to the new value or to the old value (which includes the all the previously
+      * calculated filter results).
+      */
+      real_t coeffs[2] = {
+        0.5,  // The weight of the new value
+        0.5   // The weight of the old value
+      };
+
+      /**
+      * Here we initialise our IIR filter.
+      */
+      void filter_init() {
+        old_value = 0.0;
+      }
+
+      /**
+      * This function is called every cycle. Calculates the new output value and
+      * saves it in last_value for the next cycle.
+      *
+      * @param double new_value
+      * @return double
+      */
+      real_t filter(real_t new_value) {
+        // Calculate y = a0 * x(k-0) + a1 * x(k-1)
+        return old_value = coeffs[0] * new_value + coeffs[1] * old_value;
+      }
+    ```
+  </details>
+
+2. **Moving Average**  
+   Ein Moving Average Filter (oder Sliding Window Filter) bildet den Mittelwert über die letzten N Eingabewerte. Wie der IIR Filter oben ist er schnell berechnet, reagiert aber schneller bei moderater Rauschunterdrückung. Nachteil: Er braucht Speicher, was auf kleinen Mikrocontrollern ein Problem sein könnte. Der Algorithmus berechnet einfach die Summe der Vergangenheitswerte geteilt durch die Anzahl an Vergangenheitswerten (Mittelwert eben). Mit einem kleinen Trick rechnen wir das nicht immer wieder aus, stattdessen speichern wir die Summe in einer Variable. Wenn ein neuer Eingabewert kommt, so subtrahieren wir den ältesten Wert und addieren den neuen. Danach müssen wir diese Summe noch durch die Anzahl an Elementen teilen und haben das neue Ergebnis. Erstmal die Floating Point Variante:  
+   &nbsp;
+   ```c
+    /**
+    * @file fir_filter_moving_avg8_uint.h
+    *
+    * FIR FILTER EXAMPLE, MOVING AVERAGE IMPLEMENTATION
+    *
+    *
+    **/
+    
+    /**
+    * The size of our filter. We specify it in bits
+    */
+    #define FILTER_SIZE (8)
+    
+    /**
+    *
+    */
+    real_t filter_buffer[FILTER_SIZE];
+    
+    /**
+    * Here we store the sum of all history values
+    */
+    real_t filter_sum;
+    
+    
+    /**
+    * This is the actual position of the ring buffer.
+    */
+    real_t *filter_position;
+    
+    /**
+    * Here we initialise our filter. In this case we only set the
+    * initial position and set all buffer values to zero.
+    */
+    void filter_init() {
+      register int i;
+      filter_sum = 0;
+      filter_position = filter_buffer;
+      // alternatively memset(filter_buffer, 0, sizeof(filter_buffer) * sizeof(unsigned int))
+      for(i=0; i<FILTER_SIZE; i++) filter_buffer[i] = 0;
+    }
+    
+    /**
+    * This function is called every cycle. It adds substracts the oldest value from
+    * the sum, adds the new value to the sum, overwrites the oldest value with the
+    * new value and increments the ring buffer pointer (with rewind on overflow).
+    *
+    * @param double new_value
+    * @return double
+    */
+    real_t filter(real_t new_value) {
+      // Substract oldest value from the sum
+      filter_sum -= *filter_position;
+    
+      // Update ring buffer (overwrite oldest value with new one)
+      *filter_position = new_value;
+    
+      // Add new value to the sum
+      filter_sum += new_value;
+    
+      // Advance the buffer write position, rewind to the beginning if needed.
+      if(++filter_position >= filter_buffer + FILTER_SIZE) {
+        filter_position = filter_buffer;
+      }
+    
+      // Return sum divided by FILTER_SIZE, which is faster done by right shifting
+      // The size of the ring buffer in bits. ( filter_sum / 2^bits ).
+      return filter_sum / FILTER_SIZE;
+    }
+   ```
+    Nun das Selbe mit Integern. Vor allem wenn keine Floating Point Einheit im Controller ist spart das viel Zeit. Beim Dividieren kann ebenfalls eingespart werden, indem man statt /2 zu rechnen jeweils ein mal die Bits der Zahl nach rechts schiebt. Das lässt sich also für alle Puffergrößen von 2^BITS machen. Der Ringbuffer im Beispiel hat 8 Werte, und mit summe >> 3 haben wir die Summe durch 8 geteilt.  
+    ```c
+    
+    ```
+
+&nbsp;
 
 &nbsp;  
 

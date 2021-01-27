@@ -1327,43 +1327,27 @@ Er verhält sich (mit Ausnahme dass er digital ist) wie ein analoger RC-Tiefpass
   ```
 </details>
 
+&nbsp;
+
 **Moving Average**  
 Ein Moving Average Filter (oder Sliding Window Filter) bildet den Mittelwert über die letzten N Eingabewerte. Wie der IIR Filter oben ist er schnell berechnet, reagiert aber schneller bei moderater Rauschunterdrückung. Nachteil: Er braucht Speicher, was auf kleinen Mikrocontrollern ein Problem sein könnte. Der Algorithmus berechnet einfach die Summe der Vergangenheitswerte geteilt durch die Anzahl an Vergangenheitswerten (Mittelwert eben). Mit einem kleinen Trick rechnen wir das nicht immer wieder aus, stattdessen speichern wir die Summe in einer Variable. Wenn ein neuer Eingabewert kommt, so subtrahieren wir den ältesten Wert und addieren den neuen. Danach müssen wir diese Summe noch durch die Anzahl an Elementen teilen und haben das neue Ergebnis. Erstmal die Floating Point Variante:  
-<details><summary markdown="span">IIR FILTER EXAMPLE</summary>  
+
+<details><summary markdown="span">FIR FILTER, FLOAT, MOVING AVERAGE</summary>  
   ```c
-    /**
-    * @file fir_filter_moving_avg8_uint.h
-    *
-    * FIR FILTER EXAMPLE, MOVING AVERAGE IMPLEMENTATION
-    *
-    *
-    **/
-    
-    /**
-    * The size of our filter. We specify it in bits
-    */
+  
+    // The size of our filter. We specify it in bits
     #define FILTER_SIZE (8)
     
-    /**
-    *
-    */
     real_t filter_buffer[FILTER_SIZE];
     
-    /**
-    * Here we store the sum of all history values
-    */
+    // Here we store the sum of all history values
     real_t filter_sum;
     
-    
-    /**
-    * This is the actual position of the ring buffer.
-    */
+    // This is the actual position of the ring buffer.
     real_t *filter_position;
     
-    /**
-    * Here we initialise our filter. In this case we only set the
-    * initial position and set all buffer values to zero.
-    */
+    // Here we initialise our filter. In this case we only set the
+    // initial position and set all buffer values to zero.
     void filter_init() {
       register int i;
       filter_sum = 0;
@@ -1372,14 +1356,13 @@ Ein Moving Average Filter (oder Sliding Window Filter) bildet den Mittelwert üb
       for(i=0; i<FILTER_SIZE; i++) filter_buffer[i] = 0;
     }
     
-    /**
-    * This function is called every cycle. It adds substracts the oldest value from
-    * the sum, adds the new value to the sum, overwrites the oldest value with the
-    * new value and increments the ring buffer pointer (with rewind on overflow).
-    *
-    * @param double new_value
-    * @return double
-    */
+    // This function is called every cycle. It adds substracts the oldest value from
+    // the sum, adds the new value to the sum, overwrites the oldest value with the
+    // new value and increments the ring buffer pointer (with rewind on overflow).
+
+    // @param double new_value
+    // @return double
+
     real_t filter(real_t new_value) {
       // Substract oldest value from the sum
       filter_sum -= *filter_position;
@@ -1402,10 +1385,164 @@ Ein Moving Average Filter (oder Sliding Window Filter) bildet den Mittelwert üb
   ```
 </details>  
 
-  Nun das Selbe mit Integern. Vor allem wenn keine Floating Point Einheit im Controller ist spart das viel Zeit. Beim Dividieren kann ebenfalls eingespart werden, indem man statt /2 zu rechnen jeweils ein mal die Bits der Zahl nach rechts schiebt. Das lässt sich also für alle Puffergrößen von 2^BITS machen. Der Ringbuffer im Beispiel hat 8 Werte, und mit summe >> 3 haben wir die Summe durch 8 geteilt.  
-    ```c
+&nbsp;
+
+Nun das Selbe mit Integern. Vor allem wenn keine Floating Point Einheit im Controller ist spart das viel Zeit. Beim Dividieren kann ebenfalls eingespart werden, indem man statt /2 zu rechnen jeweils ein mal die Bits der Zahl nach rechts schiebt. Das lässt sich also für alle Puffergrößen von 2^BITS machen. Der Ringbuffer im Beispiel hat 8 Werte, und mit summe >> 3 haben wir die Summe durch 8 geteilt.  
+
+<details><summary markdown="span">FIR FILTER, INTEGER, MOVING AVERAGE</summary>  
+  ```c
+
+  // The size of our filter. We specify it in bits
+
+  #define FILTER_SIZE_IN_BITS (3)
+  #define FILTER_SIZE ( 1 << (FILTER_SIZE_IN_BITS) )
+  
+  uint16_t filter_buffer[FILTER_SIZE];
+  
+  // Here we store the sum of all history values
+  uint32_t filter_sum;
+  
+  // This is the actual position of the ring buffer.
+  uint16_t *filter_position;
+  
+  // Here we initialise our filter. In this case we only set the
+  // initial position and set all buffer values to zero.
+  void filter_init() {
+    register int i;
+    filter_sum = 0;
+    filter_position = filter_buffer;
+    // alternatively memset(filter_buffer, 0, sizeof(filter_buffer) * sizeof(unsigned int))
+    for(i=0; i<FILTER_SIZE; i++) filter_buffer[i] = 0;
+  }
+  
+  // This function is called every cycle. It adds substracts the oldest value from
+  // the sum, adds the new value to the sum, overwrites the oldest value with the
+  // new value and increments the ring buffer pointer (with rewind on overflow).
+
+  // @param double new_value
+  // @return double
+  real_t filter(real_t new_value) {
+    // Substract oldest value from the sum
+    filter_sum -= *filter_position;
+  
+    // Update ring buffer (overwrite oldest value with new one)
+    *filter_position = (uint16_t) new_value;
+  
+    // Add new value to the sum
+    filter_sum += (uint16_t) new_value;
+  
+    // Advance the buffer write position, rewind to the beginning if needed.
+    if(++filter_position >= filter_buffer + FILTER_SIZE) {
+      filter_position = filter_buffer;
+    }
+  
+    // Return sum divided by FILTER_SIZE, which is faster done by right shifting
+    // The size of the ring buffer in bits. ( filter_sum / 2^bits ).
+    return (real_t) (filter_sum >> FILTER_SIZE_IN_BITS);
+  }
+  ```
+</details> 
+
+&nbsp;
+
+**FIR Filter**  
+Die folgenden Quelltexte sind Implementationen eines zyklisch aufgerufenen FIR Filters. Wie beim Moving Average Filter (der ein FIR-Filter ist) müssen auch hier die Vergangenheitswerte gespeichert werden. Zudem gibt es einen Speicherbereich mit Koeffizienten, der genau so groß ist wie der Wertepuffer. Alles was der Filteralgorithmus tun muss, ist jeden gespeicherten Vergangenheitswert mit dem dazugehörigen Koeffizienten zu multiplizieren und all diese Produkte zum Endergebnis aufzuaddieren. Die Anzahl und Werte der Koeffizienten bestimmen dabei, was der Filter tut. Er kann Tiefpass, Hochpass, Bandpass, Bandsperre und vieles mehr sein. FIR Filter sind ein derart scharfes Messer im Schrank der Signalverarbeitung, dass Prozessoren darauf ausgelegt werden sie schnell berechnen zu können. Vor allem in DSPs sieht man daher **MAC-Operationen (Multiply and Accumulate)**, d.h. in einem Schritt multiplizieren sie zwei Zahlen und addieren das Ergebnis zu einer Summe hinzu. Abhängig von den Features eines Controllers sollte dann auch besser von C auf Assembly ausgewichen werden (z.B. gibt es auch Prozessoren, die die MAC-Operation rechnen und im selben Schritt das nächste Wert-Koeffizient-Paar anvisieren, usw. usw.). Besser lesbar ist jedoch dieses Beispiel in C. Die Koeffizienten habe ich so gewählt, dass dieser FIR identisch mit dem Moving Average Filter ist. Es ist auch ein leicht nachvollziehbares Beispiel: Statt zum Schluss **Summe / N** zu rechnen wird hier jeder Vergangenheitswert mal **1/N** gerechnet. "Da kommt das Selbe raus." Für andere Filterkoeffizienten lohnt sich ein Blick in die **Signal Toolbox von GNU Octave**. (Die Software ist kostenlos).  
+
+Erstmal mit Fließkommazahlen: Der Algorithmus ist recht selbsterklärend, zwei Sachen seien aber noch angemerkt:  
+
+- Wir füllen den Ringpuffer rückwärts, denn dann sind die Vergangenheitswerte zum Rechnen bereits richtig geordnet. D.h. der vorherige Wert ist eins nach vorn, der davor zwei nach vorn usw.  
+
+- Wir rechnen in zwei Schleifen, damit wir uns die Abfrage, ob wir am Ende des Ringpuffer-Speichers angekommen sind, in der Schleife erspart bleibt. Es kommt richtig raus wenn wir erst bis zum Ende des Puffers arbeiten, dann die Pufferposition rücksetzen und bis zum Ende der Koeffizienten rechnen.  
+
+<details><summary markdown="span">FIR FILTER, INTEGER, MOVING AVERAGE</summary>  
+  ```c
+
+    #include <stdlib.h>
     
-    ```
+    // The size of our filter.
+    #define FIR_FILTER_SIZE (8)
+    
+
+    // These are coefficients of the FIR filter. In this case the size is 8 and
+    // all values are 1/8. This means it works exactly like a sliding window
+    // (moving average) filter.
+
+    real_t fir_coeffs[FIR_FILTER_SIZE] = {
+      (1.0/8), (1.0/8), (1.0/8), (1.0/8),
+      (1.0/8), (1.0/8), (1.0/8), (1.0/8)
+    };
+    
+    // This is the history buffer of the values. It is used as a ring buffer.
+    real_t fir_buffer[FIR_FILTER_SIZE];
+    
+
+    // This is the actual position of the ring buffer.
+    real_t *fir_position = NULL;
+    
+    // Here we initialise our FIR filter. In this case we only set the
+    // initial position and set all buffer values to zero.
+    void filter_init() {
+      fir_position = fir_buffer;
+      int i;
+      for(i=0; i<FIR_FILTER_SIZE; i++) {
+        fir_buffer[i] = 0;
+      }
+    }
+    
+    // This function is called every cycle. It adds the new value (e.g. read from
+    // an analog input) and accumulates the products of all history values with
+    // their corresponding coefficient.
+    // @param double new_value
+    // @return double
+    real_t filter(real_t new_value) {
+      // 1st coeff position is at pointer position fir_coeffs
+      real_t *p_coeff  = fir_coeffs;
+    
+      // 1st buffer position is at the actual write position
+      real_t *p_buffer = fir_position;
+    
+      // This is our function result
+      real_t result = 0;
+    
+      // We overwrite the oldest value with the new value. This is now our 1st
+      // position to start.
+      *fir_position = new_value;
+    
+      // As the buffer has the same size as the coefficients, we can iterate to
+      // the end of the buffer. The p_coeff pointer cannot overflow here.
+      while(p_buffer < fir_buffer + FIR_FILTER_SIZE) {
+        // Multiply and accumulate
+        result += (*p_coeff) * (*p_buffer);
+    
+        // Next coeff, next buffer position
+        p_coeff++;
+        p_buffer++;
+      }
+    
+      // Reset the pointer to the start of the ring buffer and iterate until the
+      // p_coeff pointer reaches its end. After this we have MAC'ed all history
+      // values with their corresponding coefficients.
+      p_buffer = fir_buffer;
+      while(p_coeff < fir_coeffs + FIR_FILTER_SIZE) {
+        // MAC
+        result += (*p_coeff) * (*p_buffer);
+        // Increment buffer and coefficient position.
+        p_coeff++;
+        p_buffer++;
+      }
+    
+      // To finish this, we advance our ring buffer write position and roll over
+      // to the beginning if we reached the end of the memory block.
+      // Note: We write backwards so that our history time is ascending. 
+      if(--fir_position < fir_buffer) {
+        fir_position = fir_buffer + FIR_FILTER_SIZE - 1;
+      }
+    
+      // Return our filter result.
+      return result;
+    }
+  ```
+</details> 
 
 &nbsp;
 

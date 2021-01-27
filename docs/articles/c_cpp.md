@@ -1,5 +1,3 @@
-{::options parse_block_html="true" /}
-
 ---
 layout: default
 ---
@@ -1295,7 +1293,6 @@ Er verhält sich (mit Ausnahme dass er digital ist) wie ein analoger RC-Tiefpass
 
     // This is the only variable that this filter needs, the coefficients below are constant.
     real_t old_value;
-
 
     // The coefficients of our filter. We use a simple 1st order low pass here,
     // so we have two values. The sum of both must be 1. You can add more weight

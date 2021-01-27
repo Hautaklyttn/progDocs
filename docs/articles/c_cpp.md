@@ -1289,10 +1289,9 @@ The custom Microsoft preprocessor macro above, put at the beginning of a .cpp fi
 **IIR Tiefpass (Tiefpass 1.Ordnung)**  
 Er verhält sich (mit Ausnahme dass er digital ist) wie ein analoger RC-Tiefpass (aus Widerstand und Kondensator). Es ist sehr schnell berechnet und gut wenn hochfrequente Störungen aus einem Eingabesignal entfernt werden sollen. Zwei Parameter werden benötigt, deren Summe aber 1 ergeben muss. Je höher coeff[1], desto stärker werden Störungen entfernt, desto langsamer ändert sich aber auch die Ausgabe des Filters. Je höher coeffs[0], desto schneller reagiert die Ausgabe, aber es kommt auch mehr Rauschen durch.  
 
-<details><summary markdown="span">IIR FILTER EXAMPLE</summary>  
+<details><summary markdown="span">IIR FILTER</summary>  
   ```c  
     #include <stdlib.h>
-
 
     // This is the only variable that this filter needs, the coefficients below are constant.
     real_t old_value;
@@ -1332,7 +1331,7 @@ Er verhält sich (mit Ausnahme dass er digital ist) wie ein analoger RC-Tiefpass
 **Moving Average**  
 Ein Moving Average Filter (oder Sliding Window Filter) bildet den Mittelwert über die letzten N Eingabewerte. Wie der IIR Filter oben ist er schnell berechnet, reagiert aber schneller bei moderater Rauschunterdrückung. Nachteil: Er braucht Speicher, was auf kleinen Mikrocontrollern ein Problem sein könnte. Der Algorithmus berechnet einfach die Summe der Vergangenheitswerte geteilt durch die Anzahl an Vergangenheitswerten (Mittelwert eben). Mit einem kleinen Trick rechnen wir das nicht immer wieder aus, stattdessen speichern wir die Summe in einer Variable. Wenn ein neuer Eingabewert kommt, so subtrahieren wir den ältesten Wert und addieren den neuen. Danach müssen wir diese Summe noch durch die Anzahl an Elementen teilen und haben das neue Ergebnis. Erstmal die Floating Point Variante:  
 
-<details><summary markdown="span">FIR FILTER, FLOAT, MOVING AVERAGE</summary>  
+<details><summary markdown="span">MOVING AVERAGE (FLOAT)</summary>  
   ```c
   
     // The size of our filter. We specify it in bits
@@ -1389,11 +1388,10 @@ Ein Moving Average Filter (oder Sliding Window Filter) bildet den Mittelwert üb
 
 Nun das Selbe mit Integern. Vor allem wenn keine Floating Point Einheit im Controller ist spart das viel Zeit. Beim Dividieren kann ebenfalls eingespart werden, indem man statt /2 zu rechnen jeweils ein mal die Bits der Zahl nach rechts schiebt. Das lässt sich also für alle Puffergrößen von 2^BITS machen. Der Ringbuffer im Beispiel hat 8 Werte, und mit summe >> 3 haben wir die Summe durch 8 geteilt.  
 
-<details><summary markdown="span">FIR FILTER, INTEGER, MOVING AVERAGE</summary>  
+<details><summary markdown="span">MOVING AVERAGE (INTEGER)</summary>  
   ```c
 
   // The size of our filter. We specify it in bits
-
   #define FILTER_SIZE_IN_BITS (3)
   #define FILTER_SIZE ( 1 << (FILTER_SIZE_IN_BITS) )
   
@@ -1454,7 +1452,7 @@ Erstmal mit Fließkommazahlen: Der Algorithmus ist recht selbsterklärend, zwei 
 
 - Wir rechnen in zwei Schleifen, damit wir uns die Abfrage, ob wir am Ende des Ringpuffer-Speichers angekommen sind, in der Schleife erspart bleibt. Es kommt richtig raus wenn wir erst bis zum Ende des Puffers arbeiten, dann die Pufferposition rücksetzen und bis zum Ende der Koeffizienten rechnen.  
 
-<details><summary markdown="span">FIR FILTER, INTEGER, MOVING AVERAGE</summary>  
+<details><summary markdown="span">FIR FILTER</summary>  
   ```c
 
     #include <stdlib.h>
@@ -1462,11 +1460,9 @@ Erstmal mit Fließkommazahlen: Der Algorithmus ist recht selbsterklärend, zwei 
     // The size of our filter.
     #define FIR_FILTER_SIZE (8)
     
-
     // These are coefficients of the FIR filter. In this case the size is 8 and
     // all values are 1/8. This means it works exactly like a sliding window
     // (moving average) filter.
-
     real_t fir_coeffs[FIR_FILTER_SIZE] = {
       (1.0/8), (1.0/8), (1.0/8), (1.0/8),
       (1.0/8), (1.0/8), (1.0/8), (1.0/8)

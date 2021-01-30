@@ -57,8 +57,17 @@ Flag *was_window_init* is set to *true*.
 
 Function call `SFileEnableDirectAccess(TRUE)` results in the action that the *.mpq file* is supposed to be opened locally.  
 Function `init_archives()` 
-   - Reserves memory for and assigns to struct `fileinfo` the char variables which hold the path to relevant files (e.g. `executablefile` and `originalarchivefile`).  
-   - All mpq-file handles (e.g. `diabdat_mpq` or `hellfire_mpq`) are set by calling the `init_test_access(..)` function multiple times.  
+   - Reserves memory for and assigns to struct `fileinfo` the char variables, which holds the path to relevant files (e.g. `executablefile` and `originalarchivefile`).  
+   - All mpq-file handles (e.g. `diabdat_mpq` or `hellfire_mpq`) are set by calling the `init_test_access(..)` function (multiple calls).  
      This function itself calls function `SFileOpenArchive(..)`.  
-      - A file stream object *TFileStream \*pStrean*, an empty archive object *TMPQArchive \*ha* and a buffer for searching the MPQ header *LPBYTE pbHeaderBuffer* are created.
-      - 
+      - A file stream object *TFileStream \*pStream*, an empty archive object *TMPQArchive \*ha* and a buffer for searching the MPQ header *LPBYTE pbHeaderBuffer* are created.
+      - Function `InitializeMpqCryptography()` initializes cryptographic varibles (for decription of .mpq file)  
+      - The .mpq file is opened and assigned to object *pStream* ( + multiple checks are done with the assigned .mpq file)
+      - Multiple objects/variables/flags are set inside (master) archive object *TMPQArchive \*ha* (*HashStringSlash* / *pStream* / *dwFlags* / etc.)
+      - .mpq file is searched for the header part. If found, the position (*pUserDataPos*) and the data (*pUserData*) is stored in object *TMPQArchive \*ha* and afterwards a conversion of the header to version 4 is done (`ConvertMpkHeaderToFormat4(..)`).
+      - At the end: `listfile` (assigned to *ha->dwFileFlags1*), `attributes file` (assigned to *ha->dwFileFlags2*) and `signature` (assigned to *ha->dwFileFlags3*).
+  - At the end the archive handle ``*ha`` is returned to the mpq-file handle.  
+
+Flag *was_archives_init* is set to *true*.  
+
+

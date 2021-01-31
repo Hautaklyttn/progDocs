@@ -66,7 +66,8 @@ Function `init_archives()`:
   - The .mpq file is opened and assigned to object *pStream* ( + multiple checks are done with the assigned .mpq file)
   - Multiple objects/variables/flags are set inside (master) archive object *TMPQArchive \*ha* (*HashStringSlash* / *pStream* / *dwFlags* / etc.)
   - .mpq file is searched for the header part. If found, the position (*pUserDataPos*) and the data (*pUserData*) is stored in object *TMPQArchive \*ha* and afterwards a conversion of the header to version 4 is done (`ConvertMpkHeaderToFormat4(..)`).
-  - At the end: `listfile` (assigned to *ha->dwFileFlags1*), `attributes file` (assigned to *ha->dwFileFlags2*) and `signature` (assigned to *ha->dwFileFlags3*).
+  - At the end: `listfile` (assigned to *ha->dwFileFlags1*), `attributes file` (assigned to *ha->dwFileFlags2*) and `signature` (assigned to *ha->dwFileFlags3*).  
+  - > *Listfile*: contains a translation list of all files in the .mpq file (without it, an opened .mpq file is just a list of unnamed or randomly named files).
 - At the end the archive handle *TMPQArchive \*ha* is returned to the mpq-file handle.  
   
 Flag *was_archives_init* is set to *true*.  
@@ -93,5 +94,39 @@ diablo_splash()
 ```
 - Defined in *diablo.cpp*.  
 
+Starts `"gendata\logo.smk"`: short 'Blizzard Logo warping in' animation.  
+Depending on if started as *Diablo* (`"gendata\diablo1.smk"`) or *Hellfire* (``"gendata\Hellfire.smk"``) the respective introduction movie is started (~ 2 min).  
+
+Function `UiTitleDialog()`  
+Of class `UiItemBase` (file *ui_item.h*) an object vector (std::vector) is created (in *title.cpp*) named `vecTitleScreen`. The objects (or derivatives of that main base class `UiItemBase`) in this vector are referenced here.
+- Structure of type `SDL_Rect` is created (part of SDL library) and initialized. An *SDL_Rect* defines a rectangular area of the screen.
+- New objects are added to std::vector `vecTitleScreen` 
+  - [Hellfire] *UiImage* object is created with a pointer to variable *ArtBackgroundWidescreen* (and afterwards *ArtBackground*) (of type *Art*, declared in *diabloui.cpp*) given to the constructor
+  - [Diablo] *UiArtText* object is created with a string (*"Copyright \xA9 1996-2001 Blizzard Entertainment"*) given to the constructor
+- Function `title_load()` 
+  - `LoadBackgroundArt("ui_art\\title.pcx")` loads the *Diablo* background graphic (see down below on the page):
+    - Function `LoadArt("ui_art\\title.pcx", &ArtBackground,..)` calls function `SBmpLoadImage(..)` which loads an image from an available archive into the graphics buffer. Additionally it saves the image in the *ArtBackground* handle.  
+    - At the end `RenderPresent()` is called, which calls multiple SDL functions and finally `SDL_RenderPresent(renderer)`, which updates the screen with any rendering performed since the previous call.
+  - `LoadMaskedArt("ui_art\\logo.pcx", &ArtLogos[LOGO_BIG], 15)` loads the animated *Diablo-in-flames* text onto the previously loaded *ArtBackground*. The last argument (*frames*) is the number of animation frames (*logo.pcx* consists of 15 different graphics). The single animation graphic size (``art->frame_height``) is calculated at the end (`height / frames`). Again function `LoadArt(..)` is called and the animation is loaded into the graphic buffer and its saved in handle *ArtLogos[LOGO_BIG]*.  
+- SDL Event Loop is entered  
+  - Function `UiRenderItems(vecTitleScreen)` is called.
 
 
+
+
+
+
+
+
+
+
+&nbsp;
+
+&nbsp;
+
+![d2](../../assets/pics/diablo_raw.png)    
+**BackgroundArt** (*ui_art\title.pcx*)
+
+&nbsp;
+
+[Back](../../)

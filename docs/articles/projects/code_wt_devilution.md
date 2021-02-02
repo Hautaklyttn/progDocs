@@ -107,11 +107,19 @@ Of class `UiItemBase` (file *ui_item.h*) an object vector (std::vector) is creat
   - `LoadBackgroundArt("ui_art\\title.pcx")` loads the *Diablo* background graphic (see down below on the page):
     - Function `LoadArt("ui_art\\title.pcx", &ArtBackground,..)` calls function `SBmpLoadImage(..)` which loads an image from an available archive into the graphics buffer. Additionally it saves the image in the *ArtBackground* handle.  
     - At the end `RenderPresent()` is called, which calls multiple SDL functions and finally `SDL_RenderPresent(renderer)`, which updates the screen with any rendering performed since the previous call.
-  - `LoadMaskedArt("ui_art\\logo.pcx", &ArtLogos[LOGO_BIG], 15)` loads the animated *Diablo-in-flames* text onto the previously loaded *ArtBackground*. The last argument (*frames*) is the number of animation frames (*logo.pcx* consists of 15 different graphics). The single animation graphic size (``art->frame_height``) is calculated at the end (`height / frames`). Again function `LoadArt(..)` is called and the animation is loaded into the graphic buffer and its saved in handle *ArtLogos[LOGO_BIG]*.  
-- SDL Event Loop is entered  
-  - Function `UiRenderItems(vecTitleScreen)` is called.
+  - `LoadMaskedArt("ui_art\\logo.pcx", &ArtLogos[LOGO_BIG], 15)` loads the animated *Diablo-in-flames* text onto the previously loaded *ArtBackground*. The last argument (*frames*) is the number of animation frames (*logo.pcx* consists of 15 single graphics). The single animation graphic size (``art->frame_height``) is calculated at the end (`height / frames`). Again function `LoadArt(..)` is called and the animation is loaded into the graphic buffer and its saved in handle *ArtLogos[LOGO_BIG]*.  
+- Until the menu is not ended:  
+  - Function `UiRenderItems(vecTitleScreen)` is called. This function goes through the vector and renders the previously loaded items (ArtBackground, Logo_Big, ArtText).  
+  - Function `UiFadeIn()` is called to set the fade level and at the end `RenderPresent()` is called, which calls multiple SDL functions and finally `SDL_RenderPresent(renderer)`, which updates the screen with any rendering performed since the previous call.
+  - SDL Event Loop is entered: Loop waits for *events* to happen. If *event != MenuAction_NONE* or (*SDL_KEYDOWN*, *SDL_MOUSEBUTTONDOWN*) happens, menu is ended.
+  - If event happened, loop is left and function `title_Free()` is called. All previouly loaded items (ArtBackground, Logo_Big, ArtText) are un-loaded and vector `vecTitleScreen` cleared.
 
+&nbsp;
 
+```c
+mainmenu_loop()
+```
+- Defined in *diablo.cpp*.  
 
 
 

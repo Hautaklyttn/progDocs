@@ -1017,10 +1017,19 @@ The C programming language doesn't have a concept of a boolean variable, i.e. a 
 
 This fact is usually well hidden and can be ignored, but it does allow you to write  
 ```c
-if (a != 0)
-// just as
-if (a)
-```
+  int a;
+  ...
+  if (a != 0)
+  // just as
+  if (a)
+```  
+
+Other possibilities:
+1. 'Creating' an enum *boolean* type via `typedef`  
+   ```c
+    typedef enum {FALSE = 0, TRUE} boolean;
+   ```
+2. Just include `<stdbool.h>` if your system provides it. That defines a number of macros, including `bool`, `false`, and `true` (defined to `_Bool`, `0`, and `1` respectively).
 
 &nbsp;  
 

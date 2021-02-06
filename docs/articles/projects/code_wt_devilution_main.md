@@ -121,19 +121,46 @@ mainmenu_loop()
 ```
 - Defined in *mainmenu.cpp*.  
 
+Function contains main menu loop, which starts with call of function `UiMainMenuDialog(gszProductName, &menu, ...)`.  
+  - Here function `mainmenu_Load(name, fnSound)`  
+    - populates vector `vecMenuItems` with multiples items of type `UiListItem` (*"Single Player"+handle/"Multi Player"+handle/"Replay Intro"+handle/"Support"+handle/"Credits"+handle/"Exit Hellfire"+handle/"Show Credits"+handle/"Exit Diablo"+handle*), so one for every menu point.
+    - calls function `UiAddBackground(&vecMainMenuDialog)` which, depending on the screen size (widescreen or not) populates vector `vecMainMenuDialog` with the fitting background art image. Afterwards function `UiAddLogo(&vecMainMenuDialog)` is called to set the logo art object in vector `vecMainMenuDialog`.
+    - adds object vector `vecMenuItems` to vector `vecMainMenuDialog` as an element.
+    - to vector `vecMainMenuDialog` another element is added (of type `UiArtText`): Diablo version number ("Diablo v1.09")
 
+  - Small loop (waiting for click events):
+    - Function `UiClearScreen()` clears current screen.
+    - Function `UiPollAndRender()` renders all previously loaded items, mouse cursor, etc on screen and waits for events.
 
+  - If an event was recognzed, function `mainmenu_Free()` is called, which unloads all background art and clears all vectors (`vecMainMenuDialog` and `vecMenuItems`).  
 
+  - Return value is set value `menu` (which was passed by reference) which contains chosen menu item.
 
+Depending on value for `menu` a function for a submenu is called and loop is left:
+  - `mainmenu_single_player()`
+  - `mainmenu_multi_player()`
+  - `mainmenu_play_intro()`
+  - no function call, which leads to exit of game.  
 
-
+&nbsp;
+<u>Last steps before game start:</u>  
+In case of `mainmenu_single_player()`, some variables are set and function `mainmenu_init_menu(SELHERO_NEW_DUNGEON)` is called.  
+This function stops the current music and calls function `StartGame(type != SELHERO_CONTINUE, type != SELHERO_CONNECT)`.
 
 &nbsp;
 
+&rarr; Further code walkthrough (start of game) [here](./code_wt_devilution_ext_01.md).
+
 &nbsp;
 
-![d2](../../assets/pics/diablo_raw.png)    
-**BackgroundArt** (*ui_art\title.pcx*)
+```c
+diablo_deinit()
+```
+- Defined in *diablo.cpp*.  
+
+Function calls multiple *cleanup* functions and at the end quits SDL and the program itself.
+
+&nbsp;
 
 &nbsp;
 

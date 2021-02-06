@@ -26,16 +26,16 @@ layout: default
 
 **Walkthrough**  
 
-```c
-diablo_parse_flags(argc, argv)
-```
+
+> diablo_parse_flags(argc, argv)
+
 - Defined in *diablo.cpp*.  
 
 Function parses possibly given IO Options and sets data or replies accordingly.  
 
-```c
-diablo_init()
-```
+
+> diablo_init()
+
 - Defined in *diablo.cpp*.  
 
 First function called is `init_create_window()`:  
@@ -111,15 +111,15 @@ Of class `UiItemBase` (file *ui_item.h*) an object vector (std::vector) is creat
 - Until the menu is not ended:  
   - Function `UiRenderItems(vecTitleScreen)` is called. This function goes through the vector and renders the previously loaded items (ArtBackground, Logo_Big, ArtText).  
   - Function `UiFadeIn()` is called to set the fade level and at the end `RenderPresent()` is called, which calls multiple SDL functions and finally `SDL_RenderPresent(renderer)`, which updates the screen with any rendering performed since the previous call.
-  - SDL Event Loop is entered: Loop waits for *events* to happen. If *event != MenuAction_NONE* or (*SDL_KEYDOWN*, *SDL_MOUSEBUTTONDOWN*) happens, menu is ended.
-  - If event happened, loop is left and function `title_Free()` is called. All previouly loaded items (ArtBackground, Logo_Big, ArtText) are un-loaded and vector `vecTitleScreen` cleared.
+  - <u>SDL Event Loop is entered:</u> Loop waits for *events* to happen. If *event != MenuAction_NONE* or (*SDL_KEYDOWN*, *SDL_MOUSEBUTTONDOWN*) happens, menu is ended.
+  - If *event* happened, loop is left and function `title_Free()` is called. All previouly loaded items (ArtBackground, Logo_Big, ArtText) are un-loaded and vector `vecTitleScreen` cleared.
 
 &nbsp;
 
 ```c
 mainmenu_loop()
 ```
-- Defined in *diablo.cpp*.  
+- Defined in *mainmenu.cpp*.  
 
 
 

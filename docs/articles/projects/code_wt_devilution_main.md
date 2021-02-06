@@ -142,10 +142,11 @@ Depending on value for `menu` a function for a submenu is called and loop is lef
   - `mainmenu_play_intro()`
   - no function call, which leads to exit of game.  
 
-&nbsp;
+&nbsp;  
+
 <u>Last steps before game start:</u>  
-In case of `mainmenu_single_player()`, some variables are set and function `mainmenu_init_menu(SELHERO_NEW_DUNGEON)` is called.  
-This function stops the current music and calls function `StartGame(type != SELHERO_CONTINUE, type != SELHERO_CONNECT)`.
+In case of `mainmenu_single_player()`, some variables are set and function `mainmenu_init_menu(SELHERO_NEW_DUNGEON)` is called. This function stops the current music and calls function  
+`StartGame(type != SELHERO_CONTINUE, type != SELHERO_CONNECT)`.  
 
 &nbsp;
 

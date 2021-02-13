@@ -1079,11 +1079,18 @@ This fact is usually well hidden and can be ignored, but it does allow you to wr
 ```  
 
 Other possibilities:
-1. 'Creating' an enum *boolean* type via `typedef`  
+1. Just include `<stdbool.h>` if your system provides it. That defines a number of macros, including `bool`, `false`, and `true` (defined to `_Bool`, `0`, and `1` respectively).
+
+2. 'Creating' an enum *boolean* int type via `typedef`  
    ```c
-    typedef enum {FALSE = 0, TRUE} boolean;
+    typedef int bool;
+    enum { false, true };
    ```
-2. Just include `<stdbool.h>` if your system provides it. That defines a number of macros, including `bool`, `false`, and `true` (defined to `_Bool`, `0`, and `1` respectively).
+
+3. 'Creating' an enum *boolean* type via `typedef`  
+   ```c
+    typedef enum {FALSE = 0, TRUE} bool;
+   ```
 
 &nbsp;  
 

@@ -26,15 +26,17 @@ layout: default
 
 **Walkthrough**  
 
-
-> diablo_parse_flags(argc, argv)
+```c
+diablo_parse_flags(argc, argv)
+```
 
 - Defined in *diablo.cpp*.  
 
 Function parses possibly given IO Options and sets data or replies accordingly.  
 
-
-> diablo_init()
+```c
+diablo_init()
+```
 
 - Defined in *diablo.cpp*.  
 

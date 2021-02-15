@@ -32,6 +32,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 *Calling Convention* (`__stdcall`)</font>](#ch1-12)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.13 Namespaces</font>](#ch1-13)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.14 `extern c` in C++</font>](#ch1-14)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.15 *Forward Declaration* in C++</font>](#ch1-15)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -65,6 +66,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 String</font>](#ch6-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.2 [Win API] `#define DECLARE_HANDLE(n)`</font>](#ch6-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.3 [Win API] `HWND` (Fenster Handle)</font>](#ch6-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.4 *The C++ Standard Template Library* (Container-Klasse)</font>](#ch6-4)  
 
 ### 7. How To's & Special Syntax   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.1 Emulation</font>](#ch7-1)  
@@ -559,6 +561,44 @@ extern "C" {
 #endif
 ```
 What this accomplishes is that it allows you to use that C header file with your C++ code, because the macro `"__cplusplus"` will be defined. But you can also still use it with your legacy C code, where the macro is NOT defined, so it won't see the uniquely C++ construct.
+
+&nbsp;
+
+<a name="ch1-15"></a>
+### 1.15 *Forward Declaration* in C++  
+
+Two ways of including a class:
+1. including header file: `#include A.h`
+2. use *forward declaration*: `class A;`  
+
+When you forward declare a type, all the compiler knows is that this type exists. It knows nothing about its size, members or methods. This is why it's called an **incomplete type**. Therefore you cannot use the type to declare a member or a base class since the compiler would need to know the layout of the type.  
+
+a) What you <u>can</u> do with an incomplete type  
+   - Declare a member to be a pointer or a reference  
+     `class Foo { A *pt; A &pt; }`  
+   - Declare functions or methods which accept/return incomplete types  
+     `void f1(A); a f2();`  
+   - Define functions or methods which accept/return pointers/references to the incomplete type  
+     `void f3(A*, A&) {...}; A& f4() {...}; A* f5() {...};`  
+
+b) What you <u>can't</u> do with an incomplete type  
+   - Use it as a base class  
+     `class Foo: A {...}     // compiler error`
+   - Use it to declare a member  
+     `class Foo { A m; }     // compiler error`
+   - Define functions or methods using this type  
+     `void f1(A a) {...}     // compiler error`
+     `A f2() {...}           // compiler error`
+   - Use its methods or fields  
+
+&nbsp;
+
+Advantages of 'forward declaration'  
+  - Reduced compile time  
+  - No namespace pollute  
+  - (In some cases) may reduce the size of your generated binaries  
+  - Recompilation time can be reduced  
+  - Avoiding potential clash of preprocessor names  
 
 &nbsp;
 
@@ -1279,6 +1319,76 @@ HWND is a "handle to a window" and is part of the Win32 API . HWNDs are essentia
   Das Window- Objekt ist ein Objekt der C++- ``CWnd`` Klasse (oder einer abgeleiteten Klasse), die vom Programm direkt erstellt wird. Dies geschieht als Reaktion auf den Konstruktor-und dekonstruktoraufruf Ihres Programms. Das Windows- Fenster hingegen ist ein **undurchsichtiges Handle für eine interne Windows-Datenstruktur**, die einem Fenster entspricht und Systemressourcen beansprucht, wenn Sie vorhanden sind. Ein Windows-Fenster wird durch ein "Fenster Handle" ( ``HWND`` ) identifiziert und wird erstellt, nachdem das- ``CWnd`` Objekt durch einen- ``Create`` Member der-Klasse erstellt wurde ``CWnd`` . Das Fenster kann entweder durch einen Programm Rückruf oder durch eine Benutzeraktion zerstört werden. Das Fenster Handle wird in der m_hWnd Member-Variable des Window-Objekts gespeichert. In der folgenden Abbildung wird die Beziehung zwischen dem C++-Fenster Objekt und dem Windows-Fenster angezeigt.  
 
   ![hwnd](../assets/pics/hwnd01.png)  
+
+- Funktion *EnumWindows*  
+  Function enumerates all top-level windows currently on the screen by passing the handle to each window to an application-defined callback function. *EnumWindows* continues until the last top-level window is enumerated or the callback function returns FALSE.  
+  ```c
+  BOOL WINAPI EnumWindows (WNDENUMPROC lpEnumFunc,..., LPARAM lParam); 
+                                  (1)                      (2)
+  ```
+  (1) A pointer to an application-defined callback function (&rarr; 'EnumWindowsProc')  
+  (2) An application-defined value to be passed to the callback function  
+
+- Funktion *EnumWindowsProc*  
+  A user defined function used with function *EnumWindows* (&rarr; argument (1)). It receives top-level window handles. *EnumWindowsProc* is a placeholder for the application-defined function name.  
+  ```c
+  BOOL CALLBACK EnumWindowsProc (HWND hwnd,..., LPARAM lParam); 
+                                  (1)                      (2)
+  ```
+  (1) A handle to a top-level window  
+  (2) The application-defined value given in *EnumWindows*  
+
+&nbsp; 
+
+<a name="ch6-4"></a>
+### 6.4 *The C++ Standard Template Library* ('Container-Klasse')  
+
+> STL := The Standard Template Library (STL) is a set of C++ template classes to provide common programming data structures and functions such as lists, stacks, arrays, etc. It is a library of container classes, algorithms, and iterators. It is a generalized library and so, its components are parameterized.  
+
+&nbsp;
+
+Flowchart of Adaptive Containers and Unordered Containers  
+![stl](../assets/pics/stl_01.png)  
+
+Flowchart of Sequence conatiners and ordered containers  
+![stl](../assets/pics/stl_02.png)  
+
+&nbsp;
+
+**Template classes**
+
+- `map`
+
+  Der Container `map` nimmt zwei Arten von Elementen auf, der Erste ist der Suchschlüssel (oder 'key') und der Zweite ist das eigentliche Datenelement, das durch den Schlüssel gefunden werden soll. So werden bei der Definition eines Map-Containers zwei Typen angegeben: der Erste für den Schlüssel, der Zweite für den Wert. Die eckigen Klammern werden von der `map` so überladen, dass der Schlüssel dazwischen angegeben wird. Der gesamte Ausdruck bezeichnet dann das Datenelement.  
+
+  ```c
+  #include <string>
+  #include <maps>
+
+  int main () {
+    map <string, string> Kennzeichen;
+    Kennzeichen["HH"] = 'Hansestadt Hamburg';
+  }
+  ```
+  &nbsp;
+
+  **Functions**  
+
+  - *find()*  
+     Wollen Sie prüfen, ob es ein Element überhaupt gibt, sollten Sie die Elementfunktion 'find()' verwenden:
+     ```c
+     if (Kennzeichen.find("KI")==Kennzeichen.end()) {
+       cout << "Nicht gefunden!" << endl;
+     }
+     ```
+  - *size()*  
+     Returns the number of elements in the map.  
+  - *pair insert(keyvalue, mapvalue)* 
+    Adds a new element to the map.
+  - *erase(iterator position)* 
+    Removes the element at the position pointed by the iterator.
+  - *erase(const g)* 
+    Removes the key value ‘g’ from the map.
 
 &nbsp;
 

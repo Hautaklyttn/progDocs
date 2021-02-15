@@ -19,20 +19,21 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 L- und R-Werte</font>](#ch1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Auswertungsreihenfolge</font>](#ch1-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Headers und Libraries</font>](#ch1-5)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Die Funktion `main`</font>](#ch1-6)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Übersicht Datentypen in C</font>](#ch1-7)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.8 Threads und Prozesse</font>](#ch1-8)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9 Benutzerdefinierte Datentypen</font>](#ch1-9)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.1 `typedef`</font>](#ch1-9-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.2 `enum`</font>](#ch1-9-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.3 `struct`</font>](#ch1-9-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9.4 `union`</font>](#ch1-9-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10 Precompiled Header</font>](#ch1-10)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.11 *Header Guard* (oder 'Include Guard')</font>](#ch1-11)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 *Calling Convention* (`__stdcall`)</font>](#ch1-12)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.13 Namespaces</font>](#ch1-13)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.14 `extern c` in C++</font>](#ch1-14)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.15 *Forward Declaration* in C++</font>](#ch1-15)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Memory Management - 'Heap' vs 'Stack'</font>](#ch1-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Die Funktion `main`</font>](#ch1-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.8 Übersicht Datentypen in C</font>](#ch1-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9 Threads und Prozesse</font>](#ch1-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10 Benutzerdefinierte Datentypen</font>](#ch1-10)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10.1 `typedef`</font>](#ch1-10-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10.2 `enum`</font>](#ch1-10-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10.3 `struct`</font>](#ch1-10-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10.4 `union`</font>](#ch1-10-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.11 Precompiled Header</font>](#ch1-11)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 *Header Guard* (oder 'Include Guard')</font>](#ch1-12)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.13 *Calling Convention* (`__stdcall`)</font>](#ch1-13)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.14 Namespaces</font>](#ch1-14)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.15 `extern c` in C++</font>](#ch1-15)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.16 *Forward Declaration* in C++</font>](#ch1-16)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -46,6 +47,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 Call-by-Value</font>](#ch3-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 Call-by-Reference</font>](#ch3-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.5 Pointer auf Pointer</font>](#ch3-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.6 Pointer auf Funktionen</font>](#ch3-6)  
 
 ### 4. Pointer und Arrays   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten</font>](#ch4-1)  
@@ -206,7 +208,89 @@ Similarly, while `stdio.h` holds information about the I/O stuff, the actual cod
 &nbsp;
 
 <a name="ch1-6"></a>
-### 1.6 Die Funktion `main`  
+### 1.6 Memory Management - 'Heap' vs 'Stack'  
+
+Two ways of object creation:
+
+- via Pointer
+  ```c
+  Object *myObj = new Object;
+  myObj->testFunc();
+  ```
+
+- via Object
+  ```c
+  Object myObj;
+  myObj.testFunc();
+  ```
+
+Two ways of object creation are demonstrated. The main difference is the storage duration of the object. When doing `Object myObj;` within a block, the object is created with automatic storage duration, which means it will be destroyes automatically when it goes of scope. When you do `new Object;`. the object has dinamic storage duration, which means it stays alive until you explicitly `delete`. You should only use dynamic storage duration when you need it.  
+
+The main two situations in which you might require dynamic allocation:  
+1. You need the object to outlive the current scope. That specific object at that specific memory location, not a copy of it. If you are ok with copying/moving the object (most of the time should be), you should prefer an automatic object.  
+2. You need  to allocate a lot of memory, which may easily fill up the stack (e.g. in case of a dynamic array).  
+
+&nbsp;
+
+**[-!-]** 
+When you do absolutely require dynamic allocation, you should encapsulate it in a `Smart Pointer`. 'Smart Pointers' provide ownership semantics of dynamically allocated objects and provide the additional feature of automatic memory management: When the pointer is no longer in use, the memory it points to is deallocated.  
+- Use `std::unique_ptr` when you don't intend to hold multiple reference to the same object. For example, use it for a pointer to memory which gets allocated on entering some scope and deallocated on exiting the scope.  
+- Use `std::shared_ptr` when you do want to refer to your object from multiple places - and do not want it to be deallocated until all these references are themselves gone.  
+
+&nbsp;  
+
+- Comparison *Java* &harr; *C++*  
+  ```java
+  // Java
+  Object obj1 = new Object();   // A new object is allocated by Java
+  Object obj2 = new Object();   // Another new object is allocated by Java
+  obj1 = obj2;  // 'obj1' now points to the object originally allocated for 'obj2'
+  ```
+  The object originally allocated for 'obj1' is now "dead" - nothing points to it, so it will be reclaimed by the 'Garbarge Collector'. If either 'obj1' or 'obj2' is changed, the change will be reflected to the other.  
+  &nbsp;
+  ```c
+  // C++ - via Pointer
+  Object *obj1 = new Object();   // A new object is allocated on the Heap
+  Object *obj2 = new Object();   // Another new object is allocated on the Heap
+  delete obj1;
+  ```
+  Since C++ does not have a garbage collector, the last line would cause a 'memory leak', i.e. a piece of claimed memory that the app cannot use and that we have no way to reclaim.  
+  ```c
+  obj1 = obj2;  // same as Java, 'obj1' points to 'obj2'
+  ```
+  &nbsp;
+  ```c
+  // C++ - via Object
+  Object obj1;   // A new object is allocated on the Stack
+  Object obj2;   // Another new object is allocated on the Stack
+  obj1 = obj2;  // This is different !!! The CONTENTS of 'obj2' is COPIED to 'obj1'
+  ```
+  But the two objects are still different. Change one, the other remains unchanged. Also, the objects get automatically destroyed once the function returns.  
+  &nbsp;
+  > The best way to think of it is that - more or less - Java (implicitly) handles pointers to objects, while C++ may handle either pointers to objects or the objects themselves.  
+
+&nbsp;
+
+> **The heap is much slower than the stack, because the stack is very simple compared to the heap. Automatic storage variables (aka stack variables) have their destructors called once they go out of scope.**  
+
+&nbsp;
+
+- *Heap* vs *Stack*  
+  &nbsp;
+  The **stack** is the memory set aside as scratch space for a thread of execution. When a function is called, a block is reserved on the top of the stack for local variables and some bookkeeping data. When that function returns, the block becomes unused and can be used the next time a function is called. The stack is always reserved in a LIFO (*last in first out*) order; the most recently reserved block is always the next block to be freed. This makes it really simple to keep track of the stack; freeing a block from the stack is nothing more than adjusting one pointer.  
+  &nbsp;
+  The **heap** is memory set aside for dynamic allocation. Unlike the stack, there's no enforced pattern to the allocation and deallocation of blocks from the heap; you can allocate a block at any time and free it at any time. This makes it much more complex to keep track of which parts of the heap are allocated or freed at any given time; there are many custom heap allocators available to tune heap performance for different usage patterns.  
+  &nbsp;
+  Each thread gets a **stack**, while there's typically only one **heap** for the application (although it isn't uncommon to have multiple heaps for different types of allocation).  
+  - The OS allocates the stack for each system-level thread when the thread is created. Typically the OS is called by the language runtime to allocate the heap for the application.  
+  - The stack is attached to a thread, so when the thread exists the stack is reclaimed. The heap is typically allocated at application startup by the runtime, and is reclaimed when the application (technically: 'process') exists.  
+  - The size of the stack is set when a thread is created. The size of the heap is set on application startup, but can grow as space is needed (the allocator requests  more memory from the operating system).  
+
+
+&nbsp;
+
+<a name="ch1-7"></a>
+### 1.7 Die Funktion `main`  
 Es ist möglich der 'main'-Funktion eine Parameterliste zu übergeben.  
 ```c
 // 'main' function header  
@@ -245,8 +329,8 @@ Der erste Wert des Parameter-Arrays 'argv' ist immer der Programmname selbst, in
 
 &nbsp;
 
-<a name="ch1-7"></a>
-### 1.7 Übersicht Datentypen in C  
+<a name="ch1-8"></a>
+### 1.8 Übersicht Datentypen in C  
 
 |Type |Storage Size |Value range |  
 |:---|:---:|:---:|  
@@ -265,8 +349,8 @@ Der erste Wert des Parameter-Arrays 'argv' ist immer der Programmname selbst, in
 
 &nbsp;
 
-<a name="ch1-8"></a>
-### 1.8 Threads und Prozesse  
+<a name="ch1-9"></a>
+### 1.9 Threads und Prozesse  
 
 Both, processes and threads, are independent sequences of execution. The typical difference is that **threads (of the same process) run in a shared memory space, while processes run in separate memory space**.  
 
@@ -284,10 +368,10 @@ Threads are not part of the C standard, so the only way to use threads is to inc
 
 &nbsp;
 
-<a name="ch1-9"></a>
-### 1.9 Benutzerdefinierte Datentypen  
+<a name="ch1-10"></a>
+### 1.10 Benutzerdefinierte Datentypen  
 
-<a name="ch1-9-1"></a>
+<a name="ch1-10-1"></a>
 `typedef`  
 Mit Hilfe dieses Schlüsselwortes können Sie einen Datentyp umbenennen. Dabei wird kein neuer Datentyp erzeugt, sondern lediglich ein bereits bestehender unter einem neuen Namen angesprochen. Die allgemeine Form der Anweisung lautet:  
 ```c  
@@ -308,7 +392,7 @@ Wie diese Auflistung schon vermuten lässt, spricht die verbesserte Lesbarkeit d
 
 &nbsp;
 
-<a name="ch1-9-2"></a>
+<a name="ch1-10-2"></a>
 `enum`  
 Aufzählungstypen sind gedacht für Integer-Variablen, die nicht jeden beliebigen Wert annehmen dürfen, sondern auf eine begrenzte Anzahl von Werten beschränkt sind. Diese Werte werden über Namen angesprochen. Die allgemeine Form einer 'enum'-Anweisung lautet:  
 
@@ -345,7 +429,7 @@ Heute = MON;
 
 &nbsp;
 
-<a name="ch1-9-3"></a>
+<a name="ch1-10-3"></a>
 `struct`   
 Wenn eine Serie zusammenhängender Daten bearbeitet werden soll, erweisen sich Arrays und Pointer als geeignet. Beide unterliegen  aber der Einschränkung, dass alle Elemente vom gleichen Datentyp sein müssen. C bietet Ihnen für diesen Zweck die Struktur, mit der Sie ein Konglomerat unterschiedlicher Datentypen zu einem Datenobjekt zusammenfassen und dabei auf einzelne Elemente zugreifen können.  
 
@@ -378,7 +462,7 @@ pAdresse = &Lieferant;
 
 &nbsp;
 
-<a name="ch1-9-4"></a>
+<a name="ch1-10-4"></a>
 `union`  
 Bei einer 'Union' handelt es sich um ein Datenobjekt, dessen Speicherplatz von mehreren Variablen verschiedenen Typs genutzt werden kann.  
 
@@ -407,8 +491,8 @@ Die Eigenschaft einer 'Union' mehrere Variablen innerhalb des gleichen Speicherb
 
 &nbsp;
 
-<a name="ch1-10"></a>
-### 1.10 Precompiled Header  
+<a name="ch1-11"></a>
+### 1.11 Precompiled Header  
 
 In computer programming, a *precompiled header* is a (C or C++) header file that is compiled into an intermediate form, that is <u>faster to process for the compiler</u>.  
 
@@ -416,8 +500,8 @@ Usage of *precompiled headers* may significantly reduce compilation time, especi
 
 &nbsp;
 
-<a name="ch1-11"></a>
-### 1.11 *Header Guard* (oder 'Include Guard')  
+<a name="ch1-12"></a>
+### 1.12 *Header Guard* (oder 'Include Guard')  
 
 > "*Header Guards* are little pieces of code that protect the contents of a header file from being included more than once."  
 
@@ -444,8 +528,8 @@ The symbol used is not crucial, but it must be unique. It is traditional to use 
 
 &nbsp;
 
-<a name="ch1-12"></a>
-### 1.12 *Calling Convention* (`__stdcall`)  
+<a name="ch1-13"></a>
+### 1.13 *Calling Convention* (`__stdcall`)  
 ```c
 #define CALLBACK __stdcall
 #define WINAPI __stdcall
@@ -455,16 +539,16 @@ The symbol used is not crucial, but it must be unique. It is traditional to use 
 All functions in C/C++ have a particular calling convention. The point of a calling convention is to establish how data is passed between the caller and callee and who is responsible for operations such as cleaning out the call stack.  
 
 The most popular calling conventions on windows are  
-- __stdcall, Pushes parameters on the stack, in reverse order (right to left)
-- __cdecl, Pushes parameters on the stack, in reverse order (right to left)
-- __clrcall, Load parameters onto CLR expression stack in order (left to right).
+- __stdcall, Pushes parameters on the stack, in reverse order (right to left); Callee cleans the call stack
+- __cdecl, Pushes parameters on the stack, in reverse order (right to left); Caller cleans the call stack
+- __clrcall, Load parameters onto CLR expression stack in order (left to right)
 - __fastcall, Stored in registers, then pushed on stack
 - __thiscall, Pushed on stack; this pointer stored in ECX
 
 &nbsp;
 
-<a name="ch1-13"></a>
-### 1.13 Namespaces  
+<a name="ch1-14"></a>
+### 1.14 Namespaces  
 
 In C++, namespaces provide a method for preventing name conflicts in large projects.
 
@@ -510,8 +594,8 @@ namespace Q {
   ```
 &nbsp;
 
-<a name="ch1-14"></a>
-### 1.14 `extern c` in C++  
+<a name="ch1-15"></a>
+### 1.15 `extern c` in C++  
 
 [&rarr;&nbsp;&nbsp; How to mix C and C++](https://isocpp.org/wiki/faq/mixing-c-and-cpp)  
 
@@ -564,8 +648,8 @@ What this accomplishes is that it allows you to use that C header file with your
 
 &nbsp;
 
-<a name="ch1-15"></a>
-### 1.15 *Forward Declaration* in C++  
+<a name="ch1-16"></a>
+### 1.16 *Forward Declaration* in C++  
 
 Two ways of including a class:
 1. including header file: `#include A.h`
@@ -853,6 +937,45 @@ Wenn aber *matrix[0]* ein Array ist, stellt sich die Frage, ob *matrix[0]* selbs
 Folgende Regel gilt für n-dimensionale Arrays:
 - Der Array-Name gefolgt von n Klammernpaaren (wobei jedes Paar einen passenden Index einschließt) wird zu Array-Daten (genauer gesagt, zu den Daten aus dem spez. Array-Element) ausgewertet.
 - Der Array-Name gefolgt von weniger als n Klammernpaaren wird zu einem Zeiger auf ein Array-Element ausgewertet.
+
+&nbsp;
+
+<a name="ch3-6"></a>
+### 3.6 Pointer auf Funktionen  
+
+Syntax for creating a non-const function pointer:  
+```c
+int (*fcnPtr) (int,int);
+```
+
+`fcnPtr` is a pointer to a function that has two 'int'-parameters and returns an integer. 'fcnPtr' can point to any function that matches this type.  
+
+Function pointers can be initialized with a function:  
+```c
+fcnPtr = foo;       // 'foo()' is a function defined before
+```
+
+> Common mistake is 'fcnPtr = foo()'. This would assign the return value from a call to function 'foo()'.
+
+Note that the type (parameters and return type) of the function pointer must match the type of the function.  
+
+- `typedefs` for pointers to functions  
+  &nbsp;
+  The syntax for pointers to functions is ugly. 'Typedefs' can be used to make pointers to functions look more like regular variables:  
+  ```c
+  typedef bool (validateFcn)(int,int);
+  ```
+  This defines a typedef called 'validateFcn' that is a pointer to a function that takes two int's and returns a bool.  
+  &nbsp;
+  Now instead of doing this:  
+  ```c
+  bool validate (int x, int y, bool (*fcnPtr)(int,int));
+  ```
+  you can do this:
+  ```c
+  bool validate (int x, int y, validateFcn pfcn);
+  ```
+
 
 &nbsp;  
 
@@ -1383,12 +1506,12 @@ Flowchart of Sequence conatiners and ordered containers
      ```
   - *size()*  
      Returns the number of elements in the map.  
-  - *pair insert(keyvalue, mapvalue)* 
-    Adds a new element to the map.
-  - *erase(iterator position)* 
-    Removes the element at the position pointed by the iterator.
-  - *erase(const g)* 
-    Removes the key value ‘g’ from the map.
+  - *pair insert(keyvalue, mapvalue)*  
+    Adds a new element to the map.  
+  - *erase(iterator position)*  
+    Removes the element at the position pointed by the iterator.  
+  - *erase(const g)*  
+    Removes the key value ‘g’ from the map.  
 
 &nbsp;
 

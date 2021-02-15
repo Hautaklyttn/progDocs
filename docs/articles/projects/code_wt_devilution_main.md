@@ -22,9 +22,10 @@ layout: default
 &nbsp;&nbsp;&nbsp;*diablo.cpp*  
 
 **Function**:   
-&nbsp;&nbsp;&nbsp; *int DiabloMain(int argc, char \*\*argv)*  
+&nbsp;&nbsp;&nbsp; **int DiabloMain(int argc, char \*\*argv)**  
 
 **Walkthrough**  
+&nbsp;
 
 ```c
 diablo_parse_flags(argc, argv)
@@ -33,6 +34,8 @@ diablo_parse_flags(argc, argv)
 - Defined in *diablo.cpp*.  
 
 Function parses possibly given IO Options and sets data or replies accordingly.  
+
+&nbsp;
 
 ```c
 diablo_init()

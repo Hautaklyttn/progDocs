@@ -28,6 +28,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.7 Access QML properties from C++</font>](#ch2-7)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.8 Animation with `Behaviour`</font>](#ch2-8)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.9 Farbverläufe</font>](#ch2-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.10 \*.h file aus \*.ui file erzeugen</font>](#ch2-10)  
 
 ### 3. QML Elements   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 `Repeater`</font>](#ch3-1)  
@@ -87,6 +88,12 @@ layout: default
 Similar to HTML, QML is a markup language. It is composed of tags, called types in Qt Quick, that are enclosed in curly brackets: *Item {}*. It was designed from the ground up for the creation of user interfaces, speed and easier reading for developers. The user interface can be enhanced further using JavaScript code. Qt Quick is easily extendable with your own native functionality using Qt C++. In short, the declarative UI is called the front-end and the native parts are called the back-end. This allows you to separate the computing intensive and native operation of your application from the user interface part.  
 
 In a typical project, the front-end is developed in QML/JavaScript. The back-end code, which interfaces with the system and does the heavy lifting, is developed using Qt C++. This allows a natural split between the more design-oriented developers and the functional developers.  
+
+&nbsp;
+
+**QML runtime**  
+QML documents are loaded and executed by the QML runtime. This includes the Declarative UI engine along with the built-in QML types and plugin modules. The QML runtime loads QML documents by parsing them and generating native code.  
+Applications that use QML need to invoke the QML runtime in order to execute QML documents. This can be done by creating a 'QQuickView' or a 'QQMLApplicationEngine'. In addition, the Declarative UI package includes the 'qmlscene' tool, which loads .qml files.
 
 &nbsp; 
 
@@ -937,7 +944,18 @@ Rectangle {
     border.color: "slategray"
 }
 ```
-Note: A rectange with no width/height set will not be visible. This happens often when you have several rectangles width (height) dependending on each other and something went wrong in your composition logic. So watch out!
+Note: A rectange with no width/height set will not be visible. This happens often when you have several rectangles width (height) dependending on each other and something went wrong in your composition logic. So watch out!  
+
+&nbsp;  
+
+<a name="ch2-10"></a>
+### 2.10 \*.h file aus \*.ui file erzeugen  
+\*.ui Files sind qml Files, die einen im 'Qt Designer' erstellten GUI-Aufbau beschreiben. Um diese Files manuell einbinden zu können. ist eine Umwandlung in ein \*.h File notwendig.  
+
+1. In den Pfad gehen in dem das \*.ui File abgelegt ist (Kommandozeile)  
+2. Eingabe `uic <file_name.ui> -o ui_<file_name>.h`  
+
+**[-!-]** Das Qt-bin-Verzeichnis muss vorher zu den Umgebungsvariablen ('PATH') hinzugefügt worden sein.
 
 &nbsp;
 

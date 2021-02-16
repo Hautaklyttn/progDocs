@@ -1866,113 +1866,115 @@ catch {...}  // Code zur Fehlerbehandlung
 
 Man nennt einen solchen Fehler `Exception`. Tritt eine solche Ausnahme in einem try-Block auf, dann wird die Verarbeitung in dem behandelnden catch-Block fortgesetzt.  
 
-<u>Wirkunskreis</u>  
+**Wirkunskreis**  
 Eine Ausnahmebehandlung wirkt nicht nur auf den Block selbst, sondern auch auf alle innerhalb des Blocks aufgerufenen Funktionen. Dadurch kann die Fehlerbehandlung an einer zentralen Stelle durchgeführt werden.  
 Außerdem kann zusätzlich an jeder Stelle des Programms eine Ausnahmebehandlung stattfinden. Sobald es zu einem Fehler kommt, wird die nächste `catch`-Anweisung verwendet, die auf den Ausnahmetyp passt. Um die nächste Ausnahmebehandlung zu finden, wird die Aufrufreihenfolge rückwärts durchlaufen. Dadurch wird immer die Ausnahmebehandlung verwendet, die der Fehlerstelle am nächsten ist.  
 
-- `throw` - Eigene Ausnahmen erzeugen  
-  Besonders interessant ist es, eigene Ausnahmesituationen zu definieren. Der Befehl `throw` erzeugt eine solche Ausnahme. Er bricht die Verarbeitung sofort ab und springt direkt in die passende Ausnahmebehandlung.  
-  &nbsp;  
-  ```c
-  void TuWas(int prob) {
-    ...
-    if (prob > 0) {
-      throw 0;
-    }
-  }
-
-  int main() {
-    try {
-      ...
-      TuWas(1)
-    }
-    catch(int a) {
-      if (a==0) {...}
-    }
-  }
-  ```
-  &nbsp;
-  Der Befehl `throw` in der Funktion 'TuWas()' löst eine Ausnahme aus, wenn der Parameter 'prob' größer als 0 ist. Die Verarbeitung wird im 'catch'-Block fortgesetzt. Hat der 'catch'-Block 'int' als Parameter, bearbeitet er nur Ausnahmen, die durch einen 'throw'-Befehl mit einer Zahl als Argument ausgelöst wurden. Um andere Parameter zu bearbeiten, wurde einfach ein weiterer 'catch'-Block mit einem (oder mehreren) anderen Parametertyp(en) angehängt.  
 &nbsp;
 
-- *Fehlerklassen*  
-  Man kann auch eigene Klassen erstellen, die als Parameter für 'catch' verwendet werden können.  
-  ```c
-  #include <iostream>
-  using namespace std;
-
-  class KeineDatenMehr {
-    public:
-      KeineDatenMehr(int a) {
-        nr=a;
-      }
-      void MeldeFehler() {
-        cout << nr;
-      }
-    private:
-      int nr;  
+**`throw` - Eigene Ausnahmen erzeugen**  
+Besonders interessant ist es, eigene Ausnahmesituationen zu definieren. Der Befehl `throw` erzeugt eine solche Ausnahme. Er bricht die Verarbeitung sofort ab und springt direkt in die passende Ausnahmebehandlung.  
+```c
+void TuWas(int prob) {
+  ...
+  if (prob > 0) {
+    throw 0;
   }
+}
 
-  void TuWas (int prob) {
-    if (prob == 0) {
-      throw KeineDatenMehr(0);
+int main() {
+  try {
+    ...
+    TuWas(1)
+  }
+  catch(int a) {
+    if (a==0) {...}
+  }
+}
+```
+Der Befehl `throw` in der Funktion 'TuWas()' löst eine Ausnahme aus, wenn der Parameter 'prob' größer als 0 ist. Die Verarbeitung wird im 'catch'-Block fortgesetzt. Hat der 'catch'-Block 'int' als Parameter, bearbeitet er nur Ausnahmen, die durch einen 'throw'-Befehl mit einer Zahl als Argument ausgelöst wurden. Um andere Parameter zu bearbeiten, wurde einfach ein weiterer 'catch'-Block mit einem (oder mehreren) anderen Parametertyp(en) angehängt.  
+
+&nbsp;
+
+**Fehlerklassen**  
+Man kann auch eigene Klassen erstellen, die als Parameter für 'catch' verwendet werden können.  
+```c
+#include <iostream>
+using namespace std;
+
+class KeineDatenMehr {
+  public:
+    KeineDatenMehr(int a) {
+      nr=a;
     }
-  }
-
-  int main () {
-    try { TuWas(0); }
-    catch(KeineDatenMehr &fehler) {
-      fehler.MeldeFehler();
+    void MeldeFehler() {
+      cout << nr;
     }
+  private:
+    int nr;  
+}
+
+void TuWas (int prob) {
+  if (prob == 0) {
+    throw KeineDatenMehr(0);
   }
-  ```
-  In der Fehlerklasse lassen sich Informationen über die Fehlerursache hinterlegen. Außerdem können in der Fehlerklasse Funktionen zur Fehlerbehandlung eingebaut werden.
+}
 
-- *Polymorphie*  
-  Um verschiedene Fehlersituationen zu behandeln, bietet es sich an, eine Basisklasse für alle Fehlerklassen zu schreiben. Darin implementiert man, was allen Fehlersituationen gemeinsam ist. Vorteil ist, dass nur ein 'catch'-Block nötig ist um alle Fehlertypen abzufangen.  
-  &nbsp;
-  ```c
-  #include <iostream>
-  using namespace std;
+int main () {
+  try { TuWas(0); }
+  catch(KeineDatenMehr &fehler) {
+    fehler.MeldeFehler();
+  }
+}
+```
+In der Fehlerklasse lassen sich Informationen über die Fehlerursache hinterlegen. Außerdem können in der Fehlerklasse Funktionen zur Fehlerbehandlung eingebaut werden.  
 
-  class meaCulpa {
-    public:
-      virtual void MeldeFehler()=0;
-  };
-  class KeineDatenMehr : public meaCulpa {
-    public:
-       KeineDatenMehr(int a) {nr=a;}
-       void MeldeFehler() {...}
-    private:
-       int nr;
-  };
-  
-  class QuelleFehlt : public meaCulpa {
-    public:
-      QuelleFehlt() {}
+&nbsp;
+
+**Polymorphie**  
+Um verschiedene Fehlersituationen zu behandeln, bietet es sich an, eine Basisklasse für alle Fehlerklassen zu schreiben. Darin implementiert man, was allen Fehlersituationen gemeinsam ist. Vorteil ist, dass nur ein 'catch'-Block nötig ist um alle Fehlertypen abzufangen.  
+```c
+#include <iostream>
+using namespace std;
+
+class meaCulpa {
+  public:
+    virtual void MeldeFehler()=0;
+};
+class KeineDatenMehr : public meaCulpa {
+  public:
+      KeineDatenMehr(int a) {nr=a;}
       void MeldeFehler() {...}
-  };
+  private:
+      int nr;
+};
 
-  void TuWas (int prob) throw (KeineDatenMehr, QuelleFehlt) {
-    if (prob == 0) {
-      throw KeineDatenMehr(8);
-    }
-    if (prob == 1 ) {
-      throw QuelleFehlt();
-    }
-  }
+class QuelleFehlt : public meaCulpa {
+  public:
+    QuelleFehlt() {}
+    void MeldeFehler() {...}
+};
 
-  int main () {
-    try {
-      TuWas(0);
-    }
-    catch(meaCulpa &fehler) {
-      fehler.MeldeFehler();
-    }
+void TuWas (int prob) throw (KeineDatenMehr, QuelleFehlt) {
+  if (prob == 0) {
+    throw KeineDatenMehr(8);
   }
-  ```
-  Wie immer bei der Polymorphie wird ein Zeiger auf das übergebene Objekt verwendet, um die virtuelle Funktion aufzurufen. Das Objekt kennt sich selbst und ruft über die eigene VTable die zugehörige Funktion 'MeldeFehler()' auf.  
-  Im Code-Beispiel wurde der Funktion 'TuWas()' eine Deklaration hinzugefügt, die anzeigt, welche Ausnahmen sie auslöst. Diese Informationen sollen darauf hinweisen, dass die Funktion 'throw'-Befehle enthält. Der Compiler würde einen Fehler werfen, wenn die Funktion versucht, eine Ausnahme auszulösen, die in der Deklaration nicht angekündigt ist.  
+  if (prob == 1 ) {
+    throw QuelleFehlt();
+  }
+}
+
+int main () {
+  try {
+    TuWas(0);
+  }
+  catch(meaCulpa &fehler) {
+    fehler.MeldeFehler();
+  }
+}
+```
+Wie immer bei der Polymorphie wird ein Zeiger auf das übergebene Objekt verwendet, um die virtuelle Funktion aufzurufen. Das Objekt kennt sich selbst und ruft über die eigene VTable die zugehörige Funktion 'MeldeFehler()' auf.  
+Im Code-Beispiel wurde der Funktion 'TuWas()' eine Deklaration hinzugefügt, die anzeigt, welche Ausnahmen sie auslöst. Diese Informationen sollen darauf hinweisen, dass die Funktion 'throw'-Befehle enthält. Der Compiler würde einen Fehler werfen, wenn die Funktion versucht, eine Ausnahme auszulösen, die in der Deklaration nicht angekündigt ist.  
 
 &nbsp;
 

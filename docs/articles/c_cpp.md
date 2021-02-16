@@ -29,11 +29,11 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10.3 `struct`</font>](#ch1-10-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10.4 `union`</font>](#ch1-10-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.11 Precompiled Header</font>](#ch1-11)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 *Header Guard* (oder 'Include Guard')</font>](#ch1-12)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.13 *Calling Convention* (`__stdcall`)</font>](#ch1-13)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 'Header Guard' (oder 'Include Guard')</font>](#ch1-12)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.13 'Calling Convention' (`__stdcall`)</font>](#ch1-13)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.14 Namespaces</font>](#ch1-14)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.15 `extern c` in C++</font>](#ch1-15)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.16 *Forward Declaration* in C++</font>](#ch1-16)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.16 'Forward Declaration' in C++</font>](#ch1-16)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -51,7 +51,7 @@ layout: default
 
 ### 4. Pointer und Arrays   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten</font>](#ch4-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Das Schlüsselwort ``const`` bei Pointern und Arrays</font>](#ch4-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Das Schlüsselwort `const` bei Pointern und Arrays</font>](#ch4-2)  
 
 ### 5. Programmsyntax und -semantik   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Der Bedingungsoperator `A ? B : C`</font>](#ch5-1)  
@@ -68,12 +68,13 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 String</font>](#ch6-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.2 [Win API] `#define DECLARE_HANDLE(n)`</font>](#ch6-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.3 [Win API] `HWND` (Fenster Handle)</font>](#ch6-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.4 *The C++ Standard Template Library* (Container-Klasse)</font>](#ch6-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.4 'The C++ Standard Template Library' (Container-Klasse)</font>](#ch6-4)  
 
 ### 7. How To's & Special Syntax   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.1 Emulation</font>](#ch7-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2 Code optimization turned off for debugging in 'Release' version</font>](#ch7-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.3 Digital Filter Implementation</font>](#ch7-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.4 'Exceptions' - `Try / Catch`</font>](#ch7-4)  
 
 ### 8. ...
 
@@ -202,8 +203,13 @@ Similarly, while `stdio.h` holds information about the I/O stuff, the actual cod
 
 &nbsp;
 
+<u>Possibilities for including:</u>  
 - Include file *xy.h* from parent directory  
 `#include "../xy.h"`
+- Include file *xy.h* from specified `include directories`  
+  `#include <xy.h>`
+
+With "...", the file is searched relative to the current directory, whereas with \<...\> the search only takes place in the system and specified 'include directories', which normally don't include the current directory.
 
 &nbsp;
 
@@ -959,22 +965,24 @@ fcnPtr = foo;       // 'foo()' is a function defined before
 
 Note that the type (parameters and return type) of the function pointer must match the type of the function.  
 
-- `typedefs` for pointers to functions  
-  &nbsp;
-  The syntax for pointers to functions is ugly. 'Typedefs' can be used to make pointers to functions look more like regular variables:  
-  ```c
-  typedef bool (validateFcn)(int,int);
-  ```
-  This defines a typedef called 'validateFcn' that is a pointer to a function that takes two int's and returns a bool.  
-  &nbsp;
-  Now instead of doing this:  
-  ```c
-  bool validate (int x, int y, bool (*fcnPtr)(int,int));
-  ```
-  you can do this:
-  ```c
-  bool validate (int x, int y, validateFcn pfcn);
-  ```
+&nbsp;
+
+**`typedefs` for pointers to functions**  
+
+The syntax for pointers to functions is ugly. 'Typedefs' can be used to make pointers to functions look more like regular variables:  
+```c
+typedef bool (validateFcn)(int,int);
+```
+This defines a typedef called 'validateFcn' that is a pointer to a function that takes two int's and returns a bool.  
+
+Now instead of doing this:  
+```c
+bool validate (int x, int y, bool (*fcnPtr)(int,int));
+```
+you can do this:
+```c
+bool validate (int x, int y, validateFcn pfcn);
+```
 
 
 &nbsp;  
@@ -1841,6 +1849,130 @@ Erstmal mit Fließkommazahlen: Der Algorithmus ist recht selbsterklärend, zwei 
     }
   ```
 </details> 
+
+&nbsp; 
+
+<a name="ch7-4"></a>
+### 7.4 'Exceptions' - `Try / Catch`  
+
+C++ bietet einen Mechanismus, der es ermöglicht einen Block von Anweisungen gegen Abstürze zu sichern. Alle darin auftretenden Ausnahmefehler werden einem Behandlungsblock zugeleitet.  
+
+Der gesicherte Anweisungsblock wird durch das Schlüsselwort `try` eingeleitet. Der Fehlerbehandlungsblock beginnt mit `catch`.  
+
+```c
+try {...}    // zu sichernder Code
+catch {...}  // Code zur Fehlerbehandlung
+```
+
+Man nennt einen solchen Fehler `Exception`. Tritt eine solche Ausnahme in einem try-Block auf, dann wird die Verarbeitung in dem behandelnden catch-Block fortgesetzt.  
+
+<u>Wirkunskreis</u>  
+Eine Ausnahmebehandlung wirkt nicht nur auf den Block selbst, sondern auch auf alle innerhalb des Blocks aufgerufenen Funktionen. Dadurch kann die Fehlerbehandlung an einer zentralen Stelle durchgeführt werden.  
+Außerdem kann zusätzlich an jeder Stelle des Programms eine Ausnahmebehandlung stattfinden. Sobald es zu einem Fehler kommt, wird die nächste `catch`-Anweisung verwendet, die auf den Ausnahmetyp passt. Um die nächste Ausnahmebehandlung zu finden, wird die Aufrufreihenfolge rückwärts durchlaufen. Dadurch wird immer die Ausnahmebehandlung verwendet, die der Fehlerstelle am nächsten ist.  
+
+- `throw` - Eigene Ausnahmen erzeugen  
+  Besonders interessant ist es, eigene Ausnahmesituationen zu definieren. Der Befehl `throw` erzeugt eine solche Ausnahme. Er bricht die Verarbeitung sofort ab und springt direkt in die passende Ausnahmebehandlung.  
+  &nbsp;  
+  ```c
+  void TuWas(int prob) {
+    ...
+    if (prob > 0) {
+      throw 0;
+    }
+  }
+
+  int main() {
+    try {
+      ...
+      TuWas(1)
+    }
+    catch(int a) {
+      if (a==0) {...}
+    }
+  }
+  ```
+  &nbsp;
+  Der Befehl `throw` in der Funktion 'TuWas()' löst eine Ausnahme aus, wenn der Parameter 'prob' größer als 0 ist. Die Verarbeitung wird im 'catch'-Block fortgesetzt. Hat der 'catch'-Block 'int' als Parameter, bearbeitet er nur Ausnahmen, die durch einen 'throw'-Befehl mit einer Zahl als Argument ausgelöst wurden. Um andere Parameter zu bearbeiten, wurde einfach ein weiterer 'catch'-Block mit einem (oder mehreren) anderen Parametertyp(en) angehängt.  
+&nbsp;
+
+- *Fehlerklassen*  
+  Man kann auch eigene Klassen erstellen, die als Parameter für 'catch' verwendet werden können.  
+  ```c
+  #include <iostream>
+  using namespace std;
+
+  class KeineDatenMehr {
+    public:
+      KeineDatenMehr(int a) {
+        nr=a;
+      }
+      void MeldeFehler() {
+        cout << nr;
+      }
+    private:
+      int nr;  
+  }
+
+  void TuWas (int prob) {
+    if (prob == 0) {
+      throw KeineDatenMehr(0);
+    }
+  }
+
+  int main () {
+    try { TuWas(0); }
+    catch(KeineDatenMehr &fehler) {
+      fehler.MeldeFehler();
+    }
+  }
+  ```
+  In der Fehlerklasse lassen sich Informationen über die Fehlerursache hinterlegen. Außerdem können in der Fehlerklasse Funktionen zur Fehlerbehandlung eingebaut werden.
+
+- *Polymorphie*  
+  Um verschiedene Fehlersituationen zu behandeln, bietet es sich an, eine Basisklasse für alle Fehlerklassen zu schreiben. Darin implementiert man, was allen Fehlersituationen gemeinsam ist. Vorteil ist, dass nur ein 'catch'-Block nötig ist um alle Fehlertypen abzufangen.  
+  &nbsp;
+  ```c
+  #include <iostream>
+  using namespace std;
+
+  class meaCulpa {
+    public:
+      virtual void MeldeFehler()=0;
+  };
+  class KeineDatenMehr : public meaCulpa {
+    public:
+       KeineDatenMehr(int a) {nr=a;}
+       void MeldeFehler() {...}
+    private:
+       int nr;
+  };
+  
+  class QuelleFehlt : public meaCulpa {
+    public:
+      QuelleFehlt() {}
+      void MeldeFehler() {...}
+  };
+
+  void TuWas (int prob) throw (KeineDatenMehr, QuelleFehlt) {
+    if (prob == 0) {
+      throw KeineDatenMehr(8);
+    }
+    if (prob == 1 ) {
+      throw QuelleFehlt();
+    }
+  }
+
+  int main () {
+    try {
+      TuWas(0);
+    }
+    catch(meaCulpa &fehler) {
+      fehler.MeldeFehler();
+    }
+  }
+  ```
+  Wie immer bei der Polymorphie wird ein Zeiger auf das übergebene Objekt verwendet, um die virtuelle Funktion aufzurufen. Das Objekt kennt sich selbst und ruft über die eigene VTable die zugehörige Funktion 'MeldeFehler()' auf.  
+  Im Code-Beispiel wurde der Funktion 'TuWas()' eine Deklaration hinzugefügt, die anzeigt, welche Ausnahmen sie auslöst. Diese Informationen sollen darauf hinweisen, dass die Funktion 'throw'-Befehle enthält. Der Compiler würde einen Fehler werfen, wenn die Funktion versucht, eine Ausnahme auszulösen, die in der Deklaration nicht angekündigt ist.  
 
 &nbsp;
 

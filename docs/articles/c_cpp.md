@@ -1866,7 +1866,7 @@ catch {...}  // Code zur Fehlerbehandlung
 
 Man nennt einen solchen Fehler `Exception`. Tritt eine solche Ausnahme in einem try-Block auf, dann wird die Verarbeitung in dem behandelnden catch-Block fortgesetzt.  
 
-**Wirkunskreis**  
+**Wirkungskreis**  
 Eine Ausnahmebehandlung wirkt nicht nur auf den Block selbst, sondern auch auf alle innerhalb des Blocks aufgerufenen Funktionen. Dadurch kann die Fehlerbehandlung an einer zentralen Stelle durchgeführt werden.  
 Außerdem kann zusätzlich an jeder Stelle des Programms eine Ausnahmebehandlung stattfinden. Sobald es zu einem Fehler kommt, wird die nächste `catch`-Anweisung verwendet, die auf den Ausnahmetyp passt. Um die nächste Ausnahmebehandlung zu finden, wird die Aufrufreihenfolge rückwärts durchlaufen. Dadurch wird immer die Ausnahmebehandlung verwendet, die der Fehlerstelle am nächsten ist.  
 

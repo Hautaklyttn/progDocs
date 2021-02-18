@@ -35,7 +35,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.15 `extern c` in C++</font>](#ch1-15)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.16 'Forward Declaration' in C++</font>](#ch1-16)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.17 'Function Prototype' and Definition in C</font>](#ch1-17)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18 Präprozessor in C/C++</font>](#ch1-17)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18 Präprozessor in C/C++</font>](#ch1-18)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.19 'Name Mangling' (or 'Name decoration')</font>](#ch1-19)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -841,6 +842,110 @@ In diesem Beispiel prüft der C-Präprozessor, ob ihm ein Makro namens 'WIN32' b
   #endif
   ```
 
+&nbsp;
+
+<a name="ch1-19"></a>
+### 1.19 'Name Mangling' (or 'Name decoration')  
+
+In compiler construction 'name mangling' is a technique used to solve various problems caused by the need to resolve various names for programming entities in many modern programming languages. It provides a way of encoding  additional information in the name of a function, structure, class or another datatype in order to pass more semantic information from the compilers to linkers.  
+
+Any object code produced by compilers is usually linked with other pieces of object code (produced by the same or another compiler) by a type of program called a linker. The linker needs a great deal of information on each program entity. For example, to correctly link a function it needs its name, the number of arguments anf their typed, and so on.  
+
+C++ compilers are the most widespread users of 'name mangling'. The first C++ compilers were implemented as translators to C source code, which would be compiled by a C compiler to object data. Because of this, symbol names had to conform to C identifier rules. C++ has also complex language features, such as classes, templates, namespaces and operator overloading, that alter the meaning of specific symbols based on context or usage. Meta-data about these features can be disambiguated by mangling (or decorating) the name of a symbol.  
+
+```c
+int f(void) { return 1; }
+int f(int) { return 0; }
+void g(void) { int i = f(); }
+```
+The C++ compiler will encode the type information in the symbol name, the result being sth like:
+```c
+int __f_v(void) { return 1; }
+int __f_i(int) { return 0; }
+void __g_v(void) { int i = __f_i(); }
+```
+Even though its name is unique, 'g()' is still mangled: name mangling applies to <u>all</u> symbols.
+
+&nbsp;
+
+**`nm` command (Unix)**  
+
+The `nm` command ships with a number of later versions of Unix and similar operating systems. `nm` is used to examine binary files (including libraries, compiled object modules, shared object files and standalone executables) and to display the contents of those files or meta-information stored in them, specifically the `symbol table`.  
+
+`nm` is used as an aid for debugging, to help resolve problems arising from name conflicts and C++ 'name mangling'.  
+
+```c
+// Example:
+// File name 'test.c'
+
+int global_var;
+int global_var_init = 26;
+static int static_var;
+static int static_var_init = 25;
+
+static int static function() {...}
+int global_function2() {int x; int y;}
+int global_function(int p) {static int local_stat_vars;}
+
+#ifdef __cplusplus
+  extern "C"
+#endif
+
+void non_mangled_functions() {...}
+int main (void) {global_var = 1;static_var = 2;}
+```
+
+(a) Compiled with the gcc C compiler, the output of `nm test.o` is
+```
+0 0 0 0 0 0 0 a    T    global_function
+0 0 0 0 0 0 2 5    T    global_function2
+0 0 0 0 0 0 0 4    C    global_var
+0 0 0 0 0 0 0 0    D    global_var_init
+0 0 0 0 0 0 0 4    b    local_static_var.1255
+0 0 0 0 0 0 3 6    T    main
+0 0 0 0 0 0 3 6    T    non_mangled_function
+0 0 0 0 0 0 0 0    t    static_function
+0 0 0 0 0 0 0 6    b    static_var
+0 0 0 0 0 0 0 4    d    static_var_init
+```
+
+(b) When the C++ compiler is used, the output of `nm test.o` is
+```
+0 0 0 0 0 0 0 a    T    -z15global_functioni
+0 0 0 0 0 0 2 5    T    -z16global_function2v
+0 0 0 0 0 0 0 4    b    -ZL10static_var
+0 0 0 0 0 0 0 0    t    -ZL15static_functionv
+0 0 0 0 0 0 0 4    d    -ZL15static_var_init
+0 0 0 0 0 0 0 8    b    -ZZ15global_functionE16Loc...
+                   U    _gxx_personality_v0
+0 0 0 0 0 0 0 0    B    global_var
+0 0 0 0 0 0 0 0    D    global_var_init
+0 0 0 0 0 0 3 6    T    main
+0 0 0 0 0 0 3 6    T    non_mangled_function
+```
+
+The difference between the outputs also show an example of solving the name mangling problem by using `extern "c"` in C++ code.
+
+Tag meaning:  
+`"T"/"t"`: The symbol is in the text (code) section
+`"D"/"d"`: The symbol is in the initialized data section
+`"B"/"b"`: The symbol is in the uninitialized data section
+`"U"`: The symbol is undefined
+
+> To write output of `nm` command to file use command: `nm <binary> >& link.txt`  
+
+&nbsp;
+
+**`dumpbin` command (Windows)**  
+
+The Microsoft COFF Binary File Dumper displays information about 'Common Object File Format' binary files. You can use `DUMPBIN` to examine COFF object files, standard libraries of COFF objects, executable files and dynamic-linked libraries (DLL's).  
+
+**[-!-]** You can start this tool only from the Visual Studio command prompt. You cannot start it from a system command prompt or from File Explorer.  
+
+To use `DUMPBIN`, use the following syntax:
+```c
+DUMPBIN [options] files ...
+```
 
 &nbsp;
 

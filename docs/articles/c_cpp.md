@@ -927,10 +927,10 @@ int main (void) {global_var = 1;static_var = 2;}
 The difference between the outputs also show an example of solving the name mangling problem by using `extern "c"` in C++ code.
 
 Tag meaning:  
-`"T"/"t"`: The symbol is in the text (code) section
-`"D"/"d"`: The symbol is in the initialized data section
-`"B"/"b"`: The symbol is in the uninitialized data section
-`"U"`: The symbol is undefined
+`"T"/"t"`: The symbol is in the text (code) section  
+`"D"/"d"`: The symbol is in the initialized data section  
+`"B"/"b"`: The symbol is in the uninitialized data section  
+`"U"`: The symbol is undefined  
 
 > To write output of `nm` command to file use command: `nm <binary> >& link.txt`  
 

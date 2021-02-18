@@ -883,7 +883,7 @@ int global_var_init = 26;
 static int static_var;
 static int static_var_init = 25;
 
-static int static function() {...}
+static int static_function() {...}
 int global_function2() {int x; int y;}
 int global_function(int p) {static int local_stat_vars;}
 

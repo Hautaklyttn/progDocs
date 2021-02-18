@@ -68,11 +68,13 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9 `Handle` in C++</font>](#ch5-9)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.10 'Exceptions' - `Try / Catch`</font>](#ch5-10)  
 
-### 6. Bibliotheken und API's   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 String</font>](#ch6-1)  
+### 6. Bibliotheken, API's und *make*   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Library Basics</font>](#ch6-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.2 [Win API] `#define DECLARE_HANDLE(n)`</font>](#ch6-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.3 [Win API] `HWND` (Fenster Handle)</font>](#ch6-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.4 'The C++ Standard Template Library' (Container-Klasse)</font>](#ch6-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.5 [make] Call 'Makefile' in Subdirectory</font>](#ch6-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.6 String</font>](#ch6-6)  
 
 ### 7. How To's & Special Syntax   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.1 Emulation</font>](#ch7-1)  
@@ -357,6 +359,15 @@ Der erste Wert des Parameter-Arrays 'argv' ist immer der Programmname selbst, in
 |float |4 bytes |1.2E-38 to 3.4E+38 |  
 |double |8 bytes |2.3E-308 to 1,7E+308 |  
 |long double |10 bytes |3.4E-4932 to 1.1E+4932 |  
+
+&nbsp;
+
+**Advice on Signed/Unsigned**  
+
+Operands with different types get converted when you do arithmetics. Everything is converted to the floatiest, longest operand, signed if possible without losing bits.  
+
+> Avoid unnecessary complexity by minimizing your use of unsigned types. Specifically, don't use an unsigned type to represent a quantity just because it will never be negative. Use a signed type like 'int' and you won't have to worry about boundary cases in the detailed rules for promoting mixed types.  
+> Only use unsigned types for bitfields or binary masks. Use casts in expressions, to make all the operands signed or unsigned, so the compiler does not have to chose the result type.
 
 &nbsp;
 
@@ -1701,88 +1712,42 @@ Im Code-Beispiel wurde der Funktion 'TuWas()' eine Deklaration hinzugefügt, die
 
 &nbsp;
 
-# Bibliotheken
+# Bibliotheken, API's und *make*  
 
 <a name="ch6-1"></a>
-### 6.1 String  
+### 6.1 Library Basics  
 
-Um String-Funktionen nutzen zu können, muss die Bibliothek *string.h* eingebunden werden.  
+Eine Library (Bibliothek) ist eine Anwendung von Funktionen, die bereits in kompilierter Form vorliegen. Sie besteht aus zwei Teilen: dem Archiv und dem Interface in Form von Headern. Hier wird vorerst nur auf statische Libraries für den C-Compiler eingegangen werden. In der Regel enden sie auf die Dateinamenerweiterung `.a`.
+
+- Zunächst wird der Quellcode benötigt, d.h. eine \*.c-Datei mit den Funktionen, aber keine 'main'-Funktion
+- Da eine Library lediglich kompiliert und assembliert, aber nicht gelinkt werden soll, muss das beim Compileraufruf berücksichtigt werden. Der Kommandozeilenschalter dafür ist `-c`, z.b.  
+  ```c
+  $gcc -c -ggdb -02 libfunc01.o libfunc01.c
+  ```
+- Typdefinitionen und programmglobale Variablen sind am Besten in der Header-Datei aufgehoben
+- Wenn Funktionen in der Code-Datei Zeiger zurückgeben, dann müssen dafür modulglobale Variablen, d.h. innerhalb einer gesamten Programmdatei (Speicherung im Datensegment des Speichers).
+- Das Archivierungsprogramm `ar` wird dazu verwendet, um die kompilierten Objektfiles zu einer 'Library' zusammenzufügen:
+  ```c
+  $ ar -rcs libmylib.a libfunc01.o
+  ```
+- Den Inhalt der frisch erzeugten Library kann man sich mit 'nm' anzeigen lassen:
+  ```c
+  $ nm -s libmylib.a
+  ```
 &nbsp;
 
-**strlen (char \*str)**  
-Funktion ermittelt die Länge eines Strings bzw. die Anzahl seiner Zeichen.  
+**Fertige Library**  
+Es existieren jetzt zwei Dateien, die zum Export der Library benötigt werden:  
+1. 'mylib.h', in der das Interface dokumentiert ist
+2. 'libmylib.a', die Library selber in kompilierter Form
 
-&nbsp;
-
-**char \*strcpy (char \*dest, char \*src)**  
-Mit *string copy* können wir den Inhalt eines Strings kopieren.  
-- *\*dest* ist Zeiger auf Ziel-Array
-- *\*src* ist Zeiger auf Quell-Array
-
-Rückgabewert ist char-Zeiger auf Ziel-Array.
-
+Hat man die Library jetzt in seinem Projektordner vorliegen, muss man für die Verwendung die Library mit linken, z.B.
 ```c
-char textA[5] = "abc";
-printf("textA: %s", textA);    // textA: abc
-
-strcpy(textA, "xyz");
-printf("textA: %s", textA);    // textA: xyz
+$ gcc -ggdb -02 -o ... -mylib
 ```
 
-**char \*strcpy (char \*dest, char \*src, int n)**  
-Mit *strcpy* kopiert man n Zeichen von *src* nach *dest*. Das String-Ende-Zeichen (*\\0*) muss manuell gesetzt werden.  
+`-mylib` := sagt dem Linker, dass er die Library 'libmylib.a' beim Linken verwenden soll (alle Libraries haben das Prefix 'lib', welches hier nicht angegeben werden darf!)
 
-&nbsp;
-
-**char \*strcat (char \*dest, char \*src)**  
-Mit *strcat* können wir Strings verketten, also aneinenaderhängen. Das Ergebnis wird in *dest* gespeichert.
-
-**char \*strncat (char \*dest, char \*src, int n)**  
-Mit *strncat* können wir n Zeichen ans *src* anhängen.  
-
-&nbsp;
-
-**int \*strcmp (char \*str1, char \*str2)**  
-Mit *strcmp* können wir zwei Strings vergleichen.  
-Rückgabewerte:  
-- 0 := die Strings sind gleich
-- \>0 := das erste ungleiche Zeichen in *str1* ist größer als in *str2*
-- \<0 := das erste ungleiche Zeichen in *str1* ist kleiner als in *str2*  
-
-**int \*strncmp (char \*str1, char \*str2, int n)**  
-Mit *strncmp* und dem Parameter n können wir die ersten n Zeichen der Strings vergleichen.
-
-&nbsp;
-
-**char \*strstr (char \*string, char \*needle)**  
-Mit *strstr* können wir nach Zeichenketten in einem String suchen. Der Rückgabewert ist die Adresse vom Anfang des gefundenen *needle* in String (gespeichert in *needle*) ansonsten *NULL*.  
-
-&nbsp;
-
-**char \*strchr (char \*s, int c)**  
-Mit *string char* können wir ein Zeichen in einem String suchen. Das zu suchende Zeichen wird mit dem Parameter *c* als ASCII-Code übergeben. Rückgabewert ist *NULL* wenn Zeichen nicht gefunden, ansonsten Adresse des ersten gefundenen Zeichens.  
-
-&nbsp;
-
-**char \*strtok (char \*str1, char \*delimiters)**  
-Mit *strtok* können wir einen String anhand von Trennzeichen zerteilen und die einzelnen Abschnitte herauslesen. Die Trennzeichen werden im Parameter *delimiter* übergeben.  
-Beim ersten Aufruf muss *strtok* mit einem String initialisiert werden. Die Rückgabe ist hierbei der erste Abschnitt. Bei Folgeaufrufen wird statt *string* der *NULL*-Wert übergeben, da *strtok* bereits initialisiert ist und intern einen Zeiger auf *String* gespeichert hat. Der Zeiger *ptr*, welcher den Rückgabewert abfängt, zeigt auf das erste Zeichen des jeweiligen Abschnitts in *string*. Das jeweilige Ende wird mit *\\0* in *string* gesetzt, d.h. der String wird verändert. Man sollte bei *strtok* immer eine Kopie des Strings verwenden.  
-
-```c
-char string[] = "Kurt; ist, der; Größte";
-char delimiter[] = ",;";
-ptr strtok(string, delimiter);    // Initialisieren und ersten Abschnitt erstellen
-
-while (ptr != NULL) {
-  printf("Ausgabe: %s\n", ptr);
-  ptr = strtok(NULL, delimiter);
-}
-
-// Ausgabe: Kurt
-// Ausgabe: ist 
-// Ausgabe: der
-// Ausgabe: Größte
-```
 
 &nbsp; 
 
@@ -1903,6 +1868,120 @@ Flowchart of Sequence conatiners and ordered containers
     Removes the element at the position pointed by the iterator.  
   - *erase(const g)*  
     Removes the key value ‘g’ from the map.  
+
+&nbsp; 
+
+<a name="ch6-5"></a>
+### 6.5 [make] Call 'Makefile' in Subdirectory  
+
+If you're looking to perform more tasks within 'some_directory', you need to add a semi-colon and append the other commands as well. Note that you cannot use newlines as they are interpreted by 'make' as the end of the rule, so any newlines you use for clarity needs to be escaped by a backslash.  
+```c
+all: 
+    echo "I'm in some_dir"; \
+    gcc -Wall -o myTest myTest.c
+```
+
+Note also that the semicolon is necessary between every command even though you add a backslash and a newline. This is due to the fact that the entire string is parsed as a single line by the shell. You should use '&&' to join commands, which means they only get executed if the preceding command was successful.  
+```c
+all: 
+    echo "I'm in some_dir" && \
+    gcc -Wall -o myTest myTest.c
+```
+
+This is especially crucial when doing destructive work, such as clean-up, as you'll otherwise destroy the wrong stuff.  
+
+A common usage is to call 'make' in the subdirectory, the rule would look like this:
+```c
+all: 
+    $(MAKE) -C some_dir all
+```
+which will change into 'some_dir' and execute the 'Makefile' in there with the target 'all'. As a best practice use '$(MAKE)' instead of calling 'make' directly, as it'll take care to call the right make instance, as well as provide slightly different behaviour when running using certain switches, such as '-t'.  
+
+For the record:  
+'make' always echoes the commandit executed (unless explicitly suppressed), even if it has no output, which is what you're seeing.
+
+&nbsp;
+
+<a name="ch6-6"></a>
+### 6.6 String  
+
+Um String-Funktionen nutzen zu können, muss die Bibliothek *string.h* eingebunden werden.  
+&nbsp;
+
+**strlen (char \*str)**  
+Funktion ermittelt die Länge eines Strings bzw. die Anzahl seiner Zeichen.  
+
+&nbsp;
+
+**char \*strcpy (char \*dest, char \*src)**  
+Mit *string copy* können wir den Inhalt eines Strings kopieren.  
+- *\*dest* ist Zeiger auf Ziel-Array
+- *\*src* ist Zeiger auf Quell-Array
+
+Rückgabewert ist char-Zeiger auf Ziel-Array.
+
+```c
+char textA[5] = "abc";
+printf("textA: %s", textA);    // textA: abc
+
+strcpy(textA, "xyz");
+printf("textA: %s", textA);    // textA: xyz
+```
+
+**char \*strcpy (char \*dest, char \*src, int n)**  
+Mit *strcpy* kopiert man n Zeichen von *src* nach *dest*. Das String-Ende-Zeichen (*\\0*) muss manuell gesetzt werden.  
+
+&nbsp;
+
+**char \*strcat (char \*dest, char \*src)**  
+Mit *strcat* können wir Strings verketten, also aneinenaderhängen. Das Ergebnis wird in *dest* gespeichert.
+
+**char \*strncat (char \*dest, char \*src, int n)**  
+Mit *strncat* können wir n Zeichen ans *src* anhängen.  
+
+&nbsp;
+
+**int \*strcmp (char \*str1, char \*str2)**  
+Mit *strcmp* können wir zwei Strings vergleichen.  
+Rückgabewerte:  
+- 0 := die Strings sind gleich
+- \>0 := das erste ungleiche Zeichen in *str1* ist größer als in *str2*
+- \<0 := das erste ungleiche Zeichen in *str1* ist kleiner als in *str2*  
+
+**int \*strncmp (char \*str1, char \*str2, int n)**  
+Mit *strncmp* und dem Parameter n können wir die ersten n Zeichen der Strings vergleichen.
+
+&nbsp;
+
+**char \*strstr (char \*string, char \*needle)**  
+Mit *strstr* können wir nach Zeichenketten in einem String suchen. Der Rückgabewert ist die Adresse vom Anfang des gefundenen *needle* in String (gespeichert in *needle*) ansonsten *NULL*.  
+
+&nbsp;
+
+**char \*strchr (char \*s, int c)**  
+Mit *string char* können wir ein Zeichen in einem String suchen. Das zu suchende Zeichen wird mit dem Parameter *c* als ASCII-Code übergeben. Rückgabewert ist *NULL* wenn Zeichen nicht gefunden, ansonsten Adresse des ersten gefundenen Zeichens.  
+
+&nbsp;
+
+**char \*strtok (char \*str1, char \*delimiters)**  
+Mit *strtok* können wir einen String anhand von Trennzeichen zerteilen und die einzelnen Abschnitte herauslesen. Die Trennzeichen werden im Parameter *delimiter* übergeben.  
+Beim ersten Aufruf muss *strtok* mit einem String initialisiert werden. Die Rückgabe ist hierbei der erste Abschnitt. Bei Folgeaufrufen wird statt *string* der *NULL*-Wert übergeben, da *strtok* bereits initialisiert ist und intern einen Zeiger auf *String* gespeichert hat. Der Zeiger *ptr*, welcher den Rückgabewert abfängt, zeigt auf das erste Zeichen des jeweiligen Abschnitts in *string*. Das jeweilige Ende wird mit *\\0* in *string* gesetzt, d.h. der String wird verändert. Man sollte bei *strtok* immer eine Kopie des Strings verwenden.  
+
+```c
+char string[] = "Kurt; ist, der; Größte";
+char delimiter[] = ",;";
+ptr strtok(string, delimiter);    // Initialisieren und ersten Abschnitt erstellen
+
+while (ptr != NULL) {
+  printf("Ausgabe: %s\n", ptr);
+  ptr = strtok(NULL, delimiter);
+}
+
+// Ausgabe: Kurt
+// Ausgabe: ist 
+// Ausgabe: der
+// Ausgabe: Größte
+```
 
 &nbsp;
 

@@ -34,6 +34,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.14 Namespaces</font>](#ch1-14)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.15 `extern c` in C++</font>](#ch1-15)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.16 'Forward Declaration' in C++</font>](#ch1-16)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.17 'Function Prototype' and Definition in C</font>](#ch1-17)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18 Präprozessor in C/C++</font>](#ch1-17)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -63,6 +65,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.7 Konstruktor in C++</font>](#ch5-7)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.8 Das Schlüsselwort `pragma`</font>](#ch5-8)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9 `Handle` in C++</font>](#ch5-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.10 'Exceptions' - `Try / Catch`</font>](#ch5-10)  
 
 ### 6. Bibliotheken und API's   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 String</font>](#ch6-1)  
@@ -74,9 +77,10 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.1 Emulation</font>](#ch7-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2 Code optimization turned off for debugging in 'Release' version</font>](#ch7-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.3 Digital Filter Implementation</font>](#ch7-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.4 'Exceptions' - `Try / Catch`</font>](#ch7-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.4 Access file in .exe directory</font>](#ch7-4)  
 
-### 8. ...
+### 8. Warnings and Errors  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 'Warning': no previous prototype for \<function\></font>](#ch8-1)  
 
 &nbsp;
 
@@ -468,6 +472,98 @@ pAdresse = &Lieferant;
 
 &nbsp;
 
+**Using struct in multiple .c/.cpp files**  
+  
+- Case 1: Sharing the definition of a struct  
+- Case 2:Sharing a global instance of a struct  
+
+(1) If you are trying to **share the definition of a struct** among several compilation units (.c/.cpp files), the common way is the following: Place the definition of your struct in a header file. If the struct contains any methods (i.e. it is rather a class with all member public by default in cpp), you can implement them in the belonging .c/.cpp file, or, if they are lightweight, directly within the struct (which makes them inline by default).  
+```c
+// myStruct.h
+...
+struct myStruct {
+  int x;
+  void f1(){...}
+  void f2(){...}
+}
+...
+```
+```c
+// myStruct.c/.cpp
+#include "myStruct.c"
+
+// 'Implementation of 'f2()' goes here
+void myStruct::f2(){...}
+...
+```
+You can  use your struct in as many cpp files as you like, simply `#include myStruct.h`.
+&nbsp;
+
+(2) If, on the other hand, you are trying to **share a global instance of the struct** across several compilation units, do the following:
+```c
+// header file 'globals.h'
+typedef struct {
+  ...
+} node;
+
+extern node root_node;
+```
+This will announce that an instance is available with *external linkage* - in other words that a variable exists but is initialized elsewhere. In C, structures have no linkage, only objects and functions do.  
+
+Then provide an implementation/definition in a source file  
+```c
+// any source file
+#include <globals.h>
+...
+node root_node;
+```
+Now you can include 'globals.h' in any source file where 'root_node' is accessed.  
+
+&nbsp;
+
+**'Struct' as function parameter**  
+
+Es ist weit verbreitet, den Typ von Strukturen durch die Verwendung von `typedef` unter einem eigenen Namen einzuführen. Auf diese Weise entfällt die Notwendigkeit, bei der Definition von Variablen oder beim Einsatz von `sizeof` das Schlüsselwort `struct` anzugeben.  
+
+Für die Namensvergabe mittels `typedef` besteht bei Strukturen eine Kurzform:  
+```c
+typedef struct {
+  ...
+} <struct_name>
+```
+Diese Deklaration hält sich erst garnicht mit der Vergabe eines Namens für die Struktur auf, sondern macht sie dank `typedef` gleich als Datentyp \<struct_name\> verfügbar.  
+
+Beispiel:  
+```c
+// test.h
+typedef struct {
+  int aa;
+  ...
+} ABC;
+
+extern ABC XYZ;
+
+void passValue(ABC *DEF, int a);
+void doSomething();
+```
+```c
+// test.c
+ABC XYZ;
+
+void passValue(ABC *DEF, int a) {
+  DEF->aa = a;
+  ...
+}
+
+void doSomething() {
+  ...
+  ...
+  passValue(&XYZ, 10);
+}
+```
+
+&nbsp;
+
 <a name="ch1-10-4"></a>
 `union`  
 Bei einer 'Union' handelt es sich um ein Datenobjekt, dessen Speicherplatz von mehreren Variablen verschiedenen Typs genutzt werden kann.  
@@ -689,6 +785,62 @@ Advantages of 'forward declaration'
   - (In some cases) may reduce the size of your generated binaries  
   - Recompilation time can be reduced  
   - Avoiding potential clash of preprocessor names  
+
+&nbsp;
+
+<a name="ch1-17"></a>
+### 1.17 'Function Prototype' and Definition in C  
+
+If you have a function that is used in only one .c file, you can put its declaration and definition in the same .c file (and you should probably define it as `static`). In fact, if the definition appears before any calls, you can omit the separate declaration - the definition itself acts as a declaration.  
+
+&nbsp;
+
+<a name="ch1-18"></a>
+### 1.18 Präprozessor in C/C++  
+
+Der Präprozessor gehört zum Compiler und verändert den Quelltext nach Anweisungen, welche im Quelltext (oder Makefile) festgelegt werden. Wie das Stichwort 'Prä' verrät, wird der Präprozessor <u>vor</u> der eigentlichen Kompilierung ausgeführt. D.h. der Präprozessor verändert vor dem Kompilieren den Quelltext, danach wird der neue Quelltext kompiliert.  
+
+Die häufigste Nutzung des Präprozessors besteht im Einschleusen anderer Dateiinhalte:  
+```c
+#include <stdio.h>
+
+int main(void) {
+  printf("Hello World!");
+  return 0;
+}
+```
+
+Der Präprozessor ersetzt die Zeile `#include <stdio.h>` mit dem Inhalt der Header-Datei 'stdio.h' in der unter anderem die Funktion 'printf()' deklariert wird.  
+
+Die Anweisungen'#if', '#ifdef', '#ifndef', '#else' und '#endif' werden für bedingte Ersetzungen des C-Präprozessors verwendet. z.B.  
+```c
+#ifdef WIN32
+  #include <window.h>
+#else
+  #include <unistd.h>
+#endif
+```
+In diesem Beispiel prüft der C-Präprozessor, ob ihm ein Makro namens 'WIN32' bekannt ist. Ist das der Fall, wird der Dateiinhalt von \<windows.h\> eingeschleust, ansonsten der von \<unistd.h\>.
+
+- `CFLAGS`  
+  'CFLAGS' are the name of environment variables or of Makefile variables that can be set to **specify additional switches to be passed to a compiler** in the process of building computer software. These variables are usually set inside a Makefile and are **appended to the command line** when the compiler is invoked.  
+  &nbsp;  
+  So the line in the Makefile 
+  ```c
+  DEF_CFLAGS += -DWITH_FLEXRAY
+  ```
+  is the equivalent ot putting
+  ```c
+  #define WITH_FLEXRAY 1
+  ```
+  at the top of all .c and .h files in your project.  
+  Inside your code you can then tell the preprocessor (or precompiler) which code to forward to the compiler  
+  ```c
+  #ifdef (WITH_FLEXRAY)
+    ...
+  #endif
+  ```
+
 
 &nbsp;
 
@@ -1312,7 +1464,133 @@ For instance, the HWND in the Win32 API is a handle for a Window. By itself it's
 
 A Handle can be useful for saving states (among others). If u have data in a structure like an *std::vector*. Your object may be at different memory locations at different times during execution of a program, which means your pointer to that memory will change values. With a handle it never changes, it always references your object. Imagine saving a state of a program (like in a game) - you wouldn't save out a pointer location to data and later import the data again and try to get that address in memory. You can however save out a Handle with your data, and import the data and handle.  
 
-> The key thing is that when you have a "handle", you neither know nor care how that handle actually ends up identifying the thing that it identifies, all you need to know is that it does.
+> The key thing is that when you have a "handle", you neither know nor care how that handle actually ends up identifying the thing that it identifies, all you need to know is that it does.  
+
+&nbsp; 
+
+<a name="ch5-10"></a>
+### 5.10 'Exceptions' - `Try / Catch`  
+
+C++ bietet einen Mechanismus, der es ermöglicht einen Block von Anweisungen gegen Abstürze zu sichern. Alle darin auftretenden Ausnahmefehler werden einem Behandlungsblock zugeleitet.  
+
+Der gesicherte Anweisungsblock wird durch das Schlüsselwort `try` eingeleitet. Der Fehlerbehandlungsblock beginnt mit `catch`.  
+
+```c
+try {...}    // zu sichernder Code
+catch {...}  // Code zur Fehlerbehandlung
+```
+
+Man nennt einen solchen Fehler `Exception`. Tritt eine solche Ausnahme in einem try-Block auf, dann wird die Verarbeitung in dem behandelnden catch-Block fortgesetzt.  
+
+**Wirkungskreis**  
+Eine Ausnahmebehandlung wirkt nicht nur auf den Block selbst, sondern auch auf alle innerhalb des Blocks aufgerufenen Funktionen. Dadurch kann die Fehlerbehandlung an einer zentralen Stelle durchgeführt werden.  
+Außerdem kann zusätzlich an jeder Stelle des Programms eine Ausnahmebehandlung stattfinden. Sobald es zu einem Fehler kommt, wird die nächste `catch`-Anweisung verwendet, die auf den Ausnahmetyp passt. Um die nächste Ausnahmebehandlung zu finden, wird die Aufrufreihenfolge rückwärts durchlaufen. Dadurch wird immer die Ausnahmebehandlung verwendet, die der Fehlerstelle am nächsten ist.  
+
+&nbsp;
+
+**`throw` - Eigene Ausnahmen erzeugen**  
+Besonders interessant ist es, eigene Ausnahmesituationen zu definieren. Der Befehl `throw` erzeugt eine solche Ausnahme. Er bricht die Verarbeitung sofort ab und springt direkt in die passende Ausnahmebehandlung.  
+```c
+void TuWas(int prob) {
+  ...
+  if (prob > 0) {
+    throw 0;
+  }
+}
+
+int main() {
+  try {
+    ...
+    TuWas(1)
+  }
+  catch(int a) {
+    if (a==0) {...}
+  }
+}
+```
+Der Befehl `throw` in der Funktion 'TuWas()' löst eine Ausnahme aus, wenn der Parameter 'prob' größer als 0 ist. Die Verarbeitung wird im 'catch'-Block fortgesetzt. Hat der 'catch'-Block 'int' als Parameter, bearbeitet er nur Ausnahmen, die durch einen 'throw'-Befehl mit einer Zahl als Argument ausgelöst wurden. Um andere Parameter zu bearbeiten, wurde einfach ein weiterer 'catch'-Block mit einem (oder mehreren) anderen Parametertyp(en) angehängt.  
+
+&nbsp;
+
+**Fehlerklassen**  
+Man kann auch eigene Klassen erstellen, die als Parameter für 'catch' verwendet werden können.  
+```c
+#include <iostream>
+using namespace std;
+
+class KeineDatenMehr {
+  public:
+    KeineDatenMehr(int a) {
+      nr=a;
+    }
+    void MeldeFehler() {
+      cout << nr;
+    }
+  private:
+    int nr;  
+}
+
+void TuWas (int prob) {
+  if (prob == 0) {
+    throw KeineDatenMehr(0);
+  }
+}
+
+int main () {
+  try { TuWas(0); }
+  catch(KeineDatenMehr &fehler) {
+    fehler.MeldeFehler();
+  }
+}
+```
+In der Fehlerklasse lassen sich Informationen über die Fehlerursache hinterlegen. Außerdem können in der Fehlerklasse Funktionen zur Fehlerbehandlung eingebaut werden.  
+
+&nbsp;
+
+**Polymorphie**  
+Um verschiedene Fehlersituationen zu behandeln, bietet es sich an, eine Basisklasse für alle Fehlerklassen zu schreiben. Darin implementiert man, was allen Fehlersituationen gemeinsam ist. Vorteil ist, dass nur ein 'catch'-Block nötig ist um alle Fehlertypen abzufangen.  
+```c
+#include <iostream>
+using namespace std;
+
+class meaCulpa {
+  public:
+    virtual void MeldeFehler()=0;
+};
+class KeineDatenMehr : public meaCulpa {
+  public:
+      KeineDatenMehr(int a) {nr=a;}
+      void MeldeFehler() {...}
+  private:
+      int nr;
+};
+
+class QuelleFehlt : public meaCulpa {
+  public:
+    QuelleFehlt() {}
+    void MeldeFehler() {...}
+};
+
+void TuWas (int prob) throw (KeineDatenMehr, QuelleFehlt) {
+  if (prob == 0) {
+    throw KeineDatenMehr(8);
+  }
+  if (prob == 1 ) {
+    throw QuelleFehlt();
+  }
+}
+
+int main () {
+  try {
+    TuWas(0);
+  }
+  catch(meaCulpa &fehler) {
+    fehler.MeldeFehler();
+  }
+}
+```
+Wie immer bei der Polymorphie wird ein Zeiger auf das übergebene Objekt verwendet, um die virtuelle Funktion aufzurufen. Das Objekt kennt sich selbst und ruft über die eigene VTable die zugehörige Funktion 'MeldeFehler()' auf.  
+Im Code-Beispiel wurde der Funktion 'TuWas()' eine Deklaration hinzugefügt, die anzeigt, welche Ausnahmen sie auslöst. Diese Informationen sollen darauf hinweisen, dass die Funktion 'throw'-Befehle enthält. Der Compiler würde einen Fehler werfen, wenn die Funktion versucht, eine Ausnahme auszulösen, die in der Deklaration nicht angekündigt ist.  
 
 &nbsp;
 
@@ -1853,128 +2131,42 @@ Erstmal mit Fließkommazahlen: Der Algorithmus ist recht selbsterklärend, zwei 
 &nbsp; 
 
 <a name="ch7-4"></a>
-### 7.4 'Exceptions' - `Try / Catch`  
+### 7.4 Access file in .exe directory  
 
-C++ bietet einen Mechanismus, der es ermöglicht einen Block von Anweisungen gegen Abstürze zu sichern. Alle darin auftretenden Ausnahmefehler werden einem Behandlungsblock zugeleitet.  
+Paths beginning with "\\" are always relative to the current drive's root directory. If the current drive is "C:", then "settings\\settings.cfg" means "C:\\settings\\settings.cfg".  
 
-Der gesicherte Anweisungsblock wird durch das Schlüsselwort `try` eingeleitet. Der Fehlerbehandlungsblock beginnt mit `catch`.  
+Note that you can use "/" in order to avoid escaping everything. So you can use "settings/settigs.cfg".This will be relative to the user's current directory. Note however, that this doesn't necessarily correspond to the directory where the executables resides!  
 
+If you need the directory of the executable, then you need to use a Windows API function to get it:
 ```c
-try {...}    // zu sichernder Code
-catch {...}  // Code zur Fehlerbehandlung
+#include <Windows.h>
+...
+HMODULE module = GetModuleHandleW(NULL);
+WCHAR path[MAX_PATH];
+GetModuleFileNameW(module, path, MAX_PATH);
 ```
-
-Man nennt einen solchen Fehler `Exception`. Tritt eine solche Ausnahme in einem try-Block auf, dann wird die Verarbeitung in dem behandelnden catch-Block fortgesetzt.  
-
-**Wirkungskreis**  
-Eine Ausnahmebehandlung wirkt nicht nur auf den Block selbst, sondern auch auf alle innerhalb des Blocks aufgerufenen Funktionen. Dadurch kann die Fehlerbehandlung an einer zentralen Stelle durchgeführt werden.  
-Außerdem kann zusätzlich an jeder Stelle des Programms eine Ausnahmebehandlung stattfinden. Sobald es zu einem Fehler kommt, wird die nächste `catch`-Anweisung verwendet, die auf den Ausnahmetyp passt. Um die nächste Ausnahmebehandlung zu finden, wird die Aufrufreihenfolge rückwärts durchlaufen. Dadurch wird immer die Ausnahmebehandlung verwendet, die der Fehlerstelle am nächsten ist.  
+Now if you want to open "settings/settings.cfg" relative to the directory of the executable create a pyth that starts with "path" and append "settings/settings.cfg" to it. To create a path of variable "path" and a text use "std::String"  
+```c
+std::string newPath = path + std::string("settings/settings.cfg")  
+```
 
 &nbsp;
 
-**`throw` - Eigene Ausnahmen erzeugen**  
-Besonders interessant ist es, eigene Ausnahmesituationen zu definieren. Der Befehl `throw` erzeugt eine solche Ausnahme. Er bricht die Verarbeitung sofort ab und springt direkt in die passende Ausnahmebehandlung.  
-```c
-void TuWas(int prob) {
-  ...
-  if (prob > 0) {
-    throw 0;
-  }
-}
-
-int main() {
-  try {
-    ...
-    TuWas(1)
-  }
-  catch(int a) {
-    if (a==0) {...}
-  }
-}
-```
-Der Befehl `throw` in der Funktion 'TuWas()' löst eine Ausnahme aus, wenn der Parameter 'prob' größer als 0 ist. Die Verarbeitung wird im 'catch'-Block fortgesetzt. Hat der 'catch'-Block 'int' als Parameter, bearbeitet er nur Ausnahmen, die durch einen 'throw'-Befehl mit einer Zahl als Argument ausgelöst wurden. Um andere Parameter zu bearbeiten, wurde einfach ein weiterer 'catch'-Block mit einem (oder mehreren) anderen Parametertyp(en) angehängt.  
-
 &nbsp;
 
-**Fehlerklassen**  
-Man kann auch eigene Klassen erstellen, die als Parameter für 'catch' verwendet werden können.  
+# Warnings and Errors
+
+&nbsp; 
+
+<a name="ch8-1"></a>
+### 8.1 'Warning: no previous prototype for \<function\>'  
+
+> A function prototype is a declaration of a function that declares the types of íts parameters.
+
+An empty argument list in a function delaration indicates that the number and type of parameters is not known. You must explictly indicate that the function takes no arguments by using the `void` keyword, e.g.  
 ```c
-#include <iostream>
-using namespace std;
-
-class KeineDatenMehr {
-  public:
-    KeineDatenMehr(int a) {
-      nr=a;
-    }
-    void MeldeFehler() {
-      cout << nr;
-    }
-  private:
-    int nr;  
-}
-
-void TuWas (int prob) {
-  if (prob == 0) {
-    throw KeineDatenMehr(0);
-  }
-}
-
-int main () {
-  try { TuWas(0); }
-  catch(KeineDatenMehr &fehler) {
-    fehler.MeldeFehler();
-  }
-}
+void screen_init(void);
 ```
-In der Fehlerklasse lassen sich Informationen über die Fehlerursache hinterlegen. Außerdem können in der Fehlerklasse Funktionen zur Fehlerbehandlung eingebaut werden.  
-
-&nbsp;
-
-**Polymorphie**  
-Um verschiedene Fehlersituationen zu behandeln, bietet es sich an, eine Basisklasse für alle Fehlerklassen zu schreiben. Darin implementiert man, was allen Fehlersituationen gemeinsam ist. Vorteil ist, dass nur ein 'catch'-Block nötig ist um alle Fehlertypen abzufangen.  
-```c
-#include <iostream>
-using namespace std;
-
-class meaCulpa {
-  public:
-    virtual void MeldeFehler()=0;
-};
-class KeineDatenMehr : public meaCulpa {
-  public:
-      KeineDatenMehr(int a) {nr=a;}
-      void MeldeFehler() {...}
-  private:
-      int nr;
-};
-
-class QuelleFehlt : public meaCulpa {
-  public:
-    QuelleFehlt() {}
-    void MeldeFehler() {...}
-};
-
-void TuWas (int prob) throw (KeineDatenMehr, QuelleFehlt) {
-  if (prob == 0) {
-    throw KeineDatenMehr(8);
-  }
-  if (prob == 1 ) {
-    throw QuelleFehlt();
-  }
-}
-
-int main () {
-  try {
-    TuWas(0);
-  }
-  catch(meaCulpa &fehler) {
-    fehler.MeldeFehler();
-  }
-}
-```
-Wie immer bei der Polymorphie wird ein Zeiger auf das übergebene Objekt verwendet, um die virtuelle Funktion aufzurufen. Das Objekt kennt sich selbst und ruft über die eigene VTable die zugehörige Funktion 'MeldeFehler()' auf.  
-Im Code-Beispiel wurde der Funktion 'TuWas()' eine Deklaration hinzugefügt, die anzeigt, welche Ausnahmen sie auslöst. Diese Informationen sollen darauf hinweisen, dass die Funktion 'throw'-Befehle enthält. Der Compiler würde einen Fehler werfen, wenn die Funktion versucht, eine Ausnahme auszulösen, die in der Deklaration nicht angekündigt ist.  
 
 &nbsp;
 

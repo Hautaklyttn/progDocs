@@ -2,13 +2,9 @@
 layout: default
 ---
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left"><a href="../.././">Back to Front Page</a></th>
-    </tr>
-  </thead>
-</table>
+[Back](../)
+
+&nbsp;
 
 # Git basics
 
@@ -301,11 +297,8 @@ command appends all _Commits_ of Branch 'topic' after _Commit_ 169a6 to the Bran
 
 ## To be continued...
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left"><a href="../.././">Back to Front Page</a></th>
-    </tr>
-  </thead>
-</table>
-***
+&nbsp;
+
+&nbsp;
+
+[Back](../)

@@ -130,7 +130,7 @@ The following step-by-step instructions show both, `Git Bash` and `TortoiseGit` 
 
   1. In the *TortoiseGit* submenu select `Git Commit -> "master"... `. In the dialogue enter your commit message in the upper box and select the file(s) you want to commit (they appear under `Not Versioned Files`) in the lower box. The selection of a file is the equivalent to the `git add` command in the Bash.  
   &nbsp;  
-  ![gf2](../../assets/images/commit.png)   
+  ![gf2](../assets/pics/commit.png)   
   &nbsp;  
   Afterwards you click on `Commit` and you are done.
   &nbsp;
@@ -177,7 +177,7 @@ The following step-by-step instructions show both, `Git Bash` and `TortoiseGit` 
 
   1. In the *TortoiseGit* submenu select `Git Commit -> "master"... `. In the dialogue enter your commit message in the upper box and select the file(s) you want to commit (in case of new files, they appear under `Not Versioned Files`) in the lower box. The selection of a file is the equivalent to the `git add` command in the Bash.  
   &nbsp;  
-  ![gf2](../../assets/images/commitPush.png)   
+  ![gf2](../assets/pics/commitPush.png)   
   &nbsp;  
   Afterwards you click on `Commit & Push` and you are done.
   &nbsp;
@@ -217,7 +217,7 @@ The following step-by-step instructions show both, `Git Bash` and `TortoiseGit` 
 
   1. In the *TortoiseGit* submenu select `Git Commit -> "master"... `. In the dialogue enter your commit message in the upper box and select the single file you want to commit (in case of a new file, it appears under `Not Versioned Files`) in the lower box. The selection of a file is the equivalent to the `git add` command in the Bash.  
   &nbsp;  
-  ![gf2](../../assets/images/commit02.png)   
+  ![gf2](../assets/pics/commit02.png)   
   &nbsp;  
   Afterwards you click on `Commit & Push` and you are done.
   &nbsp;
@@ -250,22 +250,22 @@ This solution is completely done in the browser in GitHub.
 1. Open <span style="color:Green">github.conti.de</span> in a Browser and navigate to your fork.
 2. Click the <span style="color:Green">Compare</span> button on the right, below the <span style="color:Green">Clone or Download</span> button.  
 &nbsp;  
-![Comp1](../../assets/images/compare.png)  
+![Comp1](../assets/pics/compare.png)  
 &nbsp;  
 3. Now you select as target repository (== *base repository*) your fork (the name usually contains your WinID).  
 &nbsp;  
-![Comp2](../../assets/images/compare01.png)  
+![Comp2](../assets/pics/compare01.png)  
 &nbsp;  
 After you selected your fork, the message <span style="color:Green">"There isn't anything to compare"</span> will appear.  
 &nbsp;  
 4. For being able to select a different *head repository*, click on <span style="color:Green">compare across forks</span>.  
 &nbsp;  
-![Comp3](../../assets/images/compare02.png)  
+![Comp3](../assets/pics/compare02.png)  
 Now you can set the *head repository* on the right to the main repository.  
 &nbsp;  
-![Comp4](../../assets/images/compare03.png)  
+![Comp4](../assets/pics/compare03.png)  
 &nbsp;  
-5. As a last step you create a <span style="color:Green">Pull Request</span> for your own repository as target repository. &nbsp;&nbsp; ![pr](../../assets/images/createPullReq.png)
+5. As a last step you create a <span style="color:Green">Pull Request</span> for your own repository as target repository. &nbsp;&nbsp; ![pr](../assets/pics/createPullReq.png)
 
 &nbsp;
 
@@ -311,14 +311,14 @@ Prerequisite is that the main repository (usually called '*upstream*') is set as
 - In **TortoiseGit**  
 
   1. Fetch the desired branch (here: `master`) of your remote (here: `upstream`)  
-    ![gf2](../../assets/images/git_fetch01.png)   
+    ![gf2](../pics/images/git_fetch01.png)   
     &nbsp;
   2. Integrate the changes from remote to your local ones by `Rebase`. Resolve possible merge conflicts by hand.  
-    ![gr2](../../assets/images/git_rebase01.png)   
+    ![gr2](../pics/images/git_rebase01.png)   
     Here you would first select the ''*Upstream:*'' for which you did the *Fetch* in the first step (here: `remotes/upstream/master`) and then select the latest *Commit* in the Commit list (topmost entry). Afterwards click `Start Rebase`.      
     &nbsp;
   3. Finally push your local changes to your fork repository and you are done.  
-    ![gr2](../../assets/images/git_push01.png)
+    ![gr2](../pics/images/git_push01.png)
 
 &nbsp;
 <table>
@@ -339,12 +339,12 @@ Prerequisite is that the main repository (usually called '*upstream*') is set as
 
   1. Navigate to your fork on your personal GitHub account.  
   2. To move the contents of our fork to the main repository, you have to make a so called `Pull Request`.  
-     For that click on ![gr2](../../assets/images/pullReq.png).
+     For that click on ![gr2](../assets/pics/pullReq.png).
   3. In the following dialogue, set a title for your Pull Request and specify your newly implemented changes a little closer in the box below.
      If configured, choose a reviewer for the task of finally Merging the Pull Request.  
      Click `Create Pull Request` to demand the review.  
      &nbsp;
-     ![gr2](../../assets/images/pullReq02.png)  
+     ![gr2](../assets/pics/pullReq02.png)  
      &nbsp;
   4. In case you are the one who has the required rights to perform the Merge, you can directly Merge your changes to the main repository.
      If you don't have the rights or you have selected a reviewer, the person who is in charge now is notified by mail and will Merge your changes (or not in case of problems).
@@ -390,10 +390,10 @@ Prerequisite is that the main repository (usually called '*upstream*') is set as
   ``Rebase``
 
   1. Fetch the desired branch (here: `master`) of your remote (here: `upstream`)  
-    ![gf2](../../assets/images/git_fetch01.png)   
+    ![gf2](../assets/pics/git_fetch01.png)   
     &nbsp;
   2. Integrate the changes from remote to your local ones by `Rebase`. Resolve possible merge conflicts by hand.  
-    ![gr2](../../assets/images/git_rebase01.png)   
+    ![gr2](../assets/pics/git_rebase01.png)   
     Here you would first select the ''*Upstream:*'' for which you did the *Fetch* in the first step (here: `remotes/upstream/master`) and then select the latest *Commit* in the Commit list (topmost entry). Afterwards click `Start Rebase`.  
 
   or  
@@ -402,7 +402,7 @@ Prerequisite is that the main repository (usually called '*upstream*') is set as
 
   1.  Select `Merge...` in the TortoiseGit submenu and the branch from which you want to pull from.
     &nbsp;  
-    ![gf2](../../assets/images/git_merge.png)    
+    ![gf2](../assets/pics/git_merge.png)    
 
 &nbsp;
 <table>
@@ -435,10 +435,10 @@ Prerequisite is that the main repository (usually called '*upstream*') is set as
 - In **TortoiseGit**  
 
   1. Fetch the desired branch (here: `master`) of your remote (here: `upstream`).  
-    ![gf2](../../assets/images/git_fetch01.png)   
+    ![gf2](../assets/pics/git_fetch01.png)   
     &nbsp;
   2. Select `Switch/Checkout` in the TortoiseGit submenu.  
-    ![gf2](../../assets/images/git_resetForce.png)   
+    ![gf2](../assets/pics/git_resetForce.png)   
     &nbsp;  
     For the *Branch*, select your remote beginning with 'remotes/' (here `upstream/master`).  
     `Create New Branch` should be checked and have the name of your current local branch you want to overwrite.  
@@ -494,7 +494,7 @@ c) *CM_Template* has to be set as a remote in your local *Working Directory* (&r
 - In **TortoiseGit**  
 
   1. The first step is to simply `Pull` from CM_Template  
-    ![gf2](../../assets/images/cmTemp_pull.png)  
+    ![gf2](../../assets/pics/cmTemp_pull.png)  
     &nbsp;  
     Important is to select the correct *Remote* (``CM_Template``) and leave everything as it is. In case `Launch Rebase After Fetch` is selected, deselect it (lower left). Click 'OK' and the Warning shown on the right should appear, just click 'OK'.  
     &nbsp;  
@@ -502,11 +502,11 @@ c) *CM_Template* has to be set as a remote in your local *Working Directory* (&r
     We did the ``Pull`` to trigger the following steps and we will do a final commit in the end to give us an updated project containing the most recent *CM_Template* changes.**  
     &nbsp;  
   2. `Resolve` Merging issues   
-    ![gf2](../../assets/images/cmTemp_resolve.png)  
+    ![gf2](../assets/pics/cmTemp_resolve.png)  
     &nbsp;  
     After clicking 'Ok', Git tries to resolve as much as possible itself. But most probably you will end up with the window on the above left which gives you the possibility to ``Resolve`` the Merging issues. After clicking on 'Resolve' you get an overview of all files which contain potential problems. We will go through them one by one.  When we 'Right-Click' a file, we get the following dialogue:  
     &nbsp;  
-    ![gf2](../../assets/images/cmTemp_resolve02.png)  
+    ![gf2](../assets/pics/cmTemp_resolve02.png)  
     &nbsp;  
     One of the three possibilities is usually chosen:  
         - `Edit Conflicts` opens the Editor in which we go through all lines (usually the way to go).
@@ -514,16 +514,16 @@ c) *CM_Template* has to be set as a remote in your local *Working Directory* (&r
         - `Resolve conflict using "HEAD"` is selected when you are sure that all the changes from remote can be discarded and only your local file with its contents is valid.  
     &nbsp;  
     In case you selected `Edit Conflicts` the following dialogue opens:  
-    ![gf2](../../assets/images/cmTemp_ResConflictScr.png)  
+    ![gf2](../assets/pics/cmTemp_ResConflictScr.png)  
     &nbsp;  
     The dialogue above has three areas: The upper left shows the file content from the remote server (so in our case the most recent *CM_Template* changes). The upper right shows the file content of your `HEAD` on your local machine (so your last local commit of your project) and the lower window is the resulting file contents. Here you are supposed to choose from the two upper files your resulting file contents. On the left of the lower window you can see the lines Git already did merge for you (`-` for removed line and `+` for added or edited line). Yellow and orange areas are usually already fine, so no work has to be done. It won't hurt to check anyhow to be sure nothing went wrong.  
     If you are finished with the file and sure that everything is in place you click `Save` in the upper left. The dialogue below appears in which you select `Mark as resolved` and you are done with this file. It disappears from the file overview in the previous dialogue.  
     &nbsp;  
-    ![gf2](../../assets/images/cmTemp_ResConflictScr02.png)  
+    ![gf2](../assets/pics/cmTemp_ResConflictScr02.png)  
     &nbsp;  
     Red areas, as seen in the image below, are critical areas which need the attention of the project responsible:  
     &nbsp;  
-    ![gf2](../../assets/images/cmTemp_ResConflictScr03.png)  
+    ![gf2](../assets/pics/cmTemp_ResConflictScr03.png)  
     &nbsp;  
     Select the whole red block in the lower window and do a 'Right-Click' - the dialogue above appears.  
     Three options are described:  
@@ -536,11 +536,11 @@ c) *CM_Template* has to be set as a remote in your local *Working Directory* (&r
   3. Check all files with `Diff` before final Commit  
     After you resolved all files in the list you are almost finished. To fulfill the Merge, you need to Commit your resolved files. Before we do that, it is necessary to check once again if no project files have taken harm in the process. For this select `Diff` in the TortoiseGit submenu. Result is the following dialogue:  
     &nbsp;  
-    ![gf2](../../assets/images/cmTemp_diff.png)  
+    ![gf2](../assets/pics/cmTemp_diff.png)  
     &nbsp;  
     Interesting for us are the files which are marked as `Modified`. Double click on each file one after the other and check for all differences.   
     &nbsp;  
-    ![gf2](../../assets/images/cmTemp_diff02.png)  
+    ![gf2](../assets/pics/cmTemp_diff02.png)  
     &nbsp;  
     A *diff* window appears, which shows the currently committed file content on the left and the current 'Working Directory' content on the right. Go through all differences and check again that no project content was overwritten unintentionally. Often the button `Use left block` can be used to just take over the old project content. After all files were checked, click ``Commit`` to check in the updated files.   
 
@@ -571,7 +571,7 @@ The password is stored in the Windows credential manager and needs to be updated
   2. Select 'Benutzerkonten' &nbsp; &rarr; &nbsp; 'Anmeldeinformationsverwaltung' &nbsp; &rarr; &nbsp; 'Windows-Anmeldeinformation' &nbsp; &rarr; &nbsp; in the menu on the bottom select 'git:http//:github.conti.de' (see below)
   &nbsp;  
   &nbsp;  
-  ![gf2](../../assets/images/auth_failed.png)  
+  ![gf2](../assets/pics/auth_failed.png)  
   &nbsp;
   3. Change your password and retry your git command.
 
@@ -654,16 +654,16 @@ The password is stored in the Windows credential manager and needs to be updated
   To revert changes made <u>to a single file</u>, select `Show Log` in the TortoiseGit submenu. In the new dialogue go to the top box and navigate to the Commit you want to revert your file to. Afterwards right-click the file you want to revert in the lower box.  
   Click here `Revert to this revision` which leads to the file being reverted.  
   &nbsp;
-  ![gf2](../../assets/images/git_checkoutFile.png)  
+  ![gf2](../../assets/pics/git_checkoutFile.png)  
 
   &nbsp;
 
   To revert <u>all changes</u> in the *Working Directory* to a previous Commit, first select `Show Log` in the TortoiseGit submenu.  
   1.  In the upper box select the Commit you want to reset to and right-click on it.  Now select `Reset 'master' to this ...`  
-    ![gf2](../../assets/images/git_reset.png)   
+    ![gf2](../../assets/pics/git_reset.png)   
     &nbsp;
   2. Set the `Reset Type` to *Soft* or *Mixed* to keep the files in your *Working Directory* untouched and click *OK*.  
-      ![gf2](../../assets/images/git_reset02.png)   
+      ![gf2](../../assets/pics/git_reset02.png)   
 
 
 &nbsp;
@@ -693,10 +693,10 @@ The password is stored in the Windows credential manager and needs to be updated
   1. Right click on the repository folder and select `Show Log` in the TortoiseGit submenu.  
     In the upper box select the Commit you want to reset to, in this case the 2nd one from top, and right-click on it.  
     Now select `Reset 'master' to this ...`  
-    ![gf2](../../assets/images/git_reset.png)   
+    ![gf2](../assets/pics/git_reset.png)   
     &nbsp;
   2. Set the `Reset Type` to *Soft* or *Mixed* to keep the files in your *Working Directory* untouched and click *OK*.  
-    ![gf2](../../assets/images/git_reset02.png)   
+    ![gf2](../assets/pics/git_reset02.png)   
 
 &nbsp;
 <table>
@@ -721,7 +721,7 @@ The password is stored in the Windows credential manager and needs to be updated
 
 - In **TortoiseGit**  
 
-    ![gf2](../../assets/images/git_pushForce.png)   
+    ![gf2](../assets/pics/git_pushForce.png)   
 
     Set the `unknown changes` box. This does not check any server commits, so it is possible to lose unknown changes on the remote.  
     This will overwrite the remote repository (here: `upstream/master`) with the current local files, even when the remote repository is ahead.
@@ -782,7 +782,7 @@ The file itself is not harmed and will stay where it is.
 
 - In **TortoiseGit**  
 
-  ![gf2](../../assets/images/revert.png)   
+  ![gf2](../assets/pics/revert.png)   
 
   The command will remove the file from the staging area.
 
@@ -846,12 +846,12 @@ GitHub has an integrated file comparison view, where you can see what has change
   1. Navigate to the repository you want to look at - usually a subrepository of &nbsp;[VED-CarMaker-HIL](http://github.conti.de/pages/VED-CarMaker-HIL).  
   2. In the first Tab `<> Code`, there is a link to the commit history, also displaying the number of commits overall.  
     &nbsp;  
-  ![gf2](../../assets/images/git_commits.png)  
+  ![gf2](../assets/pics/git_commits.png)  
   &nbsp;  
   3. Click on it and the commit history is shown with the dates and the commit messages which, in the best case, describe what was done at this point in time.  
   4. Now select the commit you want to investigate and click on it. As a result it shows all files that were edited with the removed parts (`-`) and the newly added parts (`+`).  
   &nbsp;  
-    ![gf2](../../assets/images/git_commits02.png)  
+    ![gf2](../assets/pics/git_commits02.png)  
   &nbsp;  
 
 

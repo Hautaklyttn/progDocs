@@ -1,10 +1,10 @@
 ---
 layout: default
 ---
-<div id='top'><a name='top'></a></div>
-Typical Use Cases for the work with Git and CarMaker projects at Continental VED.  
 
-***
+[Back](../)
+
+&nbsp;
 
 The following step-by-step instructions show both, `Git Bash` and `TortoiseGit` ways of solving the task.  
 
@@ -910,13 +910,8 @@ GitHub has an integrated file comparison view, where you can see what has change
 
 ***
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left"><a href="../.././">Back to Front Page</a></th>
-    </tr>
-  </thead>
-</table>
+&nbsp;
 
+&nbsp;
 
-For comments or suggestions, please use the `Issues` tab on our [GitHub page](http://github.conti.de/VED-CarMaker-HIL/HiL-Application-Wiki).
+[Back](../)

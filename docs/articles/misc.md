@@ -8,12 +8,12 @@ layout: default
 
 # Misc
 ---
-Basics
+Basics  
 &nbsp;&nbsp;&nbsp;[Rechnerarchitektur](#link001)
 
 &nbsp;
 
-Compiler
+Compiler  
 &nbsp;&nbsp;&nbsp;[Die Phasen eines Compilers](#link002)
 
 ---

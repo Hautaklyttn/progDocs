@@ -16,13 +16,19 @@ layout: home
 
 [javascript](./articles/js.html)
 
-[qt and qml](./articles/qt_qml.html)
+[qt and qml](./articles/qt_qml.html)  
 
 [misc](./articles/misc.html)  
 
 &nbsp;
 
 ***  
+
+&nbsp;
+
+git  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Basics</font>](./articles/git_basics.html)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Use Cases</font>](./articles/git_uc.html)  
 
 &nbsp;
 

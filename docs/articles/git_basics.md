@@ -12,7 +12,7 @@ layout: default
 
 `Basic Repository Concepts`  
 
-![gitW](../../assets/images/git_versionManagement.png)  
+![gitW](../assets/pics/git_versionManagement.png)  
 
 The illustration on the left shows a typical structure of a ``Centralised Version Management`` system, like e.g. CVS, MKS or subversion.  
 Every developer has a *Working Directory* on his machine with all project files. After editing them locally, he ``commits`` his changes to the central server or ``updates`` his Workspace with the changes from the server. The current and historic versions of the files (*`Repository`*), the parallel development lines (*``Branches``*) and the versioning (*``Tags``*) are all done centrally on the server.  
@@ -25,7 +25,7 @@ At a ``Decentralized Version Management`` system, like e.g. Git, there is no sep
 
 `Repository structure`  
 
-![gitW](../../assets/images/git_workflow.png)  
+![gitW](../assets/pics/git_workflow.png)  
 
 Your local repository consists of three 'instances', that are managed by Git.  
 The first one is your **Working directory** (or "*Arbeitskopie*"), which consists of  the real files.  
@@ -134,7 +134,7 @@ The **-m** specifies a tagging message, which is stored with the tag.
 - In **TortoiseGit**  
   In the *TortoiseGit* submenu select `Create Tag... `. In the dialogue enter your 'Tag' (usually a version number) in the upper box and write a short description of the Tag in the lower box.  
   &nbsp;  
-  ![gf2](../../assets/images/git_tags01.png)   
+  ![gf2](../assets/pics/git_tags01.png)   
   &nbsp;  
   Afterwards you click on `Ok` and you are done.
 
@@ -154,7 +154,7 @@ To push your locally created Tags you can fo the following
   In the *TortoiseGit* submenu select `Push... `.   
   In the dialogue (see below) select ``Include Tags`` before pushing your changes to remote.  
   &nbsp;  
-  ![gf2](../../assets/images/git_includeTags.png)   
+  ![gf2](../assets/pics/git_includeTags.png)   
   &nbsp;  
   Afterwards click on `Ok` and your tags are available on your remote.
 
@@ -270,7 +270,7 @@ end of the current _Main Branch_. This leads to a linearization of the _Commit_ 
 In a way it's an automated way to execute multiple _cherry-picking_ commands one after the other.
 
 <br>
-![Branching](../../assets/images/rebase_graph.png)
+![Branching](../assets/pics/rebase_graph.png)
 <br><br>
 
 ```git
@@ -290,7 +290,7 @@ command appends all _Commits_ of Branch 'topic' after _Commit_ 169a6 to the Bran
 ```
 
 <br>
-![Branching](../../assets/images/rebase_onto.png)
+![Branching](../assets/pics/rebase_onto.png)
 <br><br>
 
 &nbsp;

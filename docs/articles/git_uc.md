@@ -311,14 +311,14 @@ Prerequisite is that the main repository (usually called '*upstream*') is set as
 - In **TortoiseGit**  
 
   1. Fetch the desired branch (here: `master`) of your remote (here: `upstream`)  
-    ![gf2](../pics/images/git_fetch01.png)   
+    ![gf2](../assets/pics/git_fetch01.png)   
     &nbsp;
   2. Integrate the changes from remote to your local ones by `Rebase`. Resolve possible merge conflicts by hand.  
-    ![gr2](../pics/images/git_rebase01.png)   
+    ![gr2](../assets/pics/git_rebase01.png)   
     Here you would first select the ''*Upstream:*'' for which you did the *Fetch* in the first step (here: `remotes/upstream/master`) and then select the latest *Commit* in the Commit list (topmost entry). Afterwards click `Start Rebase`.      
     &nbsp;
   3. Finally push your local changes to your fork repository and you are done.  
-    ![gr2](../pics/images/git_push01.png)
+    ![gr2](../assets/pics/git_push01.png)
 
 &nbsp;
 <table>
@@ -494,7 +494,7 @@ c) *CM_Template* has to be set as a remote in your local *Working Directory* (&r
 - In **TortoiseGit**  
 
   1. The first step is to simply `Pull` from CM_Template  
-    ![gf2](../../assets/pics/cmTemp_pull.png)  
+    ![gf2](../assets/pics/cmTemp_pull.png)  
     &nbsp;  
     Important is to select the correct *Remote* (``CM_Template``) and leave everything as it is. In case `Launch Rebase After Fetch` is selected, deselect it (lower left). Click 'OK' and the Warning shown on the right should appear, just click 'OK'.  
     &nbsp;  
@@ -654,16 +654,16 @@ The password is stored in the Windows credential manager and needs to be updated
   To revert changes made <u>to a single file</u>, select `Show Log` in the TortoiseGit submenu. In the new dialogue go to the top box and navigate to the Commit you want to revert your file to. Afterwards right-click the file you want to revert in the lower box.  
   Click here `Revert to this revision` which leads to the file being reverted.  
   &nbsp;
-  ![gf2](../../assets/pics/git_checkoutFile.png)  
+  ![gf2](../assets/pics/git_checkoutFile.png)  
 
   &nbsp;
 
   To revert <u>all changes</u> in the *Working Directory* to a previous Commit, first select `Show Log` in the TortoiseGit submenu.  
   1.  In the upper box select the Commit you want to reset to and right-click on it.  Now select `Reset 'master' to this ...`  
-    ![gf2](../../assets/pics/git_reset.png)   
+    ![gf2](../assets/pics/git_reset.png)   
     &nbsp;
   2. Set the `Reset Type` to *Soft* or *Mixed* to keep the files in your *Working Directory* untouched and click *OK*.  
-      ![gf2](../../assets/pics/git_reset02.png)   
+      ![gf2](../assets/pics/git_reset02.png)   
 
 
 &nbsp;

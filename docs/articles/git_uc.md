@@ -8,14 +8,6 @@ layout: default
 
 The following step-by-step instructions show both, `Git Bash` and `TortoiseGit` ways of solving the task.  
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left"><a href="../.././">Back to Front Page</a></th>
-    </tr>
-  </thead>
-</table>
-
 ## Commit...
 
 [... your working directory changes to your local repository.](#link006)  

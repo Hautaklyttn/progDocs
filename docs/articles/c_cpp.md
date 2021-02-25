@@ -16,6 +16,7 @@ layout: default
 ### 1. Basics    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 Eigenschaften von C</font>](#ch1-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 C und C++</font>](#ch1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.1 'Object Oriented Programming'</font>](#ch1-2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 L- und R-Werte</font>](#ch1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Auswertungsreihenfolge</font>](#ch1-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Headers und Libraries</font>](#ch1-5)  
@@ -83,7 +84,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.4 Access file in .exe directory</font>](#ch7-4)  
 
 ### 8. Warnings and Errors  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 'Warning': no previous prototype for \<function\></font>](#ch8-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 'Warning': no previous prototype for <function></font>](#ch8-1)  
 
 &nbsp;
 
@@ -149,6 +150,57 @@ Sprachen und ihr Einsatzbereich:
 - `Fortran` - scientific, parallel programming  
 - `C++` - game programming  
 - `Python` - scientific programming  
+
+&nbsp;
+
+&nbsp;
+
+<a name="ch1-2-1"></a> **`Object-Oriented Programming`**  
+
+> "'Object-oriented programming' is characterized by inheritance and dynamic binding. C++ supports inheritance through class derivation. Dynamic binding is provided by virtual class functions. Virtual functions provide a method of encapsualation the implementation details of an inheritance hierarchy."  
+
+|Term |Definition |  
+|:---|:---|  
+|*Abstraction* |The process of refining away the unimportant details of an object, so that only the essential characteristics that describe it remain. Abstraction is a design activity. The other concepts are the OOP features that provide it. |  
+|*Class* |A user defined type, just as *int* is a built-in type. The built-in types have well-defined operations (arithmetic etc.) on the, and the class mechanism must allow the programmer to specify operations on the class types he or she defines, too. Anything in a **class** is known as a **member** of the class. |  
+|*Object* |A specifc variable of a class type, just as *j* may be a specific variable of type *int*. An **object** is also known as **instance** of a class. |  
+|*Encapsulation* |Grouping together the types, data and functions that make up a class. In C, a header file provides a very weak example of encapsulation. It is a feeble example because it is a purely lexical convention, and the compiler knows nothing about the header file as a semantic unit. |  
+|*Inheritance* |This is the big one - allowing one class to receive the data structures and functions described in a simpler base class. The derived class gets the operations and data of the base class, and can spezialize or customize them as needed. It can also add new data and function members. There's no example in C that suggests the concept of inheritance. C does not have anything resembling this feature. |  
+
+Now C++ is a rather large language. As a concrete example, the size of a C compiler front-end might be around 40,000 lines; a C++ compiler front-end might be twice as big, or more.  
+
+**Abstraction** is useful in software because it allows the programmer to:  
+- hide irrelevant detail, and concentrate on essentials  
+- present a "black box" interface to the outside world. The interface specifies the valid operations on the object, but does not indicate how the object will implement them internally  
+- break a complicated system down into independent components. This in turn localizes knowledge, and prevents undisciplined interaction between components  
+- reuse and share code  
+
+C supports **abstraction** through allowing the user to define new types (*struct*, *enum*) that are almost as convenient as the predefined types (*int*, *char*, etc), and to use them in a similar way.  
+
+**The Key Idea: A class**  
+> A class is just  a user-defined type with all the operations on it.  
+> A class is often implemented as a struct of data, grouped together with pointers-to-functions that operate on that data. The compiler imposes strong typing - ensuring that these functions are only invoked for objects of the class, and that no other functions are invoked for the objects.  
+
+The C++ class accomplishes all this. It can be compared to a struct, and indeed can be conveniently implemented as a struct. The general form is:  
+```cpp
+class <classname> {
+  <availability>: declaration
+     ...
+  <availability>: declaration
+};
+```
+\<availability\> := *public*, *protected* or *private*
+
+&nbsp;
+
+**Other new concepts with C++**  
+
+- *Exceptions*  
+  Borrowed from Ada and also from Clu (an experimental language developed at MIT, in which the key idea is a *cluster*). These are for changing the flow of control for error-handling. They simplify some kinds of error-handling by automatically diverting processing to a part of the program that can process the error.
+- Operators `new` and `delete`  
+  The operators *new* and *delete*, to replace `malloc()` and `free()` function calls. The operators are slightly more convenient (the *sizeof* calculation is done implicitly for example, and the proper constructor/destructor is called). *new* truly creates an object, whereas *malloc* just allocates memory.
+- *Call-by-reference*  
+  C uses only call-by-value (except for arrays). C++ brings call-by-reference into the language.  
 
 &nbsp;
 

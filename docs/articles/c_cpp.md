@@ -84,7 +84,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.4 Access file in .exe directory</font>](#ch7-4)  
 
 ### 8. Warnings and Errors  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 'Warning': no previous prototype for <function></font>](#ch8-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 'Warning': no previous prototype for 'function'</font>](#ch8-1)  
 
 &nbsp;
 
@@ -157,7 +157,7 @@ Sprachen und ihr Einsatzbereich:
 
 <a name="ch1-2-1"></a> **`Object-Oriented Programming`**  
 
-> "'Object-oriented programming' is characterized by inheritance and dynamic binding. C++ supports inheritance through class derivation. Dynamic binding is provided by virtual class functions. Virtual functions provide a method of encapsualation the implementation details of an inheritance hierarchy."  
+> "Object-oriented programming is characterized by inheritance and dynamic binding. C++ supports inheritance through class derivation. Dynamic binding is provided by virtual class functions. Virtual functions provide a method of encapsualation the implementation details of an inheritance hierarchy."  
 
 |Term |Definition |  
 |:---|:---|  

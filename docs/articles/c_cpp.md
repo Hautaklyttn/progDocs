@@ -1145,7 +1145,7 @@ You can now treat the array as a first-class type. You can copy the entire array
 ```c
 struct s_tag orange, lime, lemon;
 
-struct s_tag twofold (struct s_tag) {
+struct s_tag twofold (struct s_tag s) {
   int j;
   for (j=0; j<100; j++) s.a[j] *= 2;
   return s;

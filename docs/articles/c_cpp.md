@@ -35,7 +35,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.14 Namespaces</font>](#ch1-14)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.15 `extern c` in C++</font>](#ch1-15)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.16 'Forward Declaration' in C++</font>](#ch1-16)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.17 'Function Prototype' and Definition in C</font>](#ch1-17)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.17 Function 'Prototype' and Visibility in C</font>](#ch1-17)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18 Präprozessor in C/C++</font>](#ch1-18)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.19 'Name Mangling' (or 'Name decoration')</font>](#ch1-19)  
 
@@ -110,7 +110,22 @@ C ist eine relativ "maschinennahe" Sprache. C arbeitet mit denselben Objekten wi
 
 Die Sprache C erlaubt eine **hardwarenahe Programmierung** unter anderem durch direkte Zugriffe auf Adressen im Speicher oder durch Bitoperationen. C-Compiler unterstützen oftmals auch - in nicht standardisierter Weise - den Zugriff auf Hardware-Register.
 
-C enthält die Elemente der **Strukturierten Programmierung**. C hat ein **Typkonzept**, das allerdings **nicht streng** ist. Der Compiler selbst führt  viele **implizite Typwandlungen** u.a. bei Zuweisungen durch. Bei unverträglichen Datentypen werden allerdings keine automatischen Umwandlungen durchgeführt, sondern eine Fehlermeldung erzeugt.
+C enthält die Elemente der **Strukturierten Programmierung**. C hat ein **Typkonzept**, das allerdings **nicht streng** ist. Der Compiler selbst führt  viele **implizite Typwandlungen** u.a. bei Zuweisungen durch. Bei unverträglichen Datentypen werden allerdings keine automatischen Umwandlungen durchgeführt, sondern eine Fehlermeldung erzeugt.  
+
+&nbsp;
+Symbol Overloading in C  
+
+|Term |Definition |  
+|:---|:---|  
+|*static* | Inside a function, *variable retains its value between calls* <br /> At the function level, *visible only in this file*|  
+|*extern* | Applied to a function definition, *has global scope* (and is redundant) <br /> Applied to a variable, *defined elsewhere*|  
+|*void* | As the return type of a function, *doesn't return a value* <br /> In a pointer declaration, the type of a generic pointer <br /> In a parameter list, *takes no parameters*|  
+|*\** | The multiplication operator <br /> Applied to a pointer, indirection <br /> In a declaration, a pointer |  
+|*\&* | Bitwise *AND* operator <br /> Address-Of operator |  
+|*=* <br /> *==* | Assignment operator <br /> Comparison operator |  
+|*\<=* <br /> *\<<=* | Less-than-or-equal-to operator <br /> Compound shift-left assignment operator |  
+|*\<* | Less-than operator <br /> Left delimiter in *#include* directive |  
+|*( )* | Enclose formal parameters in a function call <br /> Make a function call <br /> Provide expression precedence <br /> Convert (cast) a value t  a different type <br /> Define a macro with arguments <br /> Make a macro call with arguments <br /> Enclose the operand of the *sizeof* operator when it is a typename |
 
 &nbsp;
 
@@ -625,6 +640,23 @@ void doSomething() {
   passValue(&XYZ, 10);
 }
 ```
+&rarr; s. auch Kapitel **2.2 Putting an array inside a *struct*** (to use it as a function parameter) 
+
+&nbsp;
+
+**Linked list of *structs***  
+
+One way to make a struct contain a pointer to its own type, as needed for lists, trees, and many dynamic data structures:  
+```c
+/* struct that points to the next struct */
+struct node_tag { 
+  int datum;
+  struct node_tag *next;
+};
+struct node_tag  a,b;
+a.next = &b;
+a.next->next=NULL;
+```
 
 &nbsp;
 
@@ -853,9 +885,20 @@ Advantages of 'forward declaration'
 &nbsp;
 
 <a name="ch1-17"></a>
-### 1.17 'Function Prototype' and Definition in C  
+### 1.17 Function 'Prototype' and Visibility in C  
 
-If you have a function that is used in only one .c file, you can put its declaration and definition in the same .c file (and you should probably define it as `static`). In fact, if the definition appears before any calls, you can omit the separate declaration - the definition itself acts as a declaration.  
+Whenever you define a C function, its name is globally visible by default. You can prefix the function name with the redundant *extern* keyword or leave it off, and the effect is the same. The function is visible to anything that links with that object file. If you want to restrict access to the function, you are obliged to specify the *static* keyword.  
+
+```c
+function apple () { /* visible everywhere */}
+extern function pear () { /* visible everywhere */}
+
+static function turnip () { /* not visible outside this file */ }
+```
+
+If you have a function that is used in only one .c file, you can put its declaration and definition in the same .c file (and you should define it as `static`). In fact, if the definition appears before any calls, you can omit the separate declaration - the definition itself acts as a declaration.  
+
+In practice, almost everyone tends to define functions without adding extra storage-class specifiers, so global scope prevails.  
 
 &nbsp;
 
@@ -1091,6 +1134,31 @@ void ausgabe (int alpha[], int dim)   // hier ist alpha vom Typ eines offenen Ar
   ...
 }
 ```
+
+&nbsp;
+
+**Putting an array inside a *struct***  
+```c
+struct s_tag { int a[100]; }
+```
+You can now treat the array as a first-class type. You can copy the entire array with an assignment statement, pass it to a function by value, and make it the return type of a function.  
+```c
+struct s_tag orange, lime, lemon;
+
+struct s_tag twofold (struct s_tag) {
+  int j;
+  for (j=0; j<100; j++) s.a[j] *= 2;
+  return s;
+}
+
+main () {
+  int i;
+  for (i=0; i<100; i++) lime.a[i] = 1;
+  lemon = twofold(lime);
+  orange = lemon; /* assigns entire struct */
+}
+```
+You typically don't want to assign an entire array very often, but you can do it by burying it in a struct.
 
 &nbsp;
 

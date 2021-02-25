@@ -122,7 +122,7 @@ Symbol Overloading in C
 |*extern* | Applied to a function definition, *has global scope* (and is redundant) <br /> Applied to a variable, *defined elsewhere*|  
 |*void* | As the return type of a function, *doesn't return a value* <br /> In a pointer declaration, the type of a generic pointer <br /> In a parameter list, *takes no parameters*|  
 |*\** | The multiplication operator <br /> Applied to a pointer, indirection <br /> In a declaration, a pointer |  
-|*\&* | Bitwise *AND* operator <br /> Address-Of operator |  
+|*&* | Bitwise *AND* operator <br /> Address-Of operator |  
 |*=* <br /> *==* | Assignment operator <br /> Comparison operator |  
 |*\<=* <br /> *\<<=* | Less-than-or-equal-to operator <br /> Compound shift-left assignment operator |  
 |*\<* | Less-than operator <br /> Left delimiter in *#include* directive |  

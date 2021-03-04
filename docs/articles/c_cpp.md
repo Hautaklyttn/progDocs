@@ -1439,6 +1439,9 @@ nicht, dass der Pointer konstant ist, sondern dass der Pointer auf eine konstant
 ```c
 text[1] = 's';                          // Fehler! Nicht möglich.
 text = "Jetzt blicke auch ich durch";   // Ist hier möglich!
+
+blick[1] = 's';                         // wäre möglich, da array 'blick' 
+                                        // nicht als 'const' angelegt wurde
 ```
 
 Soll ein konstante Pointer eingeführt werden, so muss *const* vor dem Pointernamen stehen:
@@ -1454,6 +1457,46 @@ Beim folgenden Beispiel bleibt *hugo* stets unzertrennlich mit *lili* verbunden,
 ```c
 const char * const hugo = lili;
 ```
+
+&nbsp;
+
+**'const' pointer in an argument**  
+
+```c
+// throws an error
+int test(const int* dummy)
+{
+   *dummy = 1;
+   return 0;
+}
+
+// works (but, read below!!!)
+int test(const int* dummy)
+{
+   *(char*)dummy = 1;
+   return 0;
+}
+```
+
+`const` is a **contract**. By receiving a `const int *` parameter, you "tell" the caller that you (the called function) will not modify the objects the pointer points to.  
+
+The second example explicitly **breaks that contract** by casting away the const qualifier and then modifying the object pointed by the received pointer. Never ever do this.  
+This "contract" is enforced by the compiler. `*dummy = 1` won't compile. The cast is a way to bypass that, by telling the compiler that you really know what you are doing and to let you do it.  
+
+All the points above about `const` apply to any type (*int*, *char*, ***void***, ...).  
+&nbsp;
+
+For example:
+```c
+char* strcpy( char* dest, const char* src );
+void* memcpy( void* dest, const void* src, std::size_t count );
+```
+``strcpy`` operates on char strings, ``memcpy`` operates on generic data.  
+``dest`` is ``char *`` because in the buffer ``dest`` the function will put the copy. The function will modify the contents of this buffer, thus it is not const.  
+``src`` is const ``char *`` because the function only reads the contents of the buffer ``src``. It doesn't modify it.  
+The same applies for ``void *`` and ``const void *`` for ``memcpy``.  
+
+> Only by looking at the declaration of the function, a caller can assert all the above. By contract ``strcpy`` will not modify the content of the second buffer passed as argument.
 
 &nbsp;  
 

@@ -157,6 +157,15 @@ Optional parameters:  `encoding`, `label`, `resturnStatus`, `returnStdOut`
 
 &nbsp;
 
+### The *Symbol Table*  
+
+The **symbol table** is created by the compiler front-end as a stand-alone file. The purpose of the table is to provide information that the linker and the debugger need to perform their respective functions. At the option of the user, the linker includes information from the symbol table in the final object file for use by the debugger.
+
+
+
+
+&nbsp;
+
 &nbsp;
 
 [Back](../)

@@ -52,6 +52,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 Call-by-Reference</font>](#ch3-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.5 Pointer auf Pointer</font>](#ch3-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.6 Pointer auf Funktionen</font>](#ch3-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.7 'void' Pointer in C</font>](#ch3-7)  
 
 ### 4. Pointer und Arrays   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten</font>](#ch4-1)  
@@ -1348,17 +1349,41 @@ int (*fcnPtr) (int,int);
 Function pointers can be initialized with a function:  
 ```c
 fcnPtr = foo;       // 'foo()' is a function defined before
-```
+```  
 
 > Common mistake is 'fcnPtr = foo()'. This would assign the return value from a call to function 'foo()'.
 
-Note that the type (parameters and return type) of the function pointer must match the type of the function.  
+&nbsp;
+
+- Note that the type (parameters and return type) of the function pointer must match the type of the function.  
+- Unlike normal pointers, a function pointer points to code, not data. Typically a function pointer stores the start of executable code.  
+- Unlike normal pointers, we do not allocate de-allocate memory using function pointers.  
+- Like normal data pointers, **a function pointer can be passed as an argument** and can also be returned from a function.  
+  ```c
+  #include <stdio.h> 
+  
+  // Two simple functions 
+  void fun1() { printf("Fun1\n"); } 
+  void fun2() { printf("Fun2\n"); } 
+    
+  // A function that receives a simple function as parameter and calls the function 
+  void wrapper(void (*fun)()) { 
+      fun(); 
+  } 
+    
+  int main() { 
+      wrapper(fun1); 
+      wrapper(fun2); 
+      return 0; 
+  }
+  ```
+- Many object oriented features in C++ are implemented using function pointers in C, e.g. *virtual functions*. *Class methods* are another example implemented using function pointers.
 
 &nbsp;
 
-**`typedefs` for pointers to functions**  
+**`typedef` for pointers to functions**  
 
-The syntax for pointers to functions is ugly. 'Typedefs' can be used to make pointers to functions look more like regular variables:  
+The syntax for pointers to functions is ugly. `typedef` can be used to make pointers to functions look more like regular variables:  
 ```c
 typedef bool (*validateFcn)(int,int);
 ```
@@ -1373,6 +1398,52 @@ you can do this:
 bool validate (int x, int y, validateFcn pfcn);
 ```
 
+&nbsp;
+
+<a name="ch3-7"></a>
+### 3.7 'void' Pointer in C  
+
+> A void pointer is a pointer that has no associated data type with it. A void pointer can hold address of any type and can be typecasted to any type.  
+
+&nbsp;
+Example:
+```c
+int a = 10; 
+char b = 'x'; 
+  
+void *p = &a;  // void pointer holds address of int 'a' 
+p = &b;        // void pointer holds address of char 'b' 
+```
+&nbsp;
+
+- ``void`` pointers in C are used to implement generic functions in C.
+  
+- ``void`` pointers cannot be dereferenced. For example the following program doesn’t compile.  
+  ```c
+  #include<stdio.h> 
+  int main() 
+  { 
+      int a = 10; 
+      void *ptr = &a; 
+      printf("%d", *ptr); 
+      return 0; 
+  }
+
+  // -> Output: "Compiler Error: 'void*' is not a pointer-to-object type"
+  ```
+  The following program compiles and runs fine.
+  ```c
+  #include<stdio.h> 
+  int main() 
+  { 
+      int a = 10; 
+      void *ptr = &a; 
+      printf("%d", *(int *)ptr); 
+      return 0; 
+  } 
+
+  // -> Output: 10
+  ```
 
 &nbsp;  
 
@@ -1409,7 +1480,7 @@ Im Falle der Pointernotation ist eine Änderung der konstanten Zeichenkette nich
 
 > Bei einem *char*-Array *buffer* kann der in ihm  gespeicherte String verändert werden. *buffer* ist ein konstanter Pointer auf das erste Element des Arrays und kann auf keine andere Adresse zeigen.  
 
-> Zeigt eine Stringvariable  vom Typ char* auf eine konstante Zeichenkette, so führt der Compiler  die Speicherung der Zeichenkette selbst durch. Die Zeichenkette kann nicht verändert werden aber die Zeigervariable vom Typ char* kann eine neue Adresse zugewiesen werden.  
+> Zeigt eine Stringvariable vom Typ char* auf eine konstante Zeichenkette, so führt der Compiler  die Speicherung der Zeichenkette selbst durch. Die Zeichenkette kann nicht verändert werden aber die Zeigervariable vom Typ char* kann eine neue Adresse zugewiesen werden.  
 
 &nbsp;
 

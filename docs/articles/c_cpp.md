@@ -1360,7 +1360,7 @@ Note that the type (parameters and return type) of the function pointer must mat
 
 The syntax for pointers to functions is ugly. 'Typedefs' can be used to make pointers to functions look more like regular variables:  
 ```c
-typedef bool (validateFcn)(int,int);
+typedef bool (*validateFcn)(int,int);
 ```
 This defines a typedef called 'validateFcn' that is a pointer to a function that takes two int's and returns a bool.  
 

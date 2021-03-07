@@ -15,7 +15,7 @@ layout: default
 
 &nbsp;
 
-## Code Walkthrough <font size="-2">(After start of game - Single player -)</font>   
+## Code Walkthrough <font size="-2">(After start of game - Single player)</font>   
 
 ```c
 StartGame(BOOL bNewGame, BOOL bSinglePlayer)

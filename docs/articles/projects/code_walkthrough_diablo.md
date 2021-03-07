@@ -12,8 +12,6 @@ layout: default
 
 &nbsp;
 
----  
-
 ### &rarr; Code walkthrough for compilable version of Diablo (*Devilution*) [here](./code_wt_devilution_main.md).  
 ---
 

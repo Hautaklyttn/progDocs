@@ -2346,6 +2346,7 @@ while (ptr != NULL) {
 ### 6.7 Code examining tools  
 
 **Tools to Examine Source**  
+
 |Tool|Where to find it|What it does|
 |:---|:---|:---|
 |cb|Comes with the compiler|C program beautifier. Run your source through this filter to put it in a standard layout and indentation.|  
@@ -2357,9 +2358,11 @@ while (ptr != NULL) {
 |lint|Comes with the compiler|A C program checker.|  
 |sccs|/usr/css/bin|A source code version control system.|  
 |vgrind|/usr/bin|A formatter for printing nice C listings|  
+
 &nbsp;
 
 **Tools to Examine Executables**  
+
 |Tool|Where to find it|What it does|
 |:---|:---|:---|  
 |dis|/usr/ccs/bin|Object code disassembler|  

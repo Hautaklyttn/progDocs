@@ -511,6 +511,74 @@ typedef unsigned int UINT
 ```  
 
 Wie diese Auflistung schon vermuten lässt, spricht die verbesserte Lesbarkeit des Programms für 'typedef'.  
+&nbsp;  
+
+**Difference between `typedef int x[10]` and `#define x  int[10]`**  
+As mentioned above, there is a key difference between a typedef and macro text replacement. The right way to think about this is to view a typedef as being a complete "encapsulated" type — you can't add to it after you have declared it. The difference between this and macros shows up in two ways.  
+
+You can extend a macro typename with other type specifiers, but not a typedef 'd typename. That is,  
+```c
+#define peach int
+unsigned peach i; /* works fine */  
+
+typedef int banana;
+unsigned banana i; /* Bzzzt! illegal */
+```
+Second, a typedef 'd name provides the type for every declarator in a declaration.  
+```c
+#define int_ptr int *
+int_ptr chalk, cheese; 
+```
+After macro expansion, the second line effectively becomes:  
+```c
+int * chalk, cheese; 
+```
+This makes chalk and cheese as different as chutney and chives: chalk is a pointer-to-an-integer, while cheese is an integer. In contrast, a typedef like this:  
+```c
+typedef char * char_ptr;
+char_ptr Bentley, Rolls_Royce;
+```
+declares both Bentley and Rolls_Royce to be the same. The name on the front is different, but they are both a pointer to a char.  
+&nbsp;
+
+**What `typedef struct foo { ... foo; } foo;` Means**  
+
+```c
+typedef struct my_tag {int i;} my_type;
+        struct my_tag variable_1;
+my_type variable_2; 
+```
+The typedef introduces the name `my_type` as a shorthand for "`struct my_tag {int i}`", but it also introduces the structure tag `my_tag` that can equally be used with the keyword `struct`. If you use the same identifier for the type and the tag in a typedef, it has the effect of making the keyword "`struct`" optional, which provides completely the wrong mental model for what is going on. Unhappily, the syntax for this kind of struct typedef exactly mirrors the syntax of a combined struct type and variable declaration. So although these two declarations have a similar form,  
+
+```c
+typedef struct fruit {int weight, price_per_lb } fruit; /*statement 1 */
+        struct veg {int weight, price_per_lb } veg;     /*statement 2 */
+```
+very different things are happening. Statement 1 declares a structure tag "fruit" and a structure typedef "fruit" which can be used like this:  
+```c
+struct fruit mandarin;  /* uses structure tag "fruit" */
+       fruit tangerine; /* uses structure type "fruit" */ 
+```
+Statement 2 declares a structure tag "veg" and a variable veg. Only the structure tag can be used in further declarations, like this:  
+```c
+struct veg potato;
+```
+It would be an error to attempt a declaration of `veg cabbage`. That would be like writing: 
+```c
+int i;
+i j;
+```
+&nbsp;
+
+**Use `typedefs` especially for:**  
+- types that combine arrays, structs, pointers, or functions.  
+- portable types. When you need a type that's at least (say) 20-bits, make it a typedef. Then when you port the code to different platforms, select the right type, `short`, `int`, `long`, making the change in just the typedef, rather than in every declaration.  
+- casts. A typedef can provide a simple name for a complicated type cast. E.g.  
+  ```c
+      typedef int (*ptr_to_int_fun)(void);
+      char * p;
+                     = (ptr_to_int_fun) p;
+  ```
 
 &nbsp;
 

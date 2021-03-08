@@ -77,6 +77,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.4 'The C++ Standard Template Library' (Container-Klasse)</font>](#ch6-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.5 [make] Call 'Makefile' in Subdirectory</font>](#ch6-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.6 String</font>](#ch6-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.7 Code examining tools</font>](#ch6-7)  
 
 ### 7. How To's & Special Syntax   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.1 Emulation</font>](#ch7-1)  
@@ -2338,6 +2339,40 @@ while (ptr != NULL) {
 // Ausgabe: der
 // Ausgabe: Größte
 ```
+
+&nbsp;
+
+<a name="ch6-7"></a>
+### 6.7 Code examining tools  
+
+**Tools to Examine Source**  
+|Tool|Where to find it|What it does|
+|:---|:---|:---|
+|cb|Comes with the compiler|C program beautifier. Run your source through this filter to put it in a standard layout and indentation.|  
+|indent||Does the same things *cb* does. Comes from AT&T.|  
+|cdecl||Unscrambles C declarations.|  
+|cflow|Comes with the compiler|Prints the caller/callee relationships of a program|  
+|cscope|Comes with the compiler|An interactive ASCII-based C program browser. We use it in the OS group to check the impact of changes to header files. It provides quick answers to questions like: "How many commands use libthread?" or "Who are all the kmem readers?"|  
+|ctags|/usr/bin|Creates a tags file for use in vi editor. A tags file speeds up examining program source by maintaining a table of where most objects are located.|  
+|lint|Comes with the compiler|A C program checker.|  
+|sccs|/usr/css/bin|A source code version control system.|  
+|vgrind|/usr/bin|A formatter for printing nice C listings|  
+&nbsp;
+
+**Tools to Examine Executables**  
+|Tool|Where to find it|What it does|
+|:---|:---|:---|  
+|dis|/usr/ccs/bin|Object code disassembler|  
+|dump - Lv|/usr/ccs/bin|Prints dynamic linking information|  
+|ldd|/usr/bin|Prints the dynamic libraries this file needs|  
+|nm|/usr/ccs/bin|Prints the symbol table of an object file|  
+|strings|/usr/bin|Looks at the strings embedded in a binary. Useful for looking at the error messages a binary can generate, built-in file  ames, and (sometimes) symbol names or version and copyright information.|  
+|sum|/usr/bin|Prints checksum and block count for a file. Answers questions like: "Are two executables the same version?" "Did the transmission go OK?"|  
+|truss|/usr/bin|The SVr4 version of `trace`. This tool prints out the system calls that an executable makes. Use it to see what a binary is doing, and why it's stuck or failing. This is a great help!|  
+|ps|/usr/bin|Displays process characteristics.|  
+|ctrace|Comes with compiler|Modifies your source to print lines as they are executed. A great tool for small programs!|  
+|debugger|Comes with compiler|Interactive debugger.|  
+|file|/usr/bin|Tells you what a file contains (e.g., executable, data, ASCII, shell script, archive, etc.).|  
 
 &nbsp;
 

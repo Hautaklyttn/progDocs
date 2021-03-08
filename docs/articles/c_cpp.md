@@ -263,6 +263,37 @@ Wie in der Mathematik spielt es bei C eine wichtige Rolle, in welcher Reihenfolg
       2.2 und dann die **Präfix-Operanden** auf ihre Operanden angewendet werden  
 3. Anschließend werden Teilausdrücke mit **mehrstelligen Operatoren** ausgewertet  
 
+<u> oder nochmals in Englisch:</u>  
+
+A &nbsp;&nbsp;&nbsp; Declarations are read by starting with the name and then reading in precedence order.  
+B &nbsp;&nbsp;&nbsp; The precedence, from high to low, is:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   B.1 &nbsp;&nbsp;&nbsp; parentheses  grouping together parts of a declaration  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   B.2 &nbsp;&nbsp;&nbsp; the postfix operators:  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; parentheses ( ) indicating a function, and  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; square brackets [ ] indicating an array  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   B.3 &nbsp;&nbsp;&nbsp; the prefix operator: the asterisk denoting "pointer to"  
+C &nbsp;&nbsp;&nbsp; If a `const` and/or `volatile` keyword is next to a type specifier (e.g. `int`, `long`,etc) it applies to the type specifier. Otherwise the `const` and/or `volatile` keyword applies to the pointer asterisk on its immediate left.  
+&nbsp;
+
+An example of solving a declaration using the rule above:  
+```c
+char* const *(*next)();
+```
+
+|Rule to apply |Explanation |  
+|:---|:---|  
+|A|First, go to the variable name, "next", and note that it is directly enclosed by parentheses.|  
+|B.1|So we group it with what else is in the parentheses, to get "next is a pointer to..." |  
+|B|Then we go outside the parentheses, and have a choice  of a prefix asterisk, or a postfix pair of parentheses.|  
+|B.2|Rule B.2 tells us the highest precedence thing is the function parentheses at the right, so we have "next is a pointer to a function returning..."|  
+|B.3|Then process the prefix "*" to get "pointer to".|  
+|C|Finally, take the `char *const`, as a constant pointer to a character.|  
+
+Then put it all together to read:  
+> "`next` is a pointer to a function returning a pointer to a const pointer-to-char"  
+
+and we are done.
+
 &nbsp;
 
 <a name="ch1-5"></a>

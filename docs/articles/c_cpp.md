@@ -111,7 +111,18 @@ C ist eine relativ "maschinennahe" Sprache. C arbeitet mit denselben Objekten wi
 
 Die Sprache C erlaubt eine **hardwarenahe Programmierung** unter anderem durch direkte Zugriffe auf Adressen im Speicher oder durch Bitoperationen. C-Compiler unterstützen oftmals auch - in nicht standardisierter Weise - den Zugriff auf Hardware-Register.
 
-C enthält die Elemente der **Strukturierten Programmierung**. C hat ein **Typkonzept**, das allerdings **nicht streng** ist. Der Compiler selbst führt  viele **implizite Typwandlungen** u.a. bei Zuweisungen durch. Bei unverträglichen Datentypen werden allerdings keine automatischen Umwandlungen durchgeführt, sondern eine Fehlermeldung erzeugt.    
+C enthält die Elemente der **Strukturierten Programmierung**. C hat ein **Typkonzept**, das allerdings **nicht streng** ist. Der Compiler selbst führt  viele **implizite Typwandlungen** u.a. bei Zuweisungen durch. Bei unverträglichen Datentypen werden allerdings keine automatischen Umwandlungen durchgeführt, sondern eine Fehlermeldung erzeugt.  
+&nbsp;
+
+**Declaration vs Definition**  
+A *definition* is the special kind of declaration that creates an object; a *declaration* indicates a name that allows you to refer to an object created here or elsewhere. Let's review the terminology:  
+|Term|Occurence|Definition|
+|:---|:---|:---|
+|Definition|Occurs in one place|Specifies the type of an object; reserves storage for it; is used to create new objects.  <br /> Example: `int my_array[100];`|  
+|Declaration|Can occure multiple times|Describes the type of an object; is used to refer to objects defined elsewhere (e.g. in another file).  <br /> Example: `extern int my_array[];`|  
+
+The declaration of an external object tells the compiler the type and name of the object, and that memory allocation is done somewhere else. Since you aren't allocating memory for the array at this point, you don't need to provide information on how big it is in total. You do have to provide the size of all array dimensions except the leftmost one — this gives the compiler enough information to generate indexing code.  
+
 
 &nbsp;
 
@@ -1550,6 +1561,17 @@ p = &b;        // void pointer holds address of char 'b'
 
 
 # Pointer und Arrays  
+&nbsp;
+
+|Pointer|Array|  
+|:---|:---|  
+|Holds the address of data|Holds data|  
+|Data is accessed indirectly, so you first retrieve the contents of the pointer, load that as an address (call it "L"), then retrieve its contents. <br /> If the pointer has a subscript `[i]` you instead retrieve the contents of the location 'i' units past "L"|Data is accessed directly, so for a[i] you simply retrieve the contents of the location i units past a.|  
+|Commonly used for dynamic data structures.|Commonly used for holding a fixed number of elements of the same type of data.|  
+|Commonly used with `malloc()`, `free()`|Implicitly allocated and deallocated|  
+|Typically points to anonymous data|Is a named variable in its own right|  
+
+&nbsp;
 
 <a name="ch4-1"></a>
 ### 4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten

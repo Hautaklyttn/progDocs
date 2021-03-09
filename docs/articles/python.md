@@ -91,7 +91,11 @@ Weitere Möglichkeit der interaktiven Arbeit ist der Online-Interpreter:
 
 <a name="ch1-2-2"></a>
 #### 1.2.2 Problem: 'Lack of Compile time checks'  
-As Python code is not generally compiled prior to execution, there is no general mechanism in place to check the code for certain types of errors before executing the program. <u>This means that errors will only be detectable during runtime, requiring sophisticated and extensive testing strategies before publishing code.</u> However, it may well be impossible to test every single path through the code under all circumstances, in particular if user input is involved, potentially leaving an arbitrary number of undetected errors in the code. While this is true to some degree for compiled languages as well, a significant number of errors would already be detected at compile time, while all errors in Python code exclusively occur during runtime.
+As Python code is not generally compiled prior to execution, there is no general mechanism in place to check the code for certain types of errors before executing the program.  
+
+>This means that errors will only be detectable during runtime, requiring sophisticated and extensive testing strategies before publishing code.  
+
+However, it may well be impossible to test every single path through the code under all circumstances, in particular if user input is involved, potentially leaving an arbitrary number of undetected errors in the code. While this is true to some degree for compiled languages as well, a significant number of errors would already be detected at compile time, while all errors in Python code exclusively occur during runtime.
 
 &nbsp;
 

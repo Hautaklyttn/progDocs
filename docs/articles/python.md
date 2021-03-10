@@ -146,6 +146,15 @@ Python additionally has a set of built in set of methods for getting, setting, a
 **Special Object Functions**  
 In order to enable consistent usage across all of the different objects in Python, they all utilize the same special methods denoted with two underscores on either side `__func__`. Overriding these objects in your own implementations can lead to neat and concise code for complex functions. They can be overriden by defining the `__func__(self, [args])` function within an object. These functions are often refered to as **"magic" functions**.  
 
+The first thing to know about *special object functions* is that they are meant to be called by the Python interpreter, and not by you. You don’t write `my_object.__len__()`. You write `len(my_object)` and, if `my_object` is an instance of a user-defined class, then Python calls the `__len__` instance method you implemented.  
+
+More often than not, the special method call is implicit. For example, the statement `for i in x:` actually causes the invocation of `iter(x)`, which in turn may call `x.__iter__()` if that is available.  
+
+Normally, your code should not have many direct calls to special methods. Unless you are doing a lot of metaprogramming, you should be implementing special methods more often than invoking them explicitly. The only special method that is frequently
+called by user code directly is `__init__`, to invoke the initializer of the superclass in your own `__init__` implementation.  
+
+If you need to invoke a special method, it is usually better to call the related built-in function (e.g. `len`, `iter`, `str`, etc). These built-ins call the corresponding special method, but often provide other services and — for built-in types — are faster than method calls.  
+
 |Attribute|Built-In Accessor|Description|  
 |:---|:---|:---|  
 |`__new__`|N/A|Called when creating a new instance of an object|  

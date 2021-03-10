@@ -17,13 +17,15 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.1 Der Interpreter, eine interaktive Shell</font>](#ch1-2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.2 Problem: 'Lack of Compile time checks'</font>](#ch1-2-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Python Virtual Machine (PVM)</font>](#ch1-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Variablen in Python</font>](#ch1-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Strings</font>](#ch1-5)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5.1 Execute String containing Python code</font>](#ch1-5-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Aufruf eines Python-Skripts (*.py)</font>](#ch1-6)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Decorators</font>](#ch1-7)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.8 `import`</font>](#ch1-8)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9 `call-by-value` / `call-by-reference`</font>](#ch1-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 The Object Model</font>](#ch1-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Variablen in Python</font>](#ch1-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Strings</font>](#ch1-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6.1 Execute String containing Python code</font>](#ch1-6-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Aufruf eines Python-Skripts (*.py)</font>](#ch1-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.8 Decorators</font>](#ch1-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9 `import`</font>](#ch1-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10 `call-by-value` / `call-by-reference`</font>](#ch1-10)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.11 Variable Scope</font>](#ch1-11)  
 
 ### 2. Functions
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basic Functions</font>](#ch2-1)  
@@ -91,11 +93,7 @@ Weitere Möglichkeit der interaktiven Arbeit ist der Online-Interpreter:
 
 <a name="ch1-2-2"></a>
 #### 1.2.2 Problem: 'Lack of Compile time checks'  
-As Python code is not generally compiled prior to execution, there is no general mechanism in place to check the code for certain types of errors before executing the program.  
-
->This means that errors will only be detectable during runtime, requiring sophisticated and extensive testing strategies before publishing code.  
-
-However, it may well be impossible to test every single path through the code under all circumstances, in particular if user input is involved, potentially leaving an arbitrary number of undetected errors in the code. While this is true to some degree for compiled languages as well, a significant number of errors would already be detected at compile time, while all errors in Python code exclusively occur during runtime.
+As Python code is not generally compiled prior to execution, there is no general mechanism in place to check the code for certain types of errors before executing the program. <u>This means that errors will only be detectable during runtime, requiring sophisticated and extensive testing strategies before publishing code.</u> However, it may well be impossible to test every single path through the code under all circumstances, in particular if user input is involved, potentially leaving an arbitrary number of undetected errors in the code. While this is true to some degree for compiled languages as well, a significant number of errors would already be detected at compile time, while all errors in Python code exclusively occur during runtime.
 
 &nbsp;
 
@@ -109,12 +107,69 @@ Das ändert sich, wenn man in einem anderen Python-Skript oder auch in der Pytho
 
 Bei einem späteren "import" in einem anderen Programmlauf, wird dann direkt die Datei mit dem Byte-Code geladen. Importiert man die gleiche Datei mehrmals im gleichen Skript wird sie nur beim ersten Mal geladen.  
 
-Bei dem Byte-Code handelt es sich um einen maschinenunabhängigen Code, der mittels einer virtuellen Maschine (PVM, ``Python Virtual Machine``) ausgeführt wird.
+Bei dem Byte-Code handelt es sich um einen maschinenunabhängigen Code, der mittels einer virtuellen Maschine (PVM, ``Python Virtual Machine``) ausgeführt wird.  
 
 &nbsp;
 
 <a name="ch1-4"></a>
-### 1.4 Variablen in Python  
+### 1.4 The Object Model  
+
+**Everything in python is an object**. Every variable you make is an object, every operation you execute is between objects.  `int`, `float`, functions, and anything else you can thing of: all objects inherit from python's base object class, unsurprisingly named object. What does this mean?  
+> In Python, primitive data types are in fact not very primitive at all, and are instead feature rich in comparison to their counterparts in lower level languages.  
+
+Let's explore this a little bit by just looking at an integer. We'll create an `int`, then see what attributes it has by calling the `dir` function. When `dir` is called on an object, it recursively searches all the attributes of the argument and it's parents or base classes.  
+```py
+>>> n = 1
+>>> dir(n)
+['__abs__', '__add__', '__and__', '__bool__', '__ceil__', '__class__', '__delattr__', '__dir__', '__divmod__', '__doc__', '__eq__', '__float__', '__floor__', '__floordiv__', '__format__', '__ge__', '__getattribute__', '__getnewargs__', '__gt__', '__hash__', '__index__', '__init__', '__init_subclass__', '__int__', '__invert__', '__le__', '__lshift__', '__lt__', '__mod__', '__mul__', '__ne__', '__neg__', '__new__', '__or__', '__pos__', '__pow__', '__radd__', '__rand__', '__rdivmod__', '__reduce__', '__reduce_ex__', '__repr__', '__rfloordiv__', '__rlshift__', '__rmod__', '__rmul__', '__ror__', '__round__', '__rpow__', '__rrshift__', '__rshift__', '__rsub__', '__rtruediv__', '__rxor__', '__setattr__', '__sizeof__', '__str__', '__sub__', '__subclasshook__', '__truediv__', '__trunc__', '__xor__', 'bit_length', 'conjugate', 'denominator', 'from_bytes', 'imag', 'numerator', 'real', 'to_bytes']
+```
+There's a lot more to an integer than just a value. In lower level languages, like C, C++, or Java, primitive types refer to sections of memory, designated to contain a specifc value that can be directly manipulated in assembly code or even transistor level logic in CPUs. Python sits at a much higher abstraction level. Though python is slower than the aforementioned languages, the programmer doesn't have to deal with problems like overflow, underflow, or invalid type casting as all of this is abstracted away through objects. Some of the attributes listed through `dir(int)` are class specific to `int`, and some are inherited from `object`. Let's see what attributes object by calling `dir` on the static type itself.  
+```py
+>>> dir(object)
+['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__']
+```
+
+&nbsp;
+
+**Getters and Setters**  
+Python additionally has a set of built in set of methods for getting, setting, and deleting attributes. The `object` base class has the following getter and setter methods which are wrapped by built-in python functions.
+
+|Object Method|Built-in Function|Description|  
+|:---|:---|:---|  
+|`object.__getattribute__('name')`|`getattr(object, 'name')`|Gets attribute|
+|`object.__setattr__('name', value)`|`setattr(object, 'name', value)`|Sets attribute to value|
+|`object.__delattr('name')`|`delattr(object, 'name')`|Deletes attribute|
+|N/A|`hasattr(object, 'name')`|Checks if an object has an attribute.|  
+
+&nbsp;
+
+**Special Object Functions**  
+In order to enable consistent usage across all of the different objects in Python, they all utilize the same special methods denoted with two underscores on either side `__func__`. Overriding these objects in your own implementations can lead to neat and concise code for complex functions. They can be overriden by defining the `__func__(self, [args])` function within an object. These functions are often refered to as **"magic" functions**.  
+
+|Attribute|Built-In Accessor|Description|  
+|:---|:---|:---|  
+|`__new__`|N/A|Called when creating a new instance of an object|  
+|`__init__`|N/A|Called when instantiating a new instance of an object, after `__new__`|  
+|`__class__`|`type(obj)`|Returns the type of a given object.|  
+|`__str__`|`str(obj)`|Converts object to a string. This is called when printed.|  
+|`__repr__`|`repr(obj)`|Returns a representation of the object used in the python shell.|  
+|`__doc__`|`help(obj)`|Gives documentation for the given type.|  
+|`__hash__`|`hash(obj)`|Custom hash function for the object.|  
+|`__get__`|N/A|Invoked every time an object is accessed. Used by function objects to make them callable. Similar definition for `__set__`|  
+|`__eq__`|`==`|Provides comparison binary operator. Other comaprison operators are `__lt__`, `__le__`, `__ne__`, `__ge__`, `__gt__`|  
+|`__add__`|`add(a, b)`, `+`|Overrides math functionality. Others are `__sub__`, `__mul__`, `__abs__`, `__floordiv__`, `__truediv__`, `__pow__`, etc.|  
+|`__getitem__`|`object[ind]`|Returns value of an object at a certain index|  
+|`__and__`|`and`|Returns logical and. Other logical operators are `__or__`, `__not__`, `__xor__`, `__lshift__`, etc.|  
+|`__contains__`|`val in obj`|Checks to see if an object contains a value using `in` keyword.|  
+|`__next__`|`next(obj)`|Yields next value of an object.|  
+|`__yield__`|`iter(obj)`, `for _ in obj`|Returns an iterator over the values of the object.|  
+
+You can find more operator attributes here: [https://docs.python.org/3/library/operator.html](https://docs.python.org/3/library/operator.html).
+
+&nbsp;
+
+<a name="ch1-5"></a>
+### 1.5 Variablen in Python  
 Es gibt gravierende Unterschiede in der Art wie Python und C bzw. C++ Variablen behandeln. Vertraute Datentypen wie Ganzzahlen (Integer), Fließkommazahlen (floating point numbers) und Strings sind zwar in Python vorhanden, aber auch hier gibt es wesentliche Unterschiede zu C und C++.
 
 In Programmiersprachen wie C, C++ oder Java hat jede Variable einen eindeutigen Datentyp. Das bedeutet, dass falls beispielsweise eine Variable vom Typ Integer ist, sie nur Integer-Werte aufnehmen kann. In diesen Programmiersprachen müssen Variablen auch vor ihrer Benutzung deklariert werden. Deklaration bedeutet Bindung an einen Datentyp, der dann für den gesamten Programmablauf unveränderlich ist.  
@@ -151,8 +206,8 @@ Wird x jetzt ein String zugewiesen, wäre das Integer-Objekt '42' verwaist. Es m
 
 &nbsp;
 
-<a name="ch1-5"></a>
-### 1.5 Strings  
+<a name="ch1-6"></a>
+### 1.6 Strings  
 Ein String, oder Zeichenkette, kann man als eine Sequenz von einzelnen Zeichen sehen.
 Jedes einzelne Zeichen eines Strings, kann über einen Index angesprochen werden:  
 
@@ -171,8 +226,8 @@ h
 
 &nbsp;
 
-<a name="ch1-5-1"></a>
-#### 1.5.1 Execute String containing Python code  
+<a name="ch1-6-1"></a>
+#### 1.6.1 Execute String containing Python code  
 
 For statements use `exec(string)` (Python 2/3) or `exec string` (Python 2):  
 
@@ -191,8 +246,8 @@ When you need the value of an expression, use `eval (string)`:
 
 &nbsp;
 
-<a name="ch1-6"></a>
-### 1.6 Aufruf eines Python-Skripts (\*.py)
+<a name="ch1-7"></a>
+### 1.7 Aufruf eines Python-Skripts (\*.py)
 
 Von der cmd shell  
 ```
@@ -210,8 +265,8 @@ exec(open('someFile.py').read())
 ```
 &nbsp;
 
-<a name="ch1-7"></a>
-### 1.7 Decorators
+<a name="ch1-8"></a>
+### 1.8 Decorators
 `@staticmethod`  
 The *staticmethod* decorator modifies a method function so that it does not use the self variable. The method function will not have access to a specific instance of the class. It behaves like a plain function except that you can call it from an instance or the class.  
 
@@ -222,8 +277,8 @@ Generally, a function decorated with *@classmethod* is used for introspection of
 
 &nbsp;
 
-<a name="ch1-8"></a>
-### 1.8 `import`  
+<a name="ch1-9"></a>
+### 1.9 `import`  
 - Use classes & functions defined in another file  
 - A python module is a file with the same name (plus the *.py* extension)  
 
@@ -267,8 +322,8 @@ sys.path.append('/my/new/path')
 
 &nbsp;
 
-<a name="ch1-9"></a>
-### 1.9 `call-by-value` / `call-by-reference`  
+<a name="ch1-10"></a>
+### 1.10 `call-by-value` / `call-by-reference`  
 Je nach Programmiersprache gibt es unterschiedliche Möglichkeiten wie Argumente übergeben werden:
 
 **call-by-value**: Hier wird funktionsintern mit Kopien der als Parameter übergebenen Instanzen gearbeitet.
@@ -281,7 +336,7 @@ Je nach Programmiersprache gibt es unterschiedliche Möglichkeiten wie Argumente
 
 Python verwendet diesbezüglich eine <u>Mischform</u>.
 
-Eine **call-by-reference** gibt es nur bei <u>veränderbaren Datentypen</u> (**list, dict**).  
+Eine **call-by-reference** gibt es bei <u>veränderbaren Datentypen</u> (==**mutable objets**) (z.B. `list` oder `dict` aber auch den meisten anderen Objekten).  
 
 ```py
 >>> def test(liste):
@@ -302,7 +357,7 @@ Man sieht die (ungewollte) Veränderung der Liste im Hauptprogramm. Vermeidung e
 [1, 2, 3]
 ```
 
-Bei unveränderbaren Datentypen (z.B. Zahlen, Strings oder Tupel) wird ein **call-by-value** verwendet.
+Bei <u>unveränderbaren Datentypen</u> (z.B. Zahlen, Strings oder Tupel) wird ein **call-by-value** verwendet.
 ```py
 >>> def test_zahl(zahl):
 ...    zahl += 2
@@ -314,6 +369,83 @@ Bei unveränderbaren Datentypen (z.B. Zahlen, Strings oder Tupel) wird ein **cal
 >>> print a
 2
 ```
+**call-by-value** also bei den Datentypen `int`, `float`, `complex`, `string`, `tuple`, `frozen set`, `bytes` (== **immutable objects**).  
+
+&nbsp;
+
+<a name="ch1-11"></a>
+### 1.11 Variable scope  
+
+In python, scopes are defined by `dict` like namespaces, similar to those found in objects. Within objects (and thus within functions), different namespaces are applied than the global python namespace. When python looks up the value attributed to a variable name, it first looks up the name in it's immediate scope by checking the namespace of the object the function is in. If it doesn't find the given variable there, it proceeds down the call stack searching for it, until it finds the variable or reaches the global scope and can't find it.  
+
+```py
+x = "global"
+
+def fn1():
+    x = "local"
+    print(x)
+
+def fn2():
+    print(x)
+
+print(x)    # global
+fn1()       # local
+fn2()       # global
+```
+You can access the local namespace by calling the `locals()` function, or the global namespace by calling the `globals()` function, both of which return key attribute dictionaries.  
+
+&nbsp;
+
+**`nonlocal` keyword**  
+The `nonlocal` keyword in python can be used in nested functions to make a given variable refer to one that is used in a different scope. This essentially binds the variable in local scope to the variable in the next higher level scope where it is defined.  
+```py
+def outer():
+
+    x = "outer"
+
+    def inner():
+        nonlocal x
+        x = "inner"
+        print("From Inner:", x)
+
+    inner()
+    print("From Outer:", x)
+
+outer()
+
+# Output:
+# From Inner: inner
+# From Outer: inner
+```
+This is because the variable `x` is set to refer to the namespace of `outer` with the `nonlocal` keyword. Thus, `x` gets set to `"inner"` in the namespace of `outer`. If `nonlocal` was not present, we would instead get the expected result of `"inner"` from `inner` and `"outer"` from `outer`.  
+
+&nbsp;  
+
+**`global` keyword**  
+While `nonlocal` can refer to external scopes, the keyword `global` can be used to make variables refer to their versions in the global namespace. The `global` key word makes a given variable refer to the global scope. Be careful though the `global` and `nonlocal` descriptors only take effect in a given scope. The following example demonstrates this.  
+
+```py
+x = "global"
+
+def outer():
+    x = "outer"
+    def inner():
+        global x
+        x = "inner"
+        print("From Inner:", x)
+    inner()
+    print("From Outer:", x)
+
+outer()
+print("From Global:", x)
+
+# Output:
+# From Inner: inner
+# From Outer: outer
+# From Global: inner
+```
+Note that in the scope of `outer` the variable is unchanged. This is because the binding of `global` only takes effect within the scope it is used. As expected, in `inner`, x will refer to the global variable and change it to `"inner"`.
+
 
 
 &nbsp;

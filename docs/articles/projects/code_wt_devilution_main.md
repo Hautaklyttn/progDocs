@@ -24,6 +24,8 @@ layout: default
 **Function**:   
 &nbsp;&nbsp;&nbsp; **int DiabloMain(int argc, char \*\*argv)**  
 
+&nbsp;
+
 **Walkthrough**  
 &nbsp;
 

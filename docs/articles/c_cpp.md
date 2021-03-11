@@ -55,8 +55,9 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.7 'void' Pointer in C</font>](#ch3-7)  
 
 ### 4. Pointer und Arrays   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten</font>](#ch4-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Das Schlüsselwort `const` bei Pointern und Arrays</font>](#ch4-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Basics</font>](#ch4-1)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Vergleich von char-Arrays und Pointern auf Zeichenketten</font>](#ch4-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.3 Das Schlüsselwort `const` bei Pointern und Arrays</font>](#ch4-3)  
 
 ### 5. Programmsyntax und -semantik   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Der Bedingungsoperator `A ? B : C`</font>](#ch5-1)  
@@ -119,6 +120,7 @@ C enthält die Elemente der **Strukturierten Programmierung**. C hat ein **Typko
 
 **Declaration vs Definition**  
 A *definition* is the special kind of declaration that creates an object; a *declaration* indicates a name that allows you to refer to an object created here or elsewhere. Let's review the terminology:  
+
 |Term|Occurence|Definition|
 |:---|:---|:---|
 |Definition|Occurs in one place|Specifies the type of an object; reserves storage for it; is used to create new objects.  <br /> Example: `int my_array[100];`|  
@@ -126,10 +128,18 @@ A *definition* is the special kind of declaration that creates an object; a *dec
 
 The declaration of an external object tells the compiler the type and name of the object, and that memory allocation is done somewhere else. Since you aren't allocating memory for the array at this point, you don't need to provide information on how big it is in total. You do have to provide the size of all array dimensions except the leftmost one — this gives the compiler enough information to generate indexing code.  
 
+&nbsp;
+
+**Parameter vs Argument** (of Function)  
+
+|Term|Definition|Example|
+|:---|:---|:---|
+|*Parameter*|is a variable defined in a function definition or a function prototype declaration. Some people call this a "formal parameter."|`int power( int base, int n);` <br /> `base` and `n` are parameters.|
+|*Argument*|is a value used in a particular call to a function. Some people call this an "actual parameter."|`i = power(10, j);` <br /> `10` and `j` are arguments. The argument can be different for the different calls of a function.|
 
 &nbsp;
 
-Symbol Overloading in C  
+**Symbol Overloading in C**  
 
 |Term |Definition |  
 |:---|:---|  
@@ -1590,6 +1600,9 @@ p = &b;        // void pointer holds address of char 'b'
 # Pointer und Arrays  
 &nbsp;
 
+<a name="ch4-1"></a>
+### 4.1 Basics
+
 |Pointer|Array|  
 |:---|:---|  
 |Holds the address of data|Holds data|  
@@ -1600,8 +1613,56 @@ p = &b;        // void pointer holds address of char 'b'
 
 &nbsp;
 
-<a name="ch4-1"></a>
-### 4.1 Vergleich von char-Arrays und Pointern auf Zeichenketten
+**When Arrays *Are* Pointers**  
+
+|Rule|Description|  
+|:---:|:---|  
+|1|An array name **in an expression** (in contrast with a declaration) is treated by the compiler as a pointer to the first element of the array.|  
+|2|A subscript is always equivalent to an offset from a pointer.|  
+|3|An array name **in the declaration of a function parameter** is treated by the compiler as a pointer to the first element of the array|  
+
+&nbsp;
+
+<u>Rule 1+2:</u>  
+```c
+int a[10], *p, i=2;
+```
+then a[i] can equally be accessed in any of these ways:
+```c
+p=a;  
+p[i];  
+
+p=a;
+*(p+i);
+
+p=a+i;
+*p;
+```
+In fact, it's even stronger than this. An array reference `a[i]` is always rewritten to `*(a+i)` by the compiler at compiletime. The C standard requires this conceptual behavior. Perhaps an easy way to follow this is to remember that square brackets `[]` represent a subscript operator, just as a plus sign represents the addition operator. The subscript operator takes an integer and pointer-to-type-T, and yields an object of type T. An array name in an expression becomes a pointer, and there you are: pointers and arrays are interchangeable in expressions because they all boil down to pointers in the end, and both can be subscripted.  
+&nbsp;
+
+<u>Rule 3:</u>  
+The standard stipulates that a declaration of a parameter as "array of *type*" shall be adjusted to "pointer to *type*". In the specific case of a definition of a formal function parameter, the compiler is *obliged* to rewrite an array into a pointer to its first element. Instead of passing a copy of the array, the compiler just passes its address. Parameters that are functions are similarly treated as pointers, but let's just stick with arrays for now. The implicit conversion means that  
+```c
+my_function( int * turnip ) {...}
+my_function( int turnip[] ) {...}
+my_function( int turnip[200]){...}
+```
+are all completely equivalent. Therefore, `my_function()` can quite legally be called with an array, or really with a pointer, as its actual argument.
+
+&nbsp;
+
+**Interchangeability Summary**  
+1. An array access `a[i]` is always "rewritten" or interpreted by the compiler as a pointer access `*(a+i);`  
+2. Pointers are always just pointers; they are never rewritten to arrays. You can apply a subscript to a pointer; you typically do this when the pointer is a function argument, and you know that you will be passing an array in.  
+3. An array declaration in the specific context (only) of a function parameter can equally be written as a pointer. An array that is a function argument (i.e., in a call to the function) is always changed, by the compiler, to a pointer to the start of the array.  
+4. Therefore, you have the choice for defining a function parameter which is an array, either as an array or as a pointer. Whichever way you define it, you actually get a pointer inside the function.  
+5. In all other cases, definitions should match declarations. If you defined it as an array, your extern declaration should be an array. And likewise for a pointer.  
+
+&nbsp;
+
+<a name="ch4-2"></a>
+### 4.2 Vergleich von char-Arrays und Pointern auf Zeichenketten
 
 Prinzipiell hat man zur Speicherung von konstanten Zeichenketten zwei Möglichkeiten. Zum einen kann man ein *char*-Array definieren und dort die konstante Zeichenkette ablegen wie im folgenden Beispiel:  
 ```c
@@ -1632,8 +1693,8 @@ Im Falle der Pointernotation ist eine Änderung der konstanten Zeichenkette nich
 
 &nbsp;
 
-<a name="ch4-2"></a>
-### 4.2 Das Schlüsselwort `const` bei Pointern und Arrays  
+<a name="ch4-3"></a>
+### 4.3 Das Schlüsselwort `const` bei Pointern und Arrays  
 
 Die mit *const* definierten Variablen besitzen - genau wie gewöhnliche Variablen - einen Wert, einen Typ, einen Namen und auch eine Adresse. Sie liegen also im adressierbaren Speicherbereich. Als Konstanten dürfen sie natürlich nicht auf der linken Seite der Zuweisung stehen.  
 

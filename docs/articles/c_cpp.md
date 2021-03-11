@@ -84,6 +84,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2 Code optimization turned off for debugging in 'Release' version</font>](#ch7-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.3 Digital Filter Implementation</font>](#ch7-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.4 Access file in .exe directory</font>](#ch7-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.5 Hash Tables</font>](#ch7-5)  
 
 ### 8. Warnings and Errors  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 'Warning': no previous prototype for 'function'</font>](#ch8-1)  
@@ -429,7 +430,7 @@ The end of the heap is marked by a pointer known as **the "break"**. When the he
 - `malloc` and `free` — get memory from heap and give it back to heap  
 - `brk` and `sbrk` — adjust the size of the data segment to an absolute value/by an increment  
 
-&nbsp;  
+&nbsp;
 
 Since C does not usually have garbage collection (automatic identification and deallocation of memory blocks no longer in use) these C programs have to be very careful in their use of `malloc()` and `free()`. There are two common types of heap problems:  
 - freeing or overwriting something that is still in use (this is a "memory corruption")  
@@ -2753,13 +2754,133 @@ Now if you want to open "settings/settings.cfg" relative to the directory of the
 std::string newPath = path + std::string("settings/settings.cfg")  
 ```
 
+&nbsp; 
+
+<a name="ch7-5"></a>
+### 7.5 Hash Tables  
+Hashing is a way to speed up access to an element in a table of data. Instead of searching the table serially, you get a jumpstart to the likeliest element to contain your value.  
+
+This is achieved by loading the table carefully, and not in serial order. What you do instead is **apply some kind of transformation (known as a hashing function) on a data value from an element to be stored**. The hashing function will yield a value in the range 0…tablesize-1, and that becomes the index where you try to store that record.  
+
+If the slot is already taken, search forward from that point in the table for the next empty slot. Alternatively, you can set up a linked list hanging off that element, and simply add it to the end (either end, by the way). Or you can even hang a second hash table off the element.  
+
+When you look up a data item, you don't need to start searching entries from element zero. Instead, again hash the value you want to locate, and start looking from that point in the table.  
+
+> **Hashing** is a tried and tested table lookup optimization, and it's used everywhere in systems software: in databases, operating systems, and compilers.  
+
+<details><summary markdown="span">Example: Hash calculation + storing in array</summary>  
+  ```c
+
+    #include <stdio.h>
+    #include <string.h>
+    #include <stdlib.h>
+
+    #define FILE_HASH 2000
+    #define SAME 0
+
+    typedef struct _file {
+        struct file* flink;
+        char* fname;
+    } file;
+
+    file* file_hash_table[FILE_HASH];
+
+    file* allocate_file(char* s) {
+        file* f = malloc(sizeof(struct _file));
+        f->fname = s;
+        return f;
+    }
+
+    int hash_filename (char *s)
+    {
+        int length = strlen(s);
+        // hash function
+        return (length+4*(s[0]+4*s[length/2])) % FILE_HASH;
+    }
+
+    file* find_filename (char *s)
+    {
+        int hash_value = hash_filename(s);
+        file* f;
+
+        for (f = file_hash_table[hash_value]; f != NULL;f=f->flink) {
+            if (strcmp(f->fname, s) == SAME) {
+            return f;
+            }
+        }
+
+        /* file not found, so make a new one: */
+        f = allocate_file(s);
+        f->flink = file_hash_table[hash_value];
+        file_hash_table[hash_value] = f;
+
+        return f;
+    }
+
+    int main()
+    {
+        // example entries
+        char* c = "aelfoi";
+        file* out = find_filename(c);
+        c = "lalala";
+        out = find_filename(c);
+
+        for (int i=0; i<FILE_HASH; i++) {
+            if (file_hash_table[i] != NULL) {
+                char* name = file_hash_table[i]->fname;
+                printf ("Hash: %u, String: %s\n", i, name);
+            }
+        }
+        
+        return 0;
+    }
+  ```
+</details>  
+
+&nbsp;
+
+<details><summary markdown="span">Example: the **CRC32**</summary>  
+  ```c
+
+    // ----------------------------- crc32b --------------------------------
+
+    /* This is the basic CRC-32 calculation with some optimization but no
+    table lookup. The the byte reversal is avoided by shifting the crc reg
+    right instead of left and by using a reversed 32-bit word to represent
+    the polynomial.
+      When compiled to Cyclops with GCC, this function executes in 8 + 72n
+    instructions, where n is the number of bytes in the input message. It
+    should be doable in 4 + 61n instructions.
+      If the inner loop is strung out (approx. 5*8 = 40 instructions),
+    it would take about 6 + 46n instructions. */
+
+    unsigned int crc32b(unsigned char *message) {
+      int i, j;
+      unsigned int byte, crc, mask;
+
+      i = 0;
+      crc = 0xFFFFFFFF;
+      while (message[i] != 0) {
+          byte = message[i];            // Get next byte.
+          crc = crc ^ byte;
+          for (j = 7; j >= 0; j--) {    // Do eight times.
+            mask = -(crc & 1);
+            crc = (crc >> 1) ^ (0xEDB88320 & mask);
+          }
+          i = i + 1;
+      }
+      return ~crc;
+    }
+  ```
+</details>  
+
 &nbsp;
 
 &nbsp;
 
 # Warnings and Errors
 
-&nbsp; 
+&nbsp;  
 
 <a name="ch8-1"></a>
 ### 8.1 'Warning: no previous prototype for \<function\>'  

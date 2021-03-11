@@ -415,7 +415,7 @@ Each thread gets a **stack**, while there's typically only one **heap** for the 
 &nbsp;
 
 **malloc, calloc, etc.**  
-&nbsp;
+&nbsp;  
 Just as the stack segment grows dynamically on demand, so the data segment contains an object that can do this, namely, the heap. The heap area is for dynamically allocated storage, that is, storage obtained through `malloc` (memory allocate) and accessed through a pointer.  
 Everything in the heap is anonymous — you cannot access it directly by name, only indirectly through a pointer. The `malloc` (and friends: `calloc`, `realloc`, etc.) library call is the only way to obtain storage from the heap. The function `calloc` is like malloc, but clears the memory to zero before giving you the pointer. Don't think that the "c " in `c alloc()` has anything to do with C programming—it means "allocate zeroized memory". The function `realloc()` changes the size of a block of memory pointed to, either growing or shrinking it, often by copying the contents somewhere else and giving you back a pointer to the new location.  
 
@@ -428,6 +428,8 @@ Heap memory does not have to be returned in the same order in which it was acqui
 The end of the heap is marked by a pointer known as **the "break"**. When the heap manager needs more memory, it can push the break further away using the system calls `brk` and `sbrk`. You typically don't call brk yourself explicitly, but if you malloc enough memory, brk will eventually be called for you. The calls that manage memory are:  
 - `malloc` and `free` — get memory from heap and give it back to heap  
 - `brk` and `sbrk` — adjust the size of the data segment to an absolute value/by an increment  
+
+&nbsp;  
 
 Since C does not usually have garbage collection (automatic identification and deallocation of memory blocks no longer in use) these C programs have to be very careful in their use of `malloc()` and `free()`. There are two common types of heap problems:  
 - freeing or overwriting something that is still in use (this is a "memory corruption")  

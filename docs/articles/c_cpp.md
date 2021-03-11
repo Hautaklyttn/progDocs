@@ -87,6 +87,7 @@ layout: default
 
 ### 8. Warnings and Errors  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 'Warning': no previous prototype for 'function'</font>](#ch8-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.2 'Segmentation Fault'</font>](#ch8-2)  
 
 &nbsp;
 
@@ -364,35 +365,35 @@ When you do absolutely require dynamic allocation, you should encapsulate it in 
 
 &nbsp;  
 
-- Comparison *Java* &harr; *C++*  
-  ```java
-  // Java
-  Object obj1 = new Object();   // A new object is allocated by Java
-  Object obj2 = new Object();   // Another new object is allocated by Java
-  obj1 = obj2;  // 'obj1' now points to the object originally allocated for 'obj2'
-  ```
-  The object originally allocated for 'obj1' is now "dead" - nothing points to it, so it will be reclaimed by the 'Garbarge Collector'. If either 'obj1' or 'obj2' is changed, the change will be reflected to the other.  
-  &nbsp;
-  ```c
-  // C++ - via Pointer
-  Object *obj1 = new Object();   // A new object is allocated on the Heap
-  Object *obj2 = new Object();   // Another new object is allocated on the Heap
-  delete obj1;
-  ```
-  Since C++ does not have a garbage collector, the last line would cause a 'memory leak', i.e. a piece of claimed memory that the app cannot use and that we have no way to reclaim.  
-  ```c
-  obj1 = obj2;  // same as Java, 'obj1' points to 'obj2'
-  ```
-  &nbsp;
-  ```c
-  // C++ - via Object
-  Object obj1;   // A new object is allocated on the Stack
-  Object obj2;   // Another new object is allocated on the Stack
-  obj1 = obj2;  // This is different !!! The CONTENTS of 'obj2' is COPIED to 'obj1'
-  ```
-  But the two objects are still different. Change one, the other remains unchanged. Also, the objects get automatically destroyed once the function returns.  
-  &nbsp;
-  > The best way to think of it is that - more or less - Java (implicitly) handles pointers to objects, while C++ may handle either pointers to objects or the objects themselves.  
+**Comparison *Java* &harr; *C++***  
+```java
+// Java
+Object obj1 = new Object();   // A new object is allocated by Java
+Object obj2 = new Object();   // Another new object is allocated by Java
+obj1 = obj2;  // 'obj1' now points to the object originally allocated for 'obj2'
+```
+The object originally allocated for 'obj1' is now "dead" - nothing points to it, so it will be reclaimed by the 'Garbarge Collector'. If either 'obj1' or 'obj2' is changed, the change will be reflected to the other.  
+&nbsp;
+```c
+// C++ - via Pointer
+Object *obj1 = new Object();   // A new object is allocated on the Heap
+Object *obj2 = new Object();   // Another new object is allocated on the Heap
+delete obj1;
+```
+Since C++ does not have a garbage collector, the last line would cause a 'memory leak', i.e. a piece of claimed memory that the app cannot use and that we have no way to reclaim.  
+```c
+obj1 = obj2;  // same as Java, 'obj1' points to 'obj2'
+```
+&nbsp;
+```c
+// C++ - via Object
+Object obj1;   // A new object is allocated on the Stack
+Object obj2;   // Another new object is allocated on the Stack
+obj1 = obj2;  // This is different !!! The CONTENTS of 'obj2' is COPIED to 'obj1'
+```
+But the two objects are still different. Change one, the other remains unchanged. Also, the objects get automatically destroyed once the function returns.  
+&nbsp;
+> The best way to think of it is that - more or less - Java (implicitly) handles pointers to objects, while C++ may handle either pointers to objects or the objects themselves.  
 
 &nbsp;
 
@@ -400,17 +401,39 @@ When you do absolutely require dynamic allocation, you should encapsulate it in 
 
 &nbsp;
 
-- *Heap* vs *Stack*  
-  &nbsp;  
-  The **stack** is the memory set aside as scratch space for a thread of execution. When a function is called, a block is reserved on the top of the stack for local variables and some bookkeeping data. When that function returns, the block becomes unused and can be used the next time a function is called. The stack is always reserved in a LIFO (*last in first out*) order; the most recently reserved block is always the next block to be freed. This makes it really simple to keep track of the stack; freeing a block from the stack is nothing more than adjusting one pointer.  
-  &nbsp;  
-  The **heap** is memory set aside for dynamic allocation. Unlike the stack, there's no enforced pattern to the allocation and deallocation of blocks from the heap; you can allocate a block at any time and free it at any time. This makes it much more complex to keep track of which parts of the heap are allocated or freed at any given time; there are many custom heap allocators available to tune heap performance for different usage patterns.  
-  &nbsp;  
-  Each thread gets a **stack**, while there's typically only one **heap** for the application (although it isn't uncommon to have multiple heaps for different types of allocation).  
-  - The OS allocates the stack for each system-level thread when the thread is created. Typically the OS is called by the language runtime to allocate the heap for the application.  
-  - The stack is attached to a thread, so when the thread exists the stack is reclaimed. The heap is typically allocated at application startup by the runtime, and is reclaimed when the application (technically: 'process') exists.  
-  - The size of the stack is set when a thread is created. The size of the heap is set on application startup, but can grow as space is needed (the allocator requests  more memory from the operating system).  
+***Heap* vs *Stack***  
+&nbsp;  
+The **stack** is the memory set aside as scratch space for a thread of execution. When a function is called, a block is reserved on the top of the stack for local variables and some bookkeeping data. When that function returns, the block becomes unused and can be used the next time a function is called. The stack is always reserved in a LIFO (*last in first out*) order; the most recently reserved block is always the next block to be freed. This makes it really simple to keep track of the stack; freeing a block from the stack is nothing more than adjusting one pointer.  
+&nbsp;  
+The **heap** is memory set aside for dynamic allocation. Unlike the stack, there's no enforced pattern to the allocation and deallocation of blocks from the heap; you can allocate a block at any time and free it at any time. This makes it much more complex to keep track of which parts of the heap are allocated or freed at any given time; there are many custom heap allocators available to tune heap performance for different usage patterns.  
+&nbsp;  
+Each thread gets a **stack**, while there's typically only one **heap** for the application (although it isn't uncommon to have multiple heaps for different types of allocation).  
+- The OS allocates the stack for each system-level thread when the thread is created. Typically the OS is called by the language runtime to allocate the heap for the application.  
+- The stack is attached to a thread, so when the thread exists the stack is reclaimed. The heap is typically allocated at application startup by the runtime, and is reclaimed when the application (technically: 'process') exists.  
+- The size of the stack is set when a thread is created. The size of the heap is set on application startup, but can grow as space is needed (the allocator requests  more memory from the operating system).  
 
+&nbsp;
+
+**malloc, calloc, etc.**  
+&nbsp;
+Just as the stack segment grows dynamically on demand, so the data segment contains an object that can do this, namely, the heap. The heap area is for dynamically allocated storage, that is, storage obtained through `malloc` (memory allocate) and accessed through a pointer.  
+Everything in the heap is anonymous — you cannot access it directly by name, only indirectly through a pointer. The `malloc` (and friends: `calloc`, `realloc`, etc.) library call is the only way to obtain storage from the heap. The function `calloc` is like malloc, but clears the memory to zero before giving you the pointer. Don't think that the "c " in `c alloc()` has anything to do with C programming—it means "allocate zeroized memory". The function `realloc()` changes the size of a block of memory pointed to, either growing or shrinking it, often by copying the contents somewhere else and giving you back a pointer to the new location.  
+
+![0x](../assets/pics/heap_location.png)  
+
+Heap memory does not have to be returned in the same order in which it was acquired (it doesn't have to be returned at all), so unordered `malloc`/`free`'s eventually cause heap fragmentation. The heap must keep track of different regions, and whether they are in use or available to malloc.  
+
+`Malloc`ed memory is always aligned appropriately for the largest size of atomic access on a machine, and a malloc request may be rounded up in size to some convenient power of two. Freed memory goes back into the heap for reuse, but there is no (convenient) way to remove it from your process and give it back to the operating system.  
+
+The end of the heap is marked by a pointer known as **the "break"**. When the heap manager needs more memory, it can push the break further away using the system calls `brk` and `sbrk`. You typically don't call brk yourself explicitly, but if you malloc enough memory, brk will eventually be called for you. The calls that manage memory are:  
+- `malloc` and `free` — get memory from heap and give it back to heap  
+- `brk` and `sbrk` — adjust the size of the data segment to an absolute value/by an increment  
+
+Since C does not usually have garbage collection (automatic identification and deallocation of memory blocks no longer in use) these C programs have to be very careful in their use of `malloc()` and `free()`. There are two common types of heap problems:  
+- freeing or overwriting something that is still in use (this is a "memory corruption")  
+- not freeing something that is no longer in use (this is a "memory leak")  
+
+These are among the hardest problems to debug. If the programmer does not free each malloced block when it is no longer needed, the process will acquire more and more memory without releasing the portions no longer in use. 
 
 &nbsp;
 
@@ -2746,6 +2769,43 @@ An empty argument list in a function delaration indicates that the number and ty
 void screen_init(void);
 ```
 
+&nbsp; 
+
+<a name="ch8-2"></a>
+### 8.2 'Segmentation Fault'  
+
+Usually, segmentation faults are generated by an exception in the memory management unit. The usual cause is dereferencing (looking at the contents of the address contained in) a pointer with an uninitialized or illegal value. The pointer causes a memory reference to a segment that is not part of your address space, and the operating system steps in. A small program that will cause a segmentation fault is:  
+```c
+int *p=0;
+*p = 17;   /* causes a segmentation fault */
+```
+
+&nbsp;
+
+<u>Common immediate causes of segmentation fault:</u>
+- dereferencing a pointer that doesn't contain a valid value
+- dereferencing a null pointer (often because the null pointer was returned from a system routine, and used without checking)
+- accessing something without the correct permission—for example, attempting to store a value into a read-only text segment would cause this error
+- running out of stack or heap space (virtual memory is huge but not infinite)
+
+&nbsp;
+
+The common programming errors that (eventually) lead to something that gives a segmentation fault, in order of occurrence, are:  
+1. **Bad pointer value errors**: using a pointer before giving it a value, or passing a bad pointer to a library routine. (Don't be fooled by this one! If the debugger shows that the segv occurred in a system routine, it doesn't mean that the system caused it. The problem is still likely to be in your code.) The third common way to generate a bad pointer is to access something after it has been freed. You can amend your free statements to clear a pointer after freeing what it points to:
+   ```c
+   free(p); 
+   p = NULL;
+   ```
+   This ensures that if you do use a pointer after you have freed it, at least the program core dumps at once.  
+   &nbsp;
+2. **Overwriting errors**: writing past either end of an array, writing past either end of a malloc'd block, or overwriting some of the heap management structures (this is all too easy to do by writing before the beginning of a malloc'd block).  
+   ```c
+   p=malloc(256); 
+   p[-1]=0; 
+   p[256]=0;
+   ```
+   &nbsp;
+3. **Free'ing errors**: freeing the same block twice, freeing something that you didn't malloc, freeing some memory that is still in use, or freeing an invalid pointer. A very common free error is to cdr down a linked list in a `for (p=start; p; p=p->next)` loop, then in the loop body do a `free(p)`. This leads a freed pointer to be dereferenced on the next loop iteration, with unpredictable results.  
 &nbsp;
 
 &nbsp;  

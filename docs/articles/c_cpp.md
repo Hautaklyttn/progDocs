@@ -1086,7 +1086,7 @@ In practice, almost everyone tends to define functions without adding extra stor
 
 **Basics**
 &nbsp;  
-Die Quelldateien werden getrennt vom **Compiler** übersetzt - eine Quelldatei ist eine Übersetzungseinheit. Für jede Quelldatei wird eine *Object*-Datei mit Maschinencode erzeugt. Dieser Maschinencode ist nicht ablauffähig, zum einen, weil die Library-Funktionen noch fehen, zum anderen, weil die Adressen von Funktionen und Variablen anderer Dateien noch nicht bekannt sind.  
+Die Quelldateien werden vom **Compiler** getrennt übersetzt - eine Quelldatei ist eine Übersetzungseinheit. Für jede Quelldatei wird eine *Object*-Datei mit Maschinencode erzeugt. Dieser Maschinencode ist nicht ablauffähig, zum einen, weil die Library-Funktionen noch fehen, zum anderen, weil die Adressen von Funktionen und Variablen anderer Dateien noch nicht bekannt sind.  
 
 Die Aufgabe des **Linkers** ist es nun, die Querbezüge zwischen den Dateien herzustellen. Er bindet die erforderlichen Library-Routinen und das Laufzeitsystem hinzu und bildet einen Adressraum für das Gesamtprogramm, sodass jede Funktion und globale Variable an einer eindeutigen Adresse liegt. Der Linker baut damit einen virtuellen Adressraum des Programms auf, der aus virtuellen (logischen) Adressen besteht, die einfach der Reihe nach durchgezählt werden.  
 
@@ -1094,7 +1094,7 @@ In diesem **virtuellem Adressraum** hat jede Funktion und jede globale Variable 
 &nbsp;  
 
 **Präprozessor**  
-&nbsp;
+&nbsp;  
 Der Präprozessor gehört zum Compiler und verändert den Quelltext nach Anweisungen, welche im Quelltext (oder Makefile) festgelegt werden. Wie das Stichwort 'Prä' verrät, wird der Präprozessor <u>vor</u> der eigentlichen Kompilierung ausgeführt. D.h. der Präprozessor verändert vor dem Kompilieren den Quelltext, danach wird der neue Quelltext kompiliert.  
 
 Die häufigste Nutzung des Präprozessors besteht im Einschleusen anderer Dateiinhalte:  

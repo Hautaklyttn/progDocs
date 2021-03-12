@@ -86,6 +86,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.3 Digital Filter Implementation</font>](#ch7-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.4 Access file in .exe directory</font>](#ch7-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.5 Hash Tables</font>](#ch7-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.6 Datei schreiben/Lesen in C</font>](#ch7-6)  
 
 ### 8. Warnings and Errors  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 'Warning': no previous prototype for 'function'</font>](#ch8-1)  
@@ -2979,9 +2980,10 @@ When you look up a data item, you don't need to start searching entries from ele
 &nbsp;  
 
 <a name="ch7-6"></a>
-### 7.6 Datei schreiben/lesen in C  
+### 7.6 Datei Schreiben/Lesen in C  
+&nbsp;
 
-**Basics**  
+**Basics**   
 &nbsp;  
 C bietet selbst keine Sprachmittel für die Ein- und Ausgabe. Für die Ein- und Ausgabe werden stattdessen Bibliotheksfunktionen verwendet, die jedoch wie die Sprache selbst inzwischen standardisiert sind. Sie sind in der Datei `stdio.h` aufgeführt.  
 

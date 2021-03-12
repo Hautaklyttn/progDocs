@@ -2981,7 +2981,6 @@ When you look up a data item, you don't need to start searching entries from ele
 
 <a name="ch7-6"></a>
 ### 7.6 Datei Schreiben/Lesen in C  
-&nbsp;
 
 **Basics**   
 &nbsp;  

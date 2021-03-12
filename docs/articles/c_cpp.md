@@ -86,7 +86,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.3 Digital Filter Implementation</font>](#ch7-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.4 Access file in .exe directory</font>](#ch7-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.5 Hash Tables</font>](#ch7-5)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.6 Datei schreiben/Lesen in C</font>](#ch7-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.6 Datei Schreiben/Lesen in C</font>](#ch7-6)  
 
 ### 8. Warnings and Errors  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 'Warning': no previous prototype for 'function'</font>](#ch8-1)  

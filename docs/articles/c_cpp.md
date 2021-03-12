@@ -36,7 +36,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.15 `extern c` in C++</font>](#ch1-15)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.16 'Forward Declaration' in C++</font>](#ch1-16)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.17 Function 'Prototype' and Visibility in C</font>](#ch1-17)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18 Präprozessor in C/C++</font>](#ch1-18)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18 Präprozessor/Compiler/Linker in C/C++</font>](#ch1-18)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.19 'Name Mangling' (or 'Name decoration')</font>](#ch1-19)  
 
 ### 2. Arrays
@@ -346,9 +346,9 @@ With "...", the file is searched relative to the current directory, whereas with
 
 <a name="ch1-6"></a>
 ### 1.6 Memory Management - 'Heap' vs 'Stack'  
-
-Two ways of object creation:
-
+&nbsp;
+**Two ways of object creation**  
+&nbsp;
 - via Pointer
   ```c
   Object *myObj = new Object;
@@ -414,10 +414,21 @@ But the two objects are still different. Change one, the other remains unchanged
 
 ***Heap* vs *Stack***  
 &nbsp;  
-The **stack** is the memory set aside as scratch space for a thread of execution. When a function is called, a block is reserved on the top of the stack for local variables and some bookkeeping data. When that function returns, the block becomes unused and can be used the next time a function is called. The stack is always reserved in a LIFO (*last in first out*) order; the most recently reserved block is always the next block to be freed. This makes it really simple to keep track of the stack; freeing a block from the stack is nothing more than adjusting one pointer.  
+![ar](../assets/pics/adressraum.png)  
+Im **Code**-Segment liegt das Programm in Maschinencode. **Lokale Variablen** werden vom C-Compiler auf dem **Stack** angelegt, **globale (externe)** im **Daten-Segment** und **dynamische Variablen** im **Heap**. Auf dem Stack werden ferner die Rücksprungadressen und die Parameter einer Funktion abgelegt, wenn sie durch den Aufruf einer anderen Funktion oder durch den Aufruf von sich selbst unterbrochen wird.  
+
+Eine **lokale Variable** wird beim Betreten des Blocks, in dem sie definiert ist, auf dem **Stack** da abgelegt, wo der **Stackpointer** gerade hinzeigt. Beim Verlassen des Blocks wird der Speicherplatz durch Verschieben des Stackpointers wieder freigegeben. Dadurch kann eine lokale Variable bei mehreren Aufrufen ein und derselben Funktion an verschiedenen Adressen liegen.  
+
+Eine **lokale Variable**, die mit der Speicherklasse `static` definiert ist, wird nicht auf dem Stack abgelegt, sondern in dem Adressbereich, der für die globale Daten verwendet wird. Dennoch ist der Gültigkeitsbereich beschränkt auf den Block, in dem die Definition erfolgt ist.  
+
+**Dynamische Variablen** werden im **Heap** mit Hilfe der Library-Funktion `malloc()` angelegt. Sie können nicht über einen Namen angesprochen werden. Der Pointer, den die Funktion `malloc()` liefert, ist die einzige Möglichkeit, auf die dynamische Variable zuzugreifen. Lebensdauer und Gültigkeit einer dynamischen Variablen unterliegen nicht den Blockgrenzen der Funktion, innerhalb der sie geschaffen wurde. Dynamische Variablen sind gültig und sichtbar bis zu ihrer expliziten Vernichtung durch die Library-Funktion `free()` bzw. bis zum Programmende.  
+
+&nbsp;
+
+> Die Namen der Variablen sind zur Laufzeit nicht mehr vorhanden. Der Compiler errechnet für Variablen, wie viel Speicherplatz sie benötigen und welche relative Adresse sie haben. Zur Laufzeit wird mit den Adressen der Variablen und nicht mit ihren Namen gearbeitet. Typinformationen sind in C nur für den Compiler wichtig. Im ausführbaren Programm sind im Falle von C keine Informationen über die Typen enthalten.  
+
 &nbsp;  
-The **heap** is memory set aside for dynamic allocation. Unlike the stack, there's no enforced pattern to the allocation and deallocation of blocks from the heap; you can allocate a block at any time and free it at any time. This makes it much more complex to keep track of which parts of the heap are allocated or freed at any given time; there are many custom heap allocators available to tune heap performance for different usage patterns.  
-&nbsp;  
+
 Each thread gets a **stack**, while there's typically only one **heap** for the application (although it isn't uncommon to have multiple heaps for different types of allocation).  
 - The OS allocates the stack for each system-level thread when the thread is created. Typically the OS is called by the language runtime to allocate the heap for the application.  
 - The stack is attached to a thread, so when the thread exists the stack is reclaimed. The heap is typically allocated at application startup by the runtime, and is reclaimed when the application (technically: 'process') exists.  
@@ -686,6 +697,12 @@ Wie schon bei den Aufzählungstypen kann auch bei der Deklaration von Strukturen
 Erst bei der Definition einer Variablen vom Typ 'struct' reserviert der Compiler ausreichend Platz, um dann alle Elemente der Struktur unterzubringen.  
 
 ```c
+struct adresse {
+  char strasse [50];
+  int ulTel;
+  ...
+}
+
 // Variablen-Definition vom Typ 'adresse'
 struct adresse Kunde, Lieferant;
 
@@ -695,8 +712,21 @@ Lieferant.ulTel = 297225;
 // Oder über Zeiger
 struct adresse *pAdresse;
 pAdresse = &Lieferant;
-(*pAdresse).ulTel = 7460688;
+pAdresse->ulTel = 7460688;
 ```
+&nbsp; 
+
+> Hat man eine Strukturvariable (hier z.B. `Lieferant`), so erhält man die Komponente `ulTel` über den **Punktoperator** durch `Lieferant.ulTel`.  
+
+> Hat man einen Pointer (hier `pAdresse`) auf eine Strukturvariable, so erhält man die Komponente `ulTel` von `Lieferant` über den **Pfeiloperator** durch `pAdresse->ulTel`.
+
+&nbsp; 
+
+Das Initialisieren von Komponentenvariablen, die **Zeichenketten** darstellen (im Beispiel: `strasse`) kann nicht durch einfache Zuweisung mit `=` erfolgen, sondern es muss stattdessen die Stringverarbeitungsfunktion `strcpy()` verwendet werden.  
+```c
+strcpy(Kunde.strasse, "Neuer Weg");
+```
+
 
 &nbsp;
 
@@ -1052,8 +1082,19 @@ In practice, almost everyone tends to define functions without adding extra stor
 &nbsp;
 
 <a name="ch1-18"></a>
-### 1.18 Präprozessor in C/C++  
+### 1.18 Präprozessor/Compiler/Linker in C/C++  
 
+**Basics**
+&nbsp;  
+Die Quelldateien werden getrennt vom **Compiler** übersetzt - eine Quelldatei ist eine Übersetzungseinheit. Für jede Quelldatei wird eine *Object*-Datei mit Maschinencode erzeugt. Dieser Maschinencode ist nicht ablauffähig, zum einen, weil die Library-Funktionen noch fehen, zum anderen, weil die Adressen von Funktionen und Variablen anderer Dateien noch nicht bekannt sind.  
+
+Die Aufgabe des **Linkers** ist es nun, die Querbezüge zwischen den Dateien herzustellen. Er bindet die erforderlichen Library-Routinen und das Laufzeitsystem hinzu und bildet einen Adressraum für das Gesamtprogramm, sodass jede Funktion und globale Variable an einer eindeutigen Adresse liegt. Der Linker baut damit einen virtuellen Adressraum des Programms auf, der aus virtuellen (logischen) Adressen besteht, die einfach der Reihe nach durchgezählt werden.  
+
+In diesem **virtuellem Adressraum** hat jede Funktion und jede globale Variable ihre eigene Adresse. Überschneidungen, dass mehrere Funktionen oder globale Variablen an derselben Adresse liegen, darf es nicht geben. Der Linker erzeugt das ausführbare Programm.  
+&nbsp;  
+
+**Präprozessor**  
+&nbsp;
 Der Präprozessor gehört zum Compiler und verändert den Quelltext nach Anweisungen, welche im Quelltext (oder Makefile) festgelegt werden. Wie das Stichwort 'Prä' verrät, wird der Präprozessor <u>vor</u> der eigentlichen Kompilierung ausgeführt. D.h. der Präprozessor verändert vor dem Kompilieren den Quelltext, danach wird der neue Quelltext kompiliert.  
 
 Die häufigste Nutzung des Präprozessors besteht im Einschleusen anderer Dateiinhalte:  

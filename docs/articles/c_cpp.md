@@ -1084,7 +1084,7 @@ In practice, almost everyone tends to define functions without adding extra stor
 <a name="ch1-18"></a>
 ### 1.18 Präprozessor/Compiler/Linker in C/C++  
 
-**Basics**
+**Basics**  
 &nbsp;  
 Die Quelldateien werden vom **Compiler** getrennt übersetzt - eine Quelldatei ist eine Übersetzungseinheit. Für jede Quelldatei wird eine *Object*-Datei mit Maschinencode erzeugt. Dieser Maschinencode ist nicht ablauffähig, zum einen, weil die Library-Funktionen noch fehen, zum anderen, weil die Adressen von Funktionen und Variablen anderer Dateien noch nicht bekannt sind.  
 
@@ -1923,7 +1923,7 @@ Now you can include 'globals.h' in any source file where 'root_node' is needed.
 
 Das Schlüsselwort 'static' hat in C eine Doppelbedeutung.  
 
-Im <u>Kontext einer Variablendeklaration</u> innerhalb einer Funktion sagt dieses Schlüsselwort, dass diese **Variable auf einer festen Speicheradresse gespeichert wird**. Daraus ergibt sich die Möglichkeit, dass eine Funktion, die mit 'static'-Variablen arbeitet, beim nächsten Durchlauf die informationen erneut nutzt, die in der Variable gespeichert wurden (wie in einem Gedächtnis).  
+Im <u>Kontext einer Variablendeklaration</u> innerhalb einer Funktion sagt dieses Schlüsselwort, dass diese **Variable auf einer festen Speicheradresse gespeichert wird** (Variable wird nicht auf dem *Stack*, sondern im Speicherbereich der globalen Variablen). Daraus ergibt sich die Möglichkeit, dass eine Funktion, die mit 'static'-Variablen arbeitet, beim nächsten Durchlauf die informationen erneut nutzt, die in der Variable gespeichert wurden (wie in einem Gedächtnis).  
 
 Auch <u>vor Funktionen sowie Variablen außerhalb von Funktionen</u> kann das Schlüsselwort 'static' stehen. Das bedeutet, dass auf die Funktion/Variable **nur in der Datei in der sie steht zugegriffen werden kann**.  
 
@@ -2975,6 +2975,53 @@ When you look up a data item, you don't need to start searching entries from ele
     }
   ```
 </details>  
+
+&nbsp;  
+
+<a name="ch7-6"></a>
+### 7.6 Datei schreiben/lesen in C  
+
+**Basics**  
+&nbsp;  
+C bietet selbst keine Sprachmittel für die Ein- und Ausgabe. Für die Ein- und Ausgabe werden stattdessen Bibliotheksfunktionen verwendet, die jedoch wie die Sprache selbst inzwischen standardisiert sind. Sie sind in der Datei `stdio.h` aufgeführt.  
+
+Auf eine Datei wird in einem C-Programm über eine Dateivariable wie z.B. einen sogenannten **File-Pointer** oder über einen sogenannten **Handle** zugegriffen. Eine Datei liegt dabei normalerweise im Dateisystem und hat einen Namen, den das Dateisystem und auch derr Nutzer versteht, z.B. den Namen `TEST.DAT`. Zur Laufzeit wird dann die Verknüpfung zwischen der Dateivariablen und der Datei auf der Platte hergestellt.  
+
+>Der Nutzer muss in seinem Programm beim Öffnen einer Datei sagen, welche Dateivariable des Programms er mit welcher Datei des Dateisystems verknüpfen möchte.  
+
+Dies erfolgt z.B. durch eine Anweisung  
+```c
+fp = fopen("TEST.DAT", "w");
+```
+Hier wird mit der Standardfunktion `fopen()` eine Datei `TEST.DAT` zum Schreiben (`w` für write) geöffnet und mit der Dateivariablen `fp` verknüpft. `fp` stellt bildlich gesprochen den Kanal vom Programm zur Datei auf der Platte dar.  
+
+![cf](../assets/pics/channel_file.png)  
+
+Über diesen Kanal kann in dem oben skizzierten Fall ("w") nur geschrieben werden. Prinzipiell kann jedoch über einen Kanal gelesen oder geschrieben werden.
+
+&nbsp;
+
+**High-Level-Dateizugriffsfunktion**  
+&nbsp;  
+Die Standardbibliothek von C bietet für den Zugriff auf Dateien vier Klassen von Funktionen an:  
+- Funktionen für die formatierte  Ein-/Ausgabe  
+- Funktionen für die zeichenweise Ein-/Ausgabe
+- Funktionen für die stringweise Ein-/Ausgabe
+- Funktionen für die blockweise (binäre) Ein-/Ausgabe  
+
+Außerdem gibt es noch:  
+- Funktionen zum **Positionieren in Dateien**. Damit wird ein **wahlfreier (direkter) Zugriff** ermöglicht,
+- Funktionen zur **Fehlerbehandlung**,  
+- Funktionen für **Dateioperationen** wie z.B. Öffnen einer Datei, Schließen einer Datei, Wegschreiben gepufferter, aber noch nicht geschriebener Daten.  
+&nbsp;  
+
+Die folgenden Funktionen bzw. Makros sind geläufig:  
+
+![cf](../assets/pics/file_access.png)  
+
+`fputc()` und `putc()` haben dieselbe Funktionalität. `fputc()` ist eine Funktion, `putc()` ist oftmals ein Makro. Entsprechendes gilt für `fgetc()` und `getc()`.  
+
+`fwrite()` und `fread()` sind besonders gut für Dateien geeignet, sie aus vielen Sätzen gleicher Länge bestehen. Sie werden z.B. verwendet, um Strukturen binär in Dateien wegzuschreiben bzw. aus Dateien einzulesen.  
 
 &nbsp;
 

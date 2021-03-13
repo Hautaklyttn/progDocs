@@ -1098,6 +1098,15 @@ In diesem **virtuellem Adressraum** hat jede Funktion und jede globale Variable 
 &nbsp;  
 Der Präprozessor gehört zum Compiler und verändert den Quelltext nach Anweisungen, welche im Quelltext (oder Makefile) festgelegt werden. Wie das Stichwort 'Prä' verrät, wird der Präprozessor <u>vor</u> der eigentlichen Kompilierung ausgeführt. D.h. der Präprozessor verändert vor dem Kompilieren den Quelltext, danach wird der neue Quelltext kompiliert.  
 
+Die folgenden Aufgaben werden durch den Präprozessor der Reihe nach vor Beginn des Kompilierlaufs ausgeführt:  
+- Falls erforderlich, Ersetzung von Zeilenende-Steuerzeichen in einer Datei durch das Zeichen new-line. Entfernen des Fortsetzungszeichens `\` und Zusammenfügen der Zeilen der Präprozessor-Anweisungen.  
+- Zerlegung eines Programms in Präprozessor-Token, die durch Whitespace-Zeichen getrennt sind. Dabei wird ein Kommentar durch ein Leerzeichen (Blank) ersetzt.  
+- Bearbeiten der Präprozessor-Direktiven (Einfügen von Dateien, Ersetzen von Text (Makros)). Wird mit `include` eine Datei eingefügt, so werden in ihr alle bisher erfolgten Schritte nachgeholt.  
+- Ersetzen von Erstzdarstellungen in Zeichenkonstanten und konstanten Zeichenketten durch die entsprechenden Zeichen.  
+- Zusammenfügen von  benachbarten Zeichenketten.  
+
+&nbsp;
+
 Die häufigste Nutzung des Präprozessors besteht im Einschleusen anderer Dateiinhalte:  
 ```c
 #include <stdio.h>
@@ -1110,7 +1119,7 @@ int main(void) {
 
 Der Präprozessor ersetzt die Zeile `#include <stdio.h>` mit dem Inhalt der Header-Datei 'stdio.h' in der unter anderem die Funktion 'printf()' deklariert wird.  
 
-Die Anweisungen'#if', '#ifdef', '#ifndef', '#else' und '#endif' werden für bedingte Ersetzungen des C-Präprozessors verwendet. z.B.  
+Die Anweisungen'#if', '#ifdef', '#ifndef', '#else' und '#endif' werden für die **bedingte Kompilierung** verwendet. z.B.  
 ```c
 #ifdef WIN32
   #include <window.h>
@@ -1118,7 +1127,10 @@ Die Anweisungen'#if', '#ifdef', '#ifndef', '#else' und '#endif' werden für bedi
   #include <unistd.h>
 #endif
 ```
-In diesem Beispiel prüft der C-Präprozessor, ob ihm ein Makro namens 'WIN32' bekannt ist. Ist das der Fall, wird der Dateiinhalt von \<windows.h\> eingeschleust, ansonsten der von \<unistd.h\>.
+In diesem Beispiel prüft der C-Präprozessor, ob ihm ein Makro namens 'WIN32' bekannt ist. Ist das der Fall, wird der Dateiinhalt von \<windows.h\> eingeschleust, ansonsten der von \<unistd.h\>.  
+> **Bedingte Kompilierung** bedeutet, dass zur Kompilierzeit anhand von Ausdrücken und Symbolen entschieden wird, welcher Teil des Source Code kompiliert werden soll. Diese Ausdrücke können bereits im MAKEFILE gesetzt werden (s.u. 'CFLAGS').  
+
+&nbsp;
 
 - `CFLAGS`  
   'CFLAGS' are the name of environment variables or of Makefile variables that can be set to **specify additional switches to be passed to a compiler** in the process of building computer software. These variables are usually set inside a Makefile and are **appended to the command line** when the compiler is invoked.  

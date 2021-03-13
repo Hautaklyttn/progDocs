@@ -1119,6 +1119,8 @@ int main(void) {
 
 Der Präprozessor ersetzt die Zeile `#include <stdio.h>` mit dem Inhalt der Header-Datei 'stdio.h' in der unter anderem die Funktion 'printf()' deklariert wird.  
 
+&nbsp;
+
 Die Anweisungen'#if', '#ifdef', '#ifndef', '#else' und '#endif' werden für die **bedingte Kompilierung** verwendet. z.B.  
 ```c
 #ifdef WIN32

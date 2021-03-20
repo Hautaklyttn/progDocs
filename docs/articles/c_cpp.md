@@ -38,7 +38,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.17 Function 'Prototype' and Visibility in C</font>](#ch1-17)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18 Präprozessor/Compiler/Linker in C/C++</font>](#ch1-18)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.19 'Name Mangling' (or 'Name decoration')</font>](#ch1-19)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.20 Single quotes vs. double quotes in C</font>](#ch1-20)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.20 Single quotes vs. double quotes</font>](#ch1-20)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -1262,9 +1262,11 @@ DUMPBIN [options] files ...
 &nbsp;
 
 <a name="ch1-20"></a>
-### 1.20 Single quotes vs. double quotes in C  
+### 1.20 Single quotes vs. double quotes  
 
-> In C and in C++ single quotes identify a single character, while double quotes create a string literal. 
+> In C and in C++ single quotes identify a single character, while double quotes create a string literal.  
+
+&nbsp;
 
 `'a'` is a single a character literal, while `"a"` is a string literal containing an `'a'` and a null terminator (that is a 2 char array).  
 

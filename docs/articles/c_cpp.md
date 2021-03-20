@@ -38,6 +38,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.17 Function 'Prototype' and Visibility in C</font>](#ch1-17)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18 Präprozessor/Compiler/Linker in C/C++</font>](#ch1-18)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.19 'Name Mangling' (or 'Name decoration')</font>](#ch1-19)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.20 Single quotes vs. double quotes in C</font>](#ch1-20)  
 
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
@@ -1121,7 +1122,7 @@ Der Präprozessor ersetzt die Zeile `#include <stdio.h>` mit dem Inhalt der Head
 
 &nbsp;
 
-Die Anweisungen'#if', '#ifdef', '#ifndef', '#else' und '#endif' werden für die **bedingte Kompilierung** verwendet. z.B.  
+Die Anweisungen **'#if', '#ifdef', '#ifndef', '#else' und '#endif'** werden für die **bedingte Kompilierung** verwendet. z.B.  
 ```c
 #ifdef WIN32
   #include <window.h>
@@ -1257,6 +1258,21 @@ To use `DUMPBIN`, use the following syntax:
 ```c
 DUMPBIN [options] files ...
 ```
+
+&nbsp;
+
+<a name="ch1-20"></a>
+### 1.20 Single quotes vs. double quotes in C  
+
+> In C and in C++ single quotes identify a single character, while double quotes create a string literal. 
+
+`'a'` is a single a character literal, while `"a"` is a string literal containing an `'a'` and a null terminator (that is a 2 char array).  
+
+<u>In other words:</u>  
+
+`'a'` is an integer, representing the numerical value of the letter a in the machine’s character set.  
+
+`"a"` is an array of characters, two characters long, consisting of `‘a’` followed by `‘\0’`.
 
 &nbsp;
 

@@ -8,7 +8,10 @@
 layout: home
 ---
 
-[c / c++](./articles/c_cpp.html)
+[c / c++]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Language Description</font>](./articles/c_cpp.html)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Function Collection C</font>](./articles/c_funcCollect.html)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Function Collection C++</font>](./articles/cpp_funcCollect.html)  
 
 [tcl](./articles/tcl.html)
 

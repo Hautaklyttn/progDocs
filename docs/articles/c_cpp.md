@@ -1291,7 +1291,7 @@ In C gibt es im Gegensatz zu anderen Sprachen **kein Schlüsselwort array**. Der
 
 Ein eindimensionaler Vektor (eindimensionales Array) wird folgendermaßen definiert:  
 ```c
-int alpha[5];     //Definition des Arrays alpha mit Platz für 5 int-Zahlen
+int alpha[5];                         // Definition des Arrays alpha mit Platz für 5 int-Zahlen
 ```
 
 Eine einfache Möglichkeit, einen Pointer auf ein Arrayelement zeigen zu lassen, besteht darin, auf der rechten Seite des Zuweisungsoperators den **Adressoperator &** wie folgt zu verwenden:  
@@ -1322,6 +1322,18 @@ Der Compiler rechnet intern nicht mit Indizes. Erhält er eine Array-Komponente,
 
 
 > Auf jeden Fall sollte man es sich bei Arrays zur Gewohnheit machen, immer mit symbolischen Konstanten wie z.B. `#define MAX 40` und nie mit literalen Konstanten wie z.B. `int fahrenheit [40]` zu arbeiten. Soll nämlich der Wert in einer nächsten Version des Programms bis 100 Grad Celsius betragen, so müsste man doch  an vielen Stellen (z.B. in den Eingabeauforderungen und in den Kommentaren) Änderungen vornehmen, von denen leider gerne welche vergessen werden.  
+
+&nbsp;
+
+**Initiailsierung bei char-Arrays**  
+
+```c
+char zeichenkette[50];                // Definition des Arrays 'zeichenkette' mit Platz für 50 characters
+memset(alpha, '\0', sizeof(alpha));   // Best Use: Alle Elemente zu Anfang mit '/O' befüllen !
+```
+
+> Bei `char` Arrays, nach Erstellen des Arrays, die einzelnen Zellen mit dem Wert `/0` (`null terminator`) initialisieren! 
+> Somit werden die als leer erkannt und Abfragen geben auch nur die Speicherzellen zurück die Character enthalten.
 
 &nbsp;
 
@@ -1764,6 +1776,19 @@ Im Falle der Pointernotation ist eine Änderung der konstanten Zeichenkette nich
 > Bei einem *char*-Array *buffer* kann der in ihm  gespeicherte String verändert werden. *buffer* ist ein konstanter Pointer auf das erste Element des Arrays und kann auf keine andere Adresse zeigen.  
 
 > Zeigt eine Stringvariable vom Typ char* auf eine konstante Zeichenkette, so führt der Compiler  die Speicherung der Zeichenkette selbst durch. Die Zeichenkette kann nicht verändert werden aber die Zeigervariable vom Typ char* kann eine neue Adresse zugewiesen werden.  
+
+&nbsp;
+
+**Initiailsierung bei char-Arrays**  
+
+```c
+char zeichenkette[50];                // Definition des Arrays 'zeichenkette' mit Platz für 50 characters
+memset(alpha, '\0', sizeof(alpha));   // Best Use: Alle Elemente zu Anfang mit '/O' befüllen !
+```
+
+> Bei `char` Arrays, nach Erstellen des Arrays, die einzelnen Zellen mit dem Wert `/0` (`null terminator`) initialisieren! 
+> Somit werden die als leer erkannt und Abfragen geben auch nur die Speicherzellen zurück die Character enthalten.
+
 
 &nbsp;
 

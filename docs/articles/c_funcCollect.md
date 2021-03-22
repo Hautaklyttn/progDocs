@@ -32,8 +32,9 @@ static long Hex2Dec(const char* hex) {
 
 // 'binContainer': "char container[1024]; memset(container, '\0', sizeof(container));"
 static void Hex2Bin(const char* hex, char* binContainer) {
-	const char binary[16][5] = {"0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111", "1000", \
-	"1001", "1010", "1011", "1100", "1101", "1110", "1111"};
+	const char binary[16][5] = {"0000", "0001", "0010", "0011", "0100", /
+  "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", /
+  "1101", "1110", "1111"};
 
 	char single[2];
 	memset(single, '\0', sizeof(single));

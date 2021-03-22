@@ -52,7 +52,7 @@ static void Hex2Bin(const char* hex, char* binContainer) {
 ```c
 #include <stdlib.h>
 
-static long Bin2Dec(char* binary) {
+static long Bin2Dec(const char* binary) {
     long decimal = strtol(binary, NULL, 2);
     return decimal;
 }
@@ -60,7 +60,7 @@ static long Bin2Dec(char* binary) {
 
 ```c
 // 'hexContainer': "char container[16]; memset(container, '\0', sizeof(container));"
-static void Bin2Hex(char* binary, char* hexContainer) {
+static void Bin2Hex(const char* binary, char* hexContainer) {
 	long decimal = Bin2Dec(binary);
 	Dec2Hex(decimal, hexContainer);
 }
@@ -74,7 +74,7 @@ static void Bin2Hex(char* binary, char* hexContainer) {
 #include <stdio.h>
 
 // 'hexContainer': "char container[16]; memset(container, '\0', sizeof(container));"
-static void Dec2Hex(int decimal, char* hexContainer) {
+static void Dec2Hex(const int decimal, char* hexContainer) {
     sprintf(hexContainer, "%x", decimal);
 }
 ```

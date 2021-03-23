@@ -2023,9 +2023,11 @@ printf ("<text> %<format>\n", <Wert>);
 
 Die Formatierung bei *printf* wird mittels Formatierungszeichen realisiert. Häufig benutzte Zeichen sind:  
 - *%d* &nbsp; Decimal signed integer (also *%i*)
+- *%u* &nbsp; unsigned integer
 - *%o* &nbsp; Octal integer
 - *%x* &nbsp; Hex integer (also *%X*)
-- *%u* &nbsp; unsigned integer
+- *%ld* &nbsp; Decimal signed long
+- *%ul* &nbsp;unsigned long
 - *%c* &nbsp; Character
 - *%s* &nbsp; String
 - *%f* &nbsp; double/floating

@@ -8,7 +8,7 @@ layout: default
 
 &nbsp;
 
-# C++ Function Collection
+# Function Collection C++
 ---  
 
 &nbsp;

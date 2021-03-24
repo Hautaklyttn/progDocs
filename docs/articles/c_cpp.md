@@ -44,6 +44,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Übergabe von Arrays</font>](#ch2-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Übergabe von Zeichenketten</font>](#ch2-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 Array of Strings in C</font>](#ch2-4)  
 
 
 ### 3. Pointer
@@ -1401,6 +1402,29 @@ You typically don't want to assign an entire array very often, but you can do it
 ### 2.3 Übergabe von Zeichenketten
 
 Da Zeichenketten vom Compiler intern als *char*-Arrays gespeichert werden, ist die Übergabe von Zeichenketten identisch mit der Übergabe von *char*-Arrays. Der formale Parameter einer Funktion, die eine Zeichenkette übergeben bekommt, kann vom Typ ``char*`` oder ``char[]`` sein.  
+
+&nbsp;
+
+<a name="ch2-4"></a>
+### 2.4 Array of Strings in C  
+
+If a C string is a one dimensional character array then what's an array of C string looks like? It's a two dimensional character array!  
+
+Here is how an array of C string can be initialized:  
+```c
+#define NUMBER_OF_STRING 4
+#define MAX_STRING_SIZE 40
+
+char arr[NUMBER_OF_STRING][MAX_STRING_SIZE] =
+{ "array of c string",
+  "is fun to use",
+  "make sure to properly",
+  "tell the array size"
+};
+```
+Now each arr[x] is a C string and each arr[x][y] is a character. You can use any function on arr[x] that works on string!  
+
+
 
 &nbsp;
 

@@ -64,6 +64,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.11 CM Quantites</font>](#ch5-11)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.12 CM Debugging</font>](#ch5-12)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.13 Auslesen von InfoFiles aus Projekt</font>](#ch5-13)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.14 Lesen/Schreiben von DVA Quantities aus Tcl</font>](#ch5-14)  
 
 ### 6. Incr Tcl    
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Fundamental Expressions</font>](#ch6-1)  
@@ -1416,7 +1417,32 @@ aktueller TestRun : `SimCore.TestRun.Inf`
 aktuelles Fahrzeug : `SimCore.Vhcl.Inf`  
 
 (!) Einbinden von *SimCore.h* nicht vergessen (`#include "SimCore.h"`)
-  
+
+&nbsp;
+
+<a name="ch5-14"></a>
+### 5.14 Lesen/Schreiben von DVA Quantities aus Tcl  
+
+<u>Bedingungen:</u>  
+- Verbindung mit Simulator ist erfolgt (`Start&Connect`)  
+- DVA Quantity wurde angelegt
+
+&nbsp;
+```c
+// Anmelden, dass man auf Quantity zugreifen möchte
+QuantSubscribe Kl30SW
+
+// Lesend auf Quantity zugreifen:
+if {$::Qu(Kl30SW) == 1 } {
+  // Schreibend auf Quantity zugreifen
+  DVAWrite Kl30SW 0 -1 Abs
+} else {
+  DVAWrite Kl30SW 1 -1 Abs
+}
+```
+
+
+
 &nbsp;
 
 &nbsp;

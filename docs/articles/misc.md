@@ -12,7 +12,8 @@ layout: default
 &nbsp;
 
 Misc Basics  
-&nbsp;&nbsp;&nbsp;[Rechnerarchitektur](#link001)
+&nbsp;&nbsp;&nbsp;[Rechnerarchitektur](#link001)  
+&nbsp;&nbsp;&nbsp;[Reflexion / Introspektion](#link005)  
 
 &nbsp;
 
@@ -40,6 +41,53 @@ Jenkins
 
 - `Kernel`: Interacts with hardware to perform memory management, task scheduling and file management. Technically, the Kernel "is" the OS.  
 - `Shells`: Textual command line shells. Processes user requests - commands are translated by the shell into something the Kernel can understand
+
+&nbsp;  
+
+### <a name="link005"></a> Reflexion / Introspektion
+Reflexion (oder Introspektion) bedeutet in der Programmierung, dass ein Programm seine eigene Struktur kennen und eventuell diese modifizieren kann. 
+
+> **Kompilierte Sprachen (wie z.B. *C*) unterstützen Reflexion <u>nicht</u>. Variablennamen und andere Informationen aus dem Source Codes gehen bei der Kompilierung verloren.**  
+
+Im Prinzip kann Maschinencode im RAM, der von einem Mikroprozessor ausgeführt wird, als reflexiv betrachtet werden. Ein solches Programm ist in der Lage, seine Anweisungen wie Daten zu behandeln und kann deshalb seine Struktur analysieren und verändern. Reflexion wird häufig von Frameworks oder Sprachen unterstützt, die in einer virtuellen Maschine ausgeführt werden, beispielsweise Java, .NET oder Smalltalk und viele interpretierende Sprachen.  
+
+Reflexion ermöglicht es bei objektorientierter Programmierung beispielsweise, zur Laufzeit Informationen über Klassen oder deren Instanzen abzufragen. Bei einer Methode sind das unter anderem deren Sichtbarkeit, der Datentyp des Rückgabewertes oder der Typ der Übergabeparameter. Die Umsetzung der Abfragemöglichkeiten ist sprachspezifisch.  
+
+Für die Realisierung der Reflexion ist das **Speichern von Metainformation im Binärcode des Programms notwendig**. Bei interpretierenden Programmiersprachen liegt zur Ausführungszeit der ursprüngliche Programmcode vor, was neben dem Zugriff auf die Strukturinformation (Methodendeklaration) auch den Zugriff auf die Implementierung ermöglicht. Beispiele dafür sind *PHP*, *Lisp*, *Python*, *Smalltalk* und *Tcl*.  
+
+Die Ausführungsgeschwindigkeit von Code per Reflexion ist für gewöhnlich geringer als die von statischem Code. Dies liegt unter anderem an den Stringvergleichen der entsprechenden Namen der gewünschten Methoden, Eigenschaften usw. mit den Einträgen in den Metadaten. Jedoch bietet Reflexion eine sehr hohe Laufzeitflexibilität, da Code dynamisch aufgerufen werden kann, neue Instanzen erstellt oder sogar Typen und Objekte dynamisch neu strukturiert werden können.
+
+&nbsp;
+
+Beispiel für *Tcl*
+
+```tcl
+oo::class create Person {
+    variable name vorname
+    
+    constructor {n v} {
+        set name $n
+        set vorname $v
+    }
+
+    # Diese gewöhnliche, parameterlose Methode liefert den Vornamen
+    method getVorname {} {
+        return $vorname
+    }
+
+    # Diese Methode ruft die Methode auf, deren Name als Parameter mitgegeben wird.
+    method rufe {methode} {
+        return [[self] $methode]
+    }
+}
+
+# Erzeugen eines Objekts person der Klasse Person
+Person create person Meier Franz
+
+# Die folgende Anweisung würde dann die Methode 'getVorname' des 
+# Objekts 'person' aufrufen und deren Rückgabewert ausgeben.
+puts "Der Vorname lautet [person rufe getVorname] ";
+```
 
 &nbsp;
 

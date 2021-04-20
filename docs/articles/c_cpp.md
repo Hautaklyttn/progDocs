@@ -89,6 +89,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.4 Access file in .exe directory</font>](#ch7-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.5 Hash Tables</font>](#ch7-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.6 Datei Schreiben/Lesen in C</font>](#ch7-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.7 X-Macros in C</font>](#ch7-7)  
 
 ### 8. Warnings and Errors  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 'Warning': no previous prototype for 'function'</font>](#ch8-1)  
@@ -3106,6 +3107,95 @@ Die folgenden Funktionen bzw. Makros sind geläufig:
 `fputc()` und `putc()` haben dieselbe Funktionalität. `fputc()` ist eine Funktion, `putc()` ist oftmals ein Makro. Entsprechendes gilt für `fgetc()` und `getc()`.  
 
 `fwrite()` und `fread()` sind besonders gut für Dateien geeignet, sie aus vielen Sätzen gleicher Länge bestehen. Sie werden z.B. verwendet, um Strukturen binär in Dateien wegzuschreiben bzw. aus Dateien einzulesen.  
+
+&nbsp;  
+
+<a name="ch7-7"></a>
+### 7.7 X-Macros in C  
+
+**X-Macros** are based on the property of nested macros and the ability to define macros inside other macros. X-Macros are very powerful pre-processor technique in the sense that it can create a **self-maintaining and inter-dependent** piece of code. When the change of one part of a program leads to a change in another part, then the code is said to be inter-dependent.  
+
+An X macro application consists of two parts:
+
+- **The definition of the list’s elements:**
+  ```c
+  #define VARIABLES \
+      X(value1, 1)  \
+      .
+      .
+      .  \
+      X(valueN, N)
+  ```
+- **Expansion(s) of the list to generate fragments of declarations or statements:**
+  ```c
+  #define X(name) int name;
+      VARIABLES
+  #undef X
+  ```
+
+The list is defined by a macro (here: VARIABLES) which generates no code by itself, but merely consists of a sequence of invocations of another macro (classically named “X”) with the elements’ data. Each expansion of VARIABLES is preceded by a definition of X with the syntax for a list element. The call of VARIABLES inside the expansion expands X for each element in the list.  
+
+**Useful Example**: *enum to string*  
+Enums are replaced during compile-time by their respective integer. That means during run-time the enum names are not available anymore. To have the possibility to use the enum names during runtime, one can use X macros.  
+```c
+// Defining a macro with the values of colors.
+#define COLORS \
+    X(RED)     \
+    X(BLACK)   \
+    X(WHITE)   \
+    X(BLUE)
+  
+// Creating an enum of colors by macro expansion.
+enum colors {
+    #define X(value) value,
+        COLORS
+    #undef X
+};
+  
+// Function that takes the enum value and returns corresponding string value
+char* toString(int idx)
+{
+    switch (idx) {
+        #define X(color) \
+            case color:  \
+                return #color;
+                COLORS
+        #undef X
+    }
+}
+  
+// driver program.
+int main(void)
+{
+    printf("%s", toString(1));  // Output: "BLACK"
+    return 0;
+}
+```  
+
+In the above code, any addition or removal of any constant from the COLORS macro will automatically reflect in the definition of the enum as well as to the *toString()* function. This is why X-Macros are used to produce self-maintaining codes. After macro expansion above code will look like the code below:
+
+```c
+enum colors {
+    RED,
+    BLACK,
+    WHITE,
+    BLUE
+};
+  
+char* toString(enum colors value)
+{
+    switch (value) {
+    case RED:
+        return "RED";
+    case BLACK:
+        return "BLACK";
+    case WHITE:
+        return "WHITE";
+    case BLUE:
+        return "BLUE";
+    }
+}
+```
 
 &nbsp;
 

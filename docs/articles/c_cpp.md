@@ -58,7 +58,7 @@ layout: default
 
 ### 4. Pointer und Arrays   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Basics</font>](#ch4-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Vergleich von char-Arrays und Pointern auf Zeichenketten</font>](#ch4-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 char-Arrays und Pointern auf Zeichenketten</font>](#ch4-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.3 Das Schlüsselwort `const` bei Pointern und Arrays</font>](#ch4-3)  
 
 ### 5. Programmsyntax und -semantik   
@@ -1773,7 +1773,7 @@ are all completely equivalent. Therefore, `my_function()` can quite legally be c
 &nbsp;
 
 <a name="ch4-2"></a>
-### 4.2 Vergleich von char-Arrays und Pointern auf Zeichenketten
+### 4.2 *char*-Arrays und Pointern auf Zeichenketten
 
 Prinzipiell hat man zur Speicherung von konstanten Zeichenketten zwei Möglichkeiten. Zum einen kann man ein *char*-Array definieren und dort die konstante Zeichenkette ablegen wie im folgenden Beispiel:  
 ```c
@@ -1807,13 +1807,48 @@ Im Falle der Pointernotation ist eine Änderung der konstanten Zeichenkette nich
 **Initiailsierung bei char-Arrays**  
 
 ```c
-char zeichenkette[50];                // Definition des Arrays 'zeichenkette' mit Platz für 50 characters
-memset(alpha, '\0', sizeof(alpha));   // Best Use: Alle Elemente zu Anfang mit '/O' befüllen !
+char chain[50];                       // Definition des Arrays 'chain' mit Platz für 50 characters
+memset(chain, '\0', sizeof(chain));   // Best Use: Alle Elemente zu Anfang mit '/O' befüllen !
 ```
 
 > Bei `char` Arrays, nach Erstellen des Arrays, die einzelnen Zellen mit dem Wert `/0` (`null terminator`) initialisieren! 
 > Somit werden die als leer erkannt und Abfragen geben auch nur die Speicherzellen zurück die Character enthalten.
 
+&nbsp;
+
+**How to store multiple strings in an array**  
+
+Possibility 1:  
+The most efficient way is to have an array of character pointers and allocate memory for them as needed:  
+```c
+char *strings[10];
+
+int main(int ac, char *av[]) {
+    memset(strings, 0, 10 * sizeof(char *));
+
+    for (int i = 0; i < 10; i += 1) {
+        char ins[100];
+        scanf("%100s", ins);
+
+        strings[i] = malloc(strlen(ins) + 1);
+        if (strings[i]) {
+            strcpy(strings[i], ins);
+        }
+     }
+  }
+```
+
+&nbsp;
+
+Possibility 2:  
+You can use 2D array to store multiple strings. For 10 strings each of length 100.  
+```c
+char strings[10][100];
+
+printf("Enter Strings\n");
+for (int i = 0; i < 10 ;i++)  
+    scanf("%100s", strings[i]); 
+```
 
 &nbsp;
 

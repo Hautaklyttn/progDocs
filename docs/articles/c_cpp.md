@@ -1409,6 +1409,8 @@ Da Zeichenketten vom Compiler intern als *char*-Arrays gespeichert werden, ist d
 <a name="ch2-4"></a>
 ### 2.4 Array of Strings in C  
 
+**Initialization**  
+
 If a C string is a one dimensional character array then what's an array of C string looks like? It's a two dimensional character array!  
 
 Here is how an array of C string can be initialized:  
@@ -1423,9 +1425,21 @@ char arr[NUMBER_OF_STRING][MAX_STRING_SIZE] =
   "tell the array size"
 };
 ```
-Now each arr[x] is a C string and each arr[x][y] is a character. You can use any function on arr[x] that works on string!  
+Now each arr[x] is a C string and each arr[x][y] is a character. You can use any function on arr[x] that works on string.
 
+&nbsp;
 
+**Zero out a 2D array**  
+
+```c
+memset(array, '\0', sizeof(array[0][0]) * m * n);
+```
+Where m and n are the width and height of the two-dimensional array.  
+
+But there are two points one should know:
+
+- this works only if `array` is really a "two-d array", i.e., was declared `T array[M][N];` for some type T.
+- it works only in the scope where `array` was declared. If you pass it to a function, then the name `array` <u>decays to a pointer</u>, and `sizeof` will not give you the size of the array.
 
 &nbsp;
 

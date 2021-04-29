@@ -43,9 +43,6 @@ layout: default
 ### 2. Arrays
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basics</font>](#ch2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Übergabe von Arrays</font>](#ch2-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Übergabe von Zeichenketten</font>](#ch2-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 Array of Strings in C</font>](#ch2-4)  
-
 
 ### 3. Pointer
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 Referencing and Dereferencing</font>](#ch3-1)  
@@ -56,10 +53,14 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.6 Pointer auf Funktionen</font>](#ch3-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.7 'void' Pointer in C</font>](#ch3-7)  
 
-### 4. Pointer und Arrays   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Basics</font>](#ch4-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 char-Arrays und Pointern auf Zeichenketten</font>](#ch4-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.3 Das Schlüsselwort `const` bei Pointern und Arrays</font>](#ch4-3)  
+&nbsp;&nbsp;&nbsp;&rarr; Pointer vs. Arrays   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1"> Basics</font>](#ch_pva_1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1"> Das Schlüsselwort `const` bei Pointern und Arrays</font>](#ch_pva_2)  
+
+### 4. char-Arrays / char-Pointer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 char-Arrays und Pointern auf Zeichenketten</font>](#ch4-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Initialisierung von char-Arrays</font>](#ch4-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.3 Storage for Strings in C</font>](#ch4-3)  
 
 ### 5. Programmsyntax und -semantik   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Der Bedingungsoperator `A ? B : C`</font>](#ch5-1)  
@@ -1399,50 +1400,6 @@ You typically don't want to assign an entire array very often, but you can do it
 
 &nbsp;
 
-<a name="ch2-3"></a>
-### 2.3 Übergabe von Zeichenketten
-
-Da Zeichenketten vom Compiler intern als *char*-Arrays gespeichert werden, ist die Übergabe von Zeichenketten identisch mit der Übergabe von *char*-Arrays. Der formale Parameter einer Funktion, die eine Zeichenkette übergeben bekommt, kann vom Typ ``char*`` oder ``char[]`` sein.  
-
-&nbsp;
-
-<a name="ch2-4"></a>
-### 2.4 Array of Strings in C  
-
-**Initialization**  
-
-If a C string is a one dimensional character array then what's an array of C string looks like? It's a two dimensional character array!  
-
-Here is how an array of C string can be initialized:  
-```c
-#define NUMBER_OF_STRING 4
-#define MAX_STRING_SIZE 40
-
-char arr[NUMBER_OF_STRING][MAX_STRING_SIZE] =
-{ "array of c string",
-  "is fun to use",
-  "make sure to properly",
-  "tell the array size"
-};
-```
-Now each arr[x] is a C string and each arr[x][y] is a character. You can use any function on arr[x] that works on string.
-
-&nbsp;
-
-**Zero out a 2D array**  
-
-```c
-memset(array, '\0', sizeof(array[0][0]) * m * n);
-```
-Where m and n are the width and height of the two-dimensional array.  
-
-But there are two points one should know:
-
-- this works only if `array` is really a "two-d array", i.e., was declared `T array[M][N];` for some type T.
-- it works only in the scope where `array` was declared. If you pass it to a function, then the name `array` <u>decays to a pointer</u>, and `sizeof` will not give you the size of the array.
-
-&nbsp;
-
 &nbsp;
 
 
@@ -1722,11 +1679,10 @@ p = &b;        // void pointer holds address of char 'b'
 &nbsp;
 
 
-# Pointer und Arrays  
-&nbsp;
+## Pointer und Arrays  
 
-<a name="ch4-1"></a>
-### 4.1 Basics
+<a name="ch_pva_1"></a>
+### Basics
 
 |Pointer|Array|  
 |:---|:---|  
@@ -1786,88 +1742,10 @@ are all completely equivalent. Therefore, `my_function()` can quite legally be c
 
 &nbsp;
 
-<a name="ch4-2"></a>
-### 4.2 *char*-Arrays und Pointern auf Zeichenketten
 
-Prinzipiell hat man zur Speicherung von konstanten Zeichenketten zwei Möglichkeiten. Zum einen kann man ein *char*-Array definieren und dort die konstante Zeichenkette ablegen wie im folgenden Beispiel:  
-```c
-char buffer [] = "hello";
-```
 
-Zum anderen kann man die Speicherung der konstanten Zeichenkette, die ja eine Konstante darstellt, dem Compiler überlassen und sich nur durch den Rückgabewert der Zeichenkette einen Pointer auf das erste Element der Zeichenkette geben lassen, z.B. durch  
-```c
-char *pointer = "hello";
-```
-
-Hier wird der Pointer auf das 'h' von "hello" dem Pointer *pointer* zugewiesen. An dieser Operation sind nur Pointer beteiligt.  
-
-Eine Stringvariable kann also durch die Pointernotation `char *pointer` oder als offenes Array `char buffer[]` bzew. als Array mit ausreichend festgelegter Größe definiert werden.  
-
-Im Falle der Pointernotation zeigt der Pointer *pointer* auf eine konstante Zeichenkette, einen R-Wert.  
-Die Komponenten des Arrays sind dagegen L-Werte! Im Falle des Arrays ist es damit möglich, Elemente des Arrays neu mit Werten zu belegen, z.B. durch  
-```c
-buffer [1] = 'a';
-```
-Dann lautet der gespeicherte String "hallo". Jedoch ist es nicht möglich, den Pointer *buffer*, der ein konstanter Pointer auf das erste Element des Arrays ist, woanders hinzeigen zu lassen.  
-
-Im Falle der Pointernotation ist eine Änderung der konstanten Zeichenkette nicht vorgesehen, d.h. nicht erlaubt. Wie der Name schon sagt, soll ein konstante Zeichenkette ja konstant sein. Dafür hat man im Falle der Pointernotation die Freiheit, seinen Pointer ganz woandershin zeigen zu lassen.  
-
-> Bei einem *char*-Array *buffer* kann der in ihm  gespeicherte String verändert werden. *buffer* ist ein konstanter Pointer auf das erste Element des Arrays und kann auf keine andere Adresse zeigen.  
-
-> Zeigt eine Stringvariable vom Typ char* auf eine konstante Zeichenkette, so führt der Compiler  die Speicherung der Zeichenkette selbst durch. Die Zeichenkette kann nicht verändert werden aber die Zeigervariable vom Typ char* kann eine neue Adresse zugewiesen werden.  
-
-&nbsp;
-
-**Initiailsierung bei char-Arrays**  
-
-```c
-char chain[50];                       // Definition des Arrays 'chain' mit Platz für 50 characters
-memset(chain, '\0', sizeof(chain));   // Best Use: Alle Elemente zu Anfang mit '/O' befüllen !
-```
-
-> Bei `char` Arrays, nach Erstellen des Arrays, die einzelnen Zellen mit dem Wert `/0` (`null terminator`) initialisieren! 
-> Somit werden die als leer erkannt und Abfragen geben auch nur die Speicherzellen zurück die Character enthalten.
-
-&nbsp;
-
-**How to store multiple strings in an array**  
-
-Possibility 1:  
-The most efficient way is to have an array of character pointers and allocate memory for them as needed:  
-```c
-char *strings[10];
-
-int main(int ac, char *av[]) {
-    memset(strings, 0, 10 * sizeof(char *));
-
-    for (int i = 0; i < 10; i += 1) {
-        char ins[100];
-        scanf("%100s", ins);
-
-        strings[i] = malloc(strlen(ins) + 1);
-        if (strings[i]) {
-            strcpy(strings[i], ins);
-        }
-     }
-  }
-```
-
-&nbsp;
-
-Possibility 2:  
-You can use 2D array to store multiple strings. For 10 strings each of length 100.  
-```c
-char strings[10][100];
-
-printf("Enter Strings\n");
-for (int i = 0; i < 10 ;i++)  
-    scanf("%100s", strings[i]); 
-```
-
-&nbsp;
-
-<a name="ch4-3"></a>
-### 4.3 Das Schlüsselwort `const` bei Pointern und Arrays  
+<a name="ch_pva_2"></a>
+### Das Schlüsselwort `const` bei Pointern und Arrays  
 
 Die mit *const* definierten Variablen besitzen - genau wie gewöhnliche Variablen - einen Wert, einen Typ, einen Namen und auch eine Adresse. Sie liegen also im adressierbaren Speicherbereich. Als Konstanten dürfen sie natürlich nicht auf der linken Seite der Zuweisung stehen.  
 
@@ -1955,6 +1833,192 @@ The same applies for ``void *`` and ``const void *`` for ``memcpy``.
 
 &nbsp;
 
+# char-Arrays / char-Pointer  
+
+<a name="ch4-1"></a>
+### 4.1 *char*-Arrays und Pointern auf Zeichenketten
+
+Prinzipiell hat man zur Speicherung von konstanten Zeichenketten zwei Möglichkeiten. Zum einen kann man ein *char*-Array definieren und dort die konstante Zeichenkette ablegen wie im folgenden Beispiel:  
+```c
+char buffer [] = "hello";
+```
+
+Zum anderen kann man die Speicherung der konstanten Zeichenkette, die ja eine Konstante darstellt, dem Compiler überlassen und sich nur durch den Rückgabewert der Zeichenkette einen Pointer auf das erste Element der Zeichenkette geben lassen, z.B. durch  
+```c
+char *pointer = "hello";
+```
+
+Hier wird der Pointer auf das 'h' von "hello" dem Pointer *pointer* zugewiesen. An dieser Operation sind nur Pointer beteiligt.  
+
+Eine Stringvariable kann also durch die Pointernotation `char *pointer` oder als offenes Array `char buffer[]` bzew. als Array mit ausreichend festgelegter Größe definiert werden.  
+
+Im Falle der Pointernotation zeigt der Pointer *pointer* auf eine konstante Zeichenkette, einen R-Wert.  
+Die Komponenten des Arrays sind dagegen L-Werte! Im Falle des Arrays ist es damit möglich, Elemente des Arrays neu mit Werten zu belegen, z.B. durch  
+```c
+buffer [1] = 'a';
+```
+Dann lautet der gespeicherte String "hallo". Jedoch ist es nicht möglich, den Pointer *buffer*, der ein konstanter Pointer auf das erste Element des Arrays ist, woanders hinzeigen zu lassen.  
+
+Im Falle der Pointernotation ist eine Änderung der konstanten Zeichenkette nicht vorgesehen, d.h. nicht erlaubt. Wie der Name schon sagt, soll ein konstante Zeichenkette ja konstant sein. Dafür hat man im Falle der Pointernotation die Freiheit, seinen Pointer ganz woandershin zeigen zu lassen.  
+
+> Bei einem *char*-Array *buffer* kann der in ihm  gespeicherte String verändert werden. *buffer* ist ein konstanter Pointer auf das erste Element des Arrays und kann auf keine andere Adresse zeigen.  
+
+> Zeigt eine Stringvariable vom Typ char* auf eine konstante Zeichenkette, so führt der Compiler  die Speicherung der Zeichenkette selbst durch. Die Zeichenkette kann nicht verändert werden aber die Zeigervariable vom Typ char* kann eine neue Adresse zugewiesen werden.  
+
+&nbsp;
+
+<a name="ch4-2"></a>
+### 4.2 Initialisierung von char-Arrays
+
+```c
+char chain[50];                       // Definition des Arrays 'chain' mit Platz für 50 characters
+memset(chain, '\0', sizeof(chain));   // Best Use: Alle Elemente zu Anfang mit '/O' befüllen !
+```
+
+> Bei `char` Arrays, nach Erstellen des Arrays, die einzelnen Zellen mit dem Wert `/0` (`null terminator`) initialisieren! 
+> Somit werden die als leer erkannt und Abfragen geben auch nur die Speicherzellen zurück die Character enthalten.
+
+&nbsp;
+
+Bei 2D char-Array:
+```c
+char array[m][n];
+memset(array, '\0', sizeof(array[0][0]) * m * n);
+```
+Where m and n are the width and height of the two-dimensional array.  
+
+But there are two points one should know:
+
+- this works only if `array` is really a "two-d array", i.e., was declared `T array[M][N];` for some type T.
+- it works only in the scope where `array` was declared. If you pass it to a function, then the name `array` <u>decays to a pointer</u>, and `sizeof` will not give you the size of the array.
+
+&nbsp;
+
+<a name="ch4-3"></a>
+### 4.3 Storage for Strings in C  
+
+**Possibility 1: Strings using character pointers**  
+
+Using character pointer, strings can be stored in two ways:  
+1. **Read only string in a shared segment**. 
+   When a string value is directly assigned to a pointer, in most of the compilers, it’s stored in a read-only block (generally in data segment) that is shared among functions.  
+   ```c
+    char *str = "GfG";
+   ```
+   In the above line “GfG” is stored in a shared read-only location, but pointer str is stored in a read-write memory. You can change str to point something else but you cannot change the value at present str. So this kind of string should only be used when we don’t want to modify a string at a later stage in the program.  
+  &nbsp;
+2. **Dynamically allocated in heap segment.**  
+   Strings are stored like other dynamically allocated things in C and can be shared among functions.  
+   ```c
+    har *str;
+    int size = 4; /*one extra for ‘\0’*/
+    str = (char *)malloc(sizeof(char)*size);
+    *(str+0) = 'G';
+    *(str+1) = 'f'; 
+    *(str+2) = 'G'; 
+    *(str+3) = '\0'; 
+   ```
+
+&nbsp;
+
+**Array of character pointers and allocation of memory as needed**  
+```c
+char *strings[10];
+
+int main(int ac, char *av[]) {
+    memset(strings, 0, 10 * sizeof(char *));
+
+    for (int i = 0; i < 10; i += 1) {
+        char ins[100];
+        scanf("%100s", ins);
+
+        strings[i] = malloc(strlen(ins) + 1);
+        if (strings[i]) {
+            strcpy(strings[i], ins);
+        }
+     }
+  }
+```
+
+&nbsp;
+
+**Return String from a function**  
+
+```c
+char *getString01()
+{
+  char *str = "GfG"; /* Stored in read only part of shared segment */
+ 
+  /* No problem: remains at address str after getString() returns*/
+  return str; 
+} 
+
+char *getString02()
+{
+  int size = 4;
+  char *str = (char *)malloc(sizeof(char)*size); /*Stored in heap segment*/
+  *(str+0) = 'G';
+  *(str+1) = 'f'; 
+  *(str+2) = 'G';
+  *(str+3) = '\0'; 
+   
+  /* No problem: string remains at str after getString() returns */   
+  return str; 
+}  
+ 
+int main()
+{
+  printf("%s", getString01()); 
+  printf("%s", getString02());   
+  getchar();
+  return 0;
+}
+```
+
+&nbsp;
+
+**Possibility 2: Strings as character arrays**  
+
+When strings are declared as character arrays, they are stored like other types of arrays in C. For example, if str[] is an standard variable then string is **stored in stack segment**, if it’s a *global* or *static* variable then **stored in data segment**.
+
+You can use 2D array to store multiple strings. For 4 strings each of length 40.  
+```c
+#define NUMBER_OF_STRING 4
+#define MAX_STRING_SIZE 40
+
+char arr[NUMBER_OF_STRING][MAX_STRING_SIZE] =
+{ "array of c string",
+  "is fun to use",
+  "make sure to properly",
+  "tell the array size"
+};
+```
+Now each arr[x] is a C string and each arr[x][y] is a character. You can use any function on arr[x] that works on string.
+
+&nbsp;
+
+**Return String from a function (!! Not working !!)**  
+
+```c
+char *getString()
+{
+  char str[] = "GfG"; /* Stored in stack segment */
+ 
+  /* Problem: string may not be present after getString() returns */
+  return str;
+}    
+int main()
+{
+  printf("%s", getString()); 
+  getchar();
+  return 0;
+}
+```
+Use pointer here instead (&rarr; storage on the heap).
+
+&nbsp;
+
+&nbsp;
 
 # Programmsyntax und -semantik
 

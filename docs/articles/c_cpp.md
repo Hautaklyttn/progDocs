@@ -1910,7 +1910,7 @@ Using character pointer, strings can be stored in two ways:
 2. **Dynamically allocated in heap segment.**  
    Strings are stored like other dynamically allocated things in C and can be shared among functions.  
    ```c
-    har *str;
+    char *str;
     int size = 4; /*one extra for ‘\0’*/
     str = (char *)malloc(sizeof(char)*size);
     *(str+0) = 'G';

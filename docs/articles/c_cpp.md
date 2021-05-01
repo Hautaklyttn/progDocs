@@ -1880,7 +1880,7 @@ memset(chain, '\0', sizeof(chain));   // Best Use: Alle Elemente zu Anfang mit '
 
 &nbsp;
 
-Bei 2D char-Array:
+**Bei 2D char array**  
 ```c
 char array[m][n];
 memset(array, '\0', sizeof(array[0][0]) * m * n);

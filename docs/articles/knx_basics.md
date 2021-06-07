@@ -34,7 +34,11 @@ layout: default
 &nbsp;
 
 <a name="ch1-2"></a>
-### 1.2 ...  
+### 1.2 Kommunikationsobjekte  
+KNX-Geräte tauschen Informationen mit Hilfe ihrer Kommunikationsobjekte aus, die mit Gruppenadressen verknüpft sind. Jedes Kommunikationsobjekt steht für eine bestimmte Teilfunktion des Geräts (z.B. Schalten Kanal A). Alle Kommunikationsobjekte, die mit der gleichen Gruppenadresse verbunden sind, sind miteinander verbunden. Wenn einer auf diese GA eine Information sendet, bekommen das alle Kommunikationsobjekte entsprechend ihrer Flags mit.  
+
+Jedes Kommunikationsobjekt hat einen bestimmten Datentyp (DPT). Meist geben allerdings die Hersteller nur die Länge in Bit an.
+Die Kommunikationsrichtung eines Kommunikationsobjekt kann (hängt vom Applikationprogramm ab) über die sog. Flags (s. *1.3 Object-Flags*) beeinflusst werden.
 
 &nbsp;
 

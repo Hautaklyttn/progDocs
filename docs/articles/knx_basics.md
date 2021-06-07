@@ -40,8 +40,6 @@ layout: default
 <a name="ch1-3"></a>
 ### 1.3 Object - Flags  
 
-&nbsp;  
-
 > Objekt-Flags definieren das Busverhalten des Objekts, das sie repräsentieren.  
 
 &nbsp;

@@ -51,12 +51,12 @@ Die Kommunikationsrichtung eines Kommunikationsobjekt kann (hängt vom Applikati
 
 6 verschiedene Objekt-Flags sind definiert:  
 
-• **K**: Kommunikations-Flag  
-• **L**: Lese-Flag  
-• **Ü**: Übertragen-Flag  
-• **S**: Schreiben-Flag  
-• **A**: Aktualisieren-Flag  
-• **I**: Initialisierungs-Flag  
+- **K**: Kommunikations-Flag  
+- **L**: Lese-Flag  
+- **Ü**: Übertragen-Flag  
+- **S**: Schreiben-Flag  
+- **A**: Aktualisieren-Flag  
+- **I**: Initialisierungs-Flag  
 
 &nbsp;
 

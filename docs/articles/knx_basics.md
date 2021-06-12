@@ -65,7 +65,7 @@ Alle anderen Flags sind für dieses Objekt aktiviert. Das Kommunikationsobjekt h
 
 **L-Flag** &nbsp;&nbsp; <font color="red">(entscheidend wenn Wert aus Gerät abgerufen wird: GroupValueRead)</font>  
 Das Gerät wird für dieses Objekt <u>auf ein vom Bus stammendes GroupValueRead-Telegramm reagieren</u>, es sendet also ein **GroupValueResponse-Telegramm** an den Bus.  
-Beispiel ist eine Visualisierung die einen Wert eines Aktors/Sensors auslesen möchte. Dieser Aktor/Sensor muss dann das L-Flag gesetzt haben. Grundsätzlich sollte es in einer GA immer nur ein KO geben, bei dem das L-Flag gesetzt ist!
+Beispiel ist eine Visualisierung die einen Wert eines Aktors/Sensors auslesen möchte. Dieser Aktor/ Sensor muss dann das L-Flag gesetzt haben. Grundsätzlich sollte es in einer GA immer nur ein KO geben, bei dem das L-Flag gesetzt ist!
 
 **Ü-Flag** &nbsp;&nbsp; <font color="red">(entscheidend z.B. bei Schaltern die Wert in GA setzen: GroupValueWrite)</font>  
 Das Gerät <u>überträgt für dieses Objekt selbstständig jeden aktualisierten Objektwert</u>, es sendet also ein **GroupValueWrite-Telegramm** an den Bus. Für ein Taster-Objekt bedeutet das beispielsweise, dass eine Wippe, die dieses Objekt darstellt, betätigt wurde.  

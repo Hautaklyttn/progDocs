@@ -1925,7 +1925,7 @@ Using character pointer, strings can be stored in two ways:
     *(str+2) = 'G'; 
     *(str+3) = '\0'; 
    ```
-
+ 
 &nbsp;
 
 **Array of character pointers and allocation of memory as needed**  
@@ -2022,6 +2022,102 @@ int main()
 }
 ```
 Use pointer here instead (&rarr; storage on the heap).
+
+&nbsp;
+
+<a name="ch4-4"></a>
+### 4.4 Relevant Functions  
+
+&nbsp;
+
+<a name="ch4-1-1"></a>
+`memcpy()`   
+The C library function **void \*memcpy(void \*dest, const void \*src, size_t n)** copies **n** characters from memory area **src** to memory area **dest**.  
+
+*Parameters*  
+- **dest** − This is pointer to the destination array where the content is to be copied, type-casted to a pointer of type void*.  
+- **src** − This is pointer to the source of data to be copied, type-casted to a pointer of type void*.  
+- **n** − This is the number of bytes to be copied.  
+
+*Requirements*  
+```c
+#include <string.h>
+```
+
+&nbsp;
+
+<a name="ch4-1-2"></a>
+`memset()`   
+The C library function **void \*memset(void \*str, int c, size_t n)** copies the character **c** (an unsigned char) to the first **n** characters of the string pointed to, by the argument **str**.  
+
+*Parameters*  
+- **str** − This is a pointer to the block of memory to fill.  
+- **c** − This is the value to be set. The value is passed as an int, but the function fills the block of memory using the unsigned char conversion of this value.  
+- **n** − This is the number of bytes to be set to the value.  
+
+*Requirements*  
+```c
+#include <string.h>
+```
+
+&nbsp;
+
+<a name="ch4-1-3"></a>
+`strcpy()`   
+The C library function **char \*strcpy(char \*dest, const char \*src)** copies the string pointed to, by **src** to **dest**.  
+
+*Parameters*  
+- **dest** − This is the pointer to the destination array where the content is to be copied.  
+- **src** − This is the string to be copied.  
+
+*Requirements*  
+```c
+#include <string.h>
+```
+
+&nbsp;
+
+<a name="ch4-1-4"></a>
+`strcmp()`   
+The C library function **int strcmp(const char \*str1, const char \*str2)** compares the string pointed to, by **str1** to the string pointed to by **str2**.  
+
+*Parameters*  
+- **src1** − This is the first string to be compared.  
+- **src2** − This is the second string to be compared.  
+
+*Requirements*  
+```c
+#include <string.h>
+```
+
+&nbsp;
+
+<a name="ch4-1-5"></a>
+`strcat()`   
+The C library function **char \*strcat(char \*dest, const char \*src)** appends the string pointed to by **src** to the end of the string pointed to by **dest**.  
+
+*Parameters*  
+- **dest** − This is pointer to the destination array, which should contain a C string, and should be large enough to contain the concatenated resulting string.  
+- **src** − This is the string to be appended. This should not overlap the destination.  
+
+*Requirements*  
+```c
+#include <string.h>
+```
+
+&nbsp;
+
+<a name="ch4-1-6"></a>
+`strlen()`   
+The C library function **size_t strlen(const char \*str)** computes the length of the string **str** up to, but not including the terminating null character.  
+
+*Parameters*  
+- **src** − This is the string whose length is to be found.  
+
+*Requirements*  
+```c
+#include <string.h>
+```
 
 &nbsp;
 

@@ -535,11 +535,15 @@ Gibt eine Liste aller Variablen im <namespace> zurück
 
 This command is used to *delay execution of the program* (1) or to *execute a command in the background in the future* (2).  
 
-For (1): `after <ms>`  
+For (1): `after <ms>`  &nbsp; <u>(Synchronous execution)</u>  
 \<ms\> must be an integer giving a time in milliseconds. While the command is sleeping, the application dose not respond to events.  
 
-For (2): `after <ms> ?script?`  
-In this form the command returns immediately, but it arranges for a Tcl command to be executed \<ms\> milliseconds later as an event handler. The command will be executed exactly once, at the given time.  
+For (2): `after <ms> ?script?`    &nbsp; <u>(Asynchronous execution)</u>  
+In this form the command returns immediately, but it arranges for a Tcl command to be executed \<ms\> milliseconds later as an event handler. The command will be executed exactly once, at the given time. Perfect for delayed execution of a function/command, e.g.  
+  ```c
+  PatchProc Appl::Start insert {ConsoleShow 0}  "after 8000 {CT_Environment::AddEcuInfoToMainWindow}"
+  ```
+  Function *CT_Environment::AddEcuInfoToMainWindow* is executed 8s after the moment in time the code was run.
 
 &nbsp;
 

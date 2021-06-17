@@ -61,6 +61,13 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 char-Arrays und Pointern auf Zeichenketten</font>](#ch4-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Initialisierung von char-Arrays</font>](#ch4-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.3 Storage for Strings in C</font>](#ch4-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.4 Relevant Functions</font>](#ch4-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.4.1 'memcpy()'</font>](#ch4-4-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.4.2 'memset()'</font>](#ch4-4-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.4.3 'strcpy()'</font>](#ch4-4-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.4.4 'strcmp()'</font>](#ch4-4-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.4.5 'strcat()'</font>](#ch4-4-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.4.6 'strlen()'</font>](#ch4-4-6)  
 
 ### 5. Programmsyntax und -semantik   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Der Bedingungsoperator `A ? B : C`</font>](#ch5-1)  

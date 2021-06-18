@@ -2030,7 +2030,7 @@ Use pointer here instead (&rarr; storage on the heap).
 
 &nbsp;
 
-<a name="ch4-1-1"></a>
+<a name="ch4-4-1"></a>
 `memcpy()`   
 The C library function **void \*memcpy(void \*dest, const void \*src, size_t n)** copies **n** characters from memory area **src** to memory area **dest**.  
 
@@ -2046,7 +2046,7 @@ The C library function **void \*memcpy(void \*dest, const void \*src, size_t n)*
 
 &nbsp;
 
-<a name="ch4-1-2"></a>
+<a name="ch4-4-2"></a>
 `memset()`   
 The C library function **void \*memset(void \*str, int c, size_t n)** copies the character **c** (an unsigned char) to the first **n** characters of the string pointed to, by the argument **str**.  
 
@@ -2062,7 +2062,7 @@ The C library function **void \*memset(void \*str, int c, size_t n)** copies the
 
 &nbsp;
 
-<a name="ch4-1-3"></a>
+<a name="ch4-4-3"></a>
 `strcpy()`   
 The C library function **char \*strcpy(char \*dest, const char \*src)** copies the string pointed to, by **src** to **dest**.  
 
@@ -2077,7 +2077,7 @@ The C library function **char \*strcpy(char \*dest, const char \*src)** copies t
 
 &nbsp;
 
-<a name="ch4-1-4"></a>
+<a name="ch4-4-4"></a>
 `strcmp()`   
 The C library function **int strcmp(const char \*str1, const char \*str2)** compares the string pointed to, by **str1** to the string pointed to by **str2**.  
 
@@ -2092,7 +2092,7 @@ The C library function **int strcmp(const char \*str1, const char \*str2)** comp
 
 &nbsp;
 
-<a name="ch4-1-5"></a>
+<a name="ch4-4-5"></a>
 `strcat()`   
 The C library function **char \*strcat(char \*dest, const char \*src)** appends the string pointed to by **src** to the end of the string pointed to by **dest**.  
 
@@ -2107,7 +2107,7 @@ The C library function **char \*strcat(char \*dest, const char \*src)** appends 
 
 &nbsp;
 
-<a name="ch4-1-6"></a>
+<a name="ch4-4-6"></a>
 `strlen()`   
 The C library function **size_t strlen(const char \*str)** computes the length of the string **str** up to, but not including the terminating null character.  
 

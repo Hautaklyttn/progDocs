@@ -730,7 +730,7 @@ The `vwait` command pauses the execution of a script until some background actio
 
 &nbsp;  
 
-1. Tcl server &harr; Tcl client  
+-1- Tcl server &harr; Tcl client  
 
 ```c  
   proc serverOpen {channel addr port} {
@@ -774,7 +774,7 @@ The `vwait` command pauses the execution of a script until some background actio
 
 &nbsp;  
 
-2. Python server &harr; Tcl client  
+-2- Python server &harr; Tcl client  
 
 ```py  
   import socket

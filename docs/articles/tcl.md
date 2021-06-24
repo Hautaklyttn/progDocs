@@ -731,7 +731,8 @@ The `vwait` command pauses the execution of a script until some background actio
 &nbsp;  
 
 1. Tcl server &harr; Tcl client  
-  ```c  
+
+```c  
   proc serverOpen {channel addr port} {
       global connected
       set connected 1
@@ -769,12 +770,13 @@ The `vwait` command pauses the execution of a script until some background actio
   catch {close $sock}
   vwait out
   close server
-  ```
+```
 
 &nbsp;  
 
 2. Python server &harr; Tcl client  
-  ```py  
+
+```py  
   import socket
 
   host = ''
@@ -805,9 +807,9 @@ The `vwait` command pauses the execution of a script until some background actio
         sock.sendall(resp)
     except socket.error, ex:
       ...
-  ```  
+```  
 
-  ```c  
+```c  
   set host "127.0.0.1"
   set port 45000
 
@@ -831,11 +833,11 @@ The `vwait` command pauses the execution of a script until some background actio
     incr i
     puts " "
   }
-  ```  
+```  
 
-  ```c
-  fconfigure <channelId> <name> <value>
-  ```
+```c
+fconfigure <channelId> <name> <value>
+```
 
 The `fconfigure` command sets and retrieves options for channels (in this case for a 'socket').
 

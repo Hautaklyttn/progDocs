@@ -82,7 +82,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.10 'Exceptions' - `Try / Catch`</font>](#ch5-10)  
 
 ### 6. Bibliotheken, API's und *make*   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Library Basics</font>](#ch6-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Static Library Basics</font>](#ch6-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.2 [Win API] `#define DECLARE_HANDLE(n)`</font>](#ch6-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.3 [Win API] `HWND` (Fenster Handle)</font>](#ch6-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.4 'The C++ Standard Template Library' (Container-Klasse)</font>](#ch6-4)  
@@ -2501,9 +2501,9 @@ Im Code-Beispiel wurde der Funktion 'TuWas()' eine Deklaration hinzugefügt, die
 # Bibliotheken, API's und *make*  
 
 <a name="ch6-1"></a>
-### 6.1 Library Basics  
+### 6.1 *Static* Library Basics  
 
-Eine Library (Bibliothek) ist eine Anwendung von Funktionen, die bereits in kompilierter Form vorliegen. Sie besteht aus zwei Teilen: dem Archiv und dem Interface in Form von Headern. Hier wird vorerst nur auf statische Libraries für den C-Compiler eingegangen werden. In der Regel enden sie auf die Dateinamenerweiterung `.a`.
+Eine Library (Bibliothek) ist eine Anwendung von Funktionen, die bereits in kompilierter Form vorliegen. Sie besteht aus zwei Teilen: dem Archiv und dem Interface in Form von Headern. Hier wird vorerst nur auf statische Libraries für den C-Compiler eingegangen werden. In der Regel enden sie auf die Dateinamenerweiterung `.a` (Linux/Unix).
 
 - Zunächst wird der Quellcode benötigt, d.h. eine \*.c-Datei mit den Funktionen, aber keine 'main'-Funktion
 - Da eine Library lediglich kompiliert und assembliert, aber nicht gelinkt werden soll, muss das beim Compileraufruf berücksichtigt werden. Der Kommandozeilenschalter dafür ist `-c`, z.b.  

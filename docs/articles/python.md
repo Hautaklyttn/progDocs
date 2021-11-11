@@ -332,7 +332,8 @@ sys.path.append('/my/new/path')
 &nbsp;
 
 **Hint: Testing imported function**  
-Start your interactive interpreter in the *cmd* line.  
+Start your interactive interpreter in the *cmd* line and import the module.
+Afterwards call any functions of the module in the shell for testing, e.g.
 
 ```
 >>> import os

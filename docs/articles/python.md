@@ -331,6 +331,18 @@ sys.path.append('/my/new/path')
 
 &nbsp;
 
+**Hint: Testing imported function**  
+Start your interactive interpreter in the *cmd* line.  
+
+```
+>>> import os
+>>> os.getcwd()   
+'c:\\code'
+```
+
+
+&nbsp;
+
 <a name="ch1-10"></a>
 ### 1.10 `call-by-value` / `call-by-reference`  
 Je nach Programmiersprache gibt es unterschiedliche Möglichkeiten wie Argumente übergeben werden:

@@ -217,7 +217,8 @@ Wird x jetzt ein String zugewiesen, wäre das Integer-Objekt '42' verwaist. Es m
 
 <a name="ch1-6"></a>
 ### 1.6 Strings  
-Ein String, oder Zeichenkette, kann man als eine Sequenz von einzelnen Zeichen sehen.
+Strings are an example of what in Python we call a *sequence* — a positionally ordered collection of other objects. Strictly speaking, strings are sequences of one-character strings; other, more general sequence types include *lists* or *tuples*.  
+
 Jedes einzelne Zeichen eines Strings, kann über einen Index angesprochen werden:  
 
 ```
@@ -232,6 +233,20 @@ h
 
 **Achtung:**
 > Wie in Java aber nicht wie in C oder C++, können Strings in Python nicht verändert werden. Versucht man eine indizierte Position zu ändern, erzeugt man eine Fehlermeldung.
+
+**Workaround:**  
+
+Strictly speaking, you can change text-based data in place if you either expand it into a *list* of individual characters and join it back together with nothing between
+
+```python
+>>> S = 'shrubbery'
+>>> L = list(S)                                   # Expand to a list: [...]
+>>> L
+['s', 'h', 'r', 'u', 'b', 'b', 'e', 'r', 'y']
+  >>> L[1] = 'c'                                  # Change it in place
+>>> ''.join(L)                                    # Join with empty delimiter
+'scrubbery'
+```
 
 &nbsp;
 
@@ -546,7 +561,7 @@ Die Funktion *type(obj)* liefert die Klasse der Instanz 'obj' zurück.
 &nbsp;
 
 <a name="ch2-2"></a>
-## 2.2 String Functions  
+## 2.2 String Functions   
 &nbsp;
 
 **Konkatenation** (englisch: Concatenation)  

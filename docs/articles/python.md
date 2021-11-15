@@ -1102,7 +1102,7 @@ value=ws_new.Cells(2,2).Value
 &nbsp;
 
 <a name="ch6-1"></a>
-### 6.1 Basics  
+## 6.1 Basics  
 
 Example class:
 

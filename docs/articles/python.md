@@ -56,6 +56,9 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.4 Code Quality Metrics</font>](#ch5-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.5 Access Windows Applications using COM</font>](#ch5-5)  
 
+### 6. User-Defined Classes (OOP)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Basics</font>](#ch6-1)  
+
 &nbsp;
 
 ---  
@@ -1092,6 +1095,47 @@ ws_new.Cells(3,3).Interior.ColorIndex=#000000
 # Zellenwert auslesen
 value=ws_new.Cells(2,2).Value
 ```
+&nbsp;
+
+# User-Defined Classes (OOP)
+
+&nbsp;
+
+<a name="ch6-1"></a>
+### 6.1 Basics  
+
+Example class:
+
+```
+>>> class Worker:
+        def __init__(self, name, pay):                   # Initialize when created
+            self.name = name                             # self is the new object
+            self.pay = pay
+        def lastName(self):
+            return self.name.split()[-1]                 # Split string on blanks
+        def giveRaise(self, percent):
+            self.pay *= (1.0 + percent)                  # Update pay in place
+```
+
+This class defines a new kind of object that will have *name* and *pay* attributes (sometimes called *state information*), as well as two bits of behavior coded as functions (normally called *methods*). Calling the class like a function generates instances of our new type, and the class’s methods automatically receive the instance being processed by a given method call (in the *self* argument):
+
+```
+>>> bob = Worker('Bob Smith', 50000)    # Make two instances
+>>> sue = Worker('Sue Jones', 60000)    # Each has name and pay attrs
+>>> bob.lastName()                      # Call method: bob is self
+'Smith'
+>>> sue.lastName()                      # sue is the self subject
+'Jones'
+>>> sue.giveRaise(.10)                  # Updates sue's pay
+>>> sue.pay
+66000.0
+```
+
+> The implied “self” object is why we call this an *object-oriented* model: there is always an implied subject in functions within a class. In a sense, though, the class-based type simply builds on and uses core types—a user-defined *Worker* object here, for example, is just a collection of a string and a number (*name* and *pay*, respectively), plus functions for processing those two built-in objects.  
+
+The larger story of classes is that their inheritance mechanism supports software hierarchies that lend themselves to customization by extension. We extend software by
+writing new classes, not by changing what already works. You should also know that classes are an optional feature of Python, and simpler built-in types such as lists and
+dictionaries are often better tools than user-coded classes.  
 
 &nbsp;
 

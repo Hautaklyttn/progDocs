@@ -542,7 +542,7 @@ When you pass a module name to the *dir()* function, it returns  the list of the
 'strip', 'swapcase', 'title', 'translate', 'upper', 'zfill']
 ```
 
-The names with double underscores in this list represent the implementation of the string object and are available to support customization. The __add__ method of strings, for example, is what really performs concatenation; Python maps the first of the following to the second internally, though you shouldn’t usually use the second form yourself (it’s less intuitive, and might even run slower):
+The names with double underscores in this list represent the implementation of the string object and are available to support customization. The **\_\_add\_\_** method of strings, for example, is what really performs concatenation; Python maps the first of the following to the second internally, though you shouldn’t usually use the second form yourself (it’s less intuitive, and might even run slower):
 
 ```
 >>> S + 'NI!'

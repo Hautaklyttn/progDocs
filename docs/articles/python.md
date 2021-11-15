@@ -525,6 +525,34 @@ When you pass a module name to the *dir()* function, it returns  the list of the
 ['__doc__', '__stderr__', '__stdin__', '__stdout', '__getframe', 'api_version', 'argv', ...]
 ```
 
+```
+>>> s = 'random_string'
+>>> dir(s)
+['__add__', '__class__', '__contains__', '__delattr__', '__dir__', '__doc__',
+'__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__',
+'__getnewargs__', '__gt__', '__hash__', '__init__', '__iter__', '__le__',
+'__len__', '__lt__', '__mod__', '__mul__', '__ne__', '__new__', '__reduce__',
+'__reduce_ex__', '__repr__', '__rmod__', '__rmul__', '__setattr__', '__sizeof__',
+'__str__', '__subclasshook__', 'capitalize', 'casefold', 'center', 'count',
+'encode', 'endswith', 'expandtabs', 'find', 'format', 'format_map', 'index',
+'isalnum', 'isalpha', 'isdecimal', 'isdigit', 'isidentifier', 'islower',
+'isnumeric', 'isprintable', 'isspace', 'istitle', 'isupper', 'join', 'ljust',
+'lower', 'lstrip', 'maketrans', 'partition', 'replace', 'rfind', 'rindex',
+'rjust', 'rpartition', 'rsplit', 'rstrip', 'split', 'splitlines', 'startswith',
+'strip', 'swapcase', 'title', 'translate', 'upper', 'zfill']
+```
+
+The names with double underscores in this list represent the implementation of the string object and are available to support customization. The __add__ method of strings, for example, is what really performs concatenation; Python maps the first of the following to the second internally, though you shouldn’t usually use the second form yourself (it’s less intuitive, and might even run slower):
+
+```
+>>> S + 'NI!'
+'spamNI!'
+>>> S.__add__('NI!')
+'spamNI!'
+```
+
+In general, leading and trailing double underscores is the naming pattern Python uses for implementation details. The names without the underscores in this list are the callable methods on string objects.
+
 &nbsp;
 
 <a name="ch2-1-3"></a>

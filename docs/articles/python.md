@@ -234,9 +234,7 @@ h
 **Achtung:**
 > Wie in Java aber nicht wie in C oder C++, können Strings in Python nicht verändert werden. Versucht man eine indizierte Position zu ändern, erzeugt man eine Fehlermeldung.
 
-**Workaround**  
-
-You can change text-based data in place if you either expand it into a *list* of individual characters and join it back together with nothing between:
+**Workaround:** You can change text-based data in place if you either expand it into a *list* of individual characters and join it back together with nothing between:
 
 ```python
 >>> S = 'shrubbery'
@@ -244,7 +242,7 @@ You can change text-based data in place if you either expand it into a *list* of
 >>> L
 ['s', 'h', 'r', 'u', 'b', 'b', 'e', 'r', 'y']
 
->>> L[1] = 'c'                                  # Change it in place
+>>> L[1] = 'c'                                    # Change it in place
 >>> ''.join(L)                                    # Join with empty delimiter
 'scrubbery'
 

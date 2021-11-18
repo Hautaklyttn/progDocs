@@ -48,6 +48,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.6 Call file in same folder</font>](#ch4-6)   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.7 Increment Characters</font>](#ch4-7)   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.8 XML Handling</font>](#ch4-8)   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.9 Binding manuell triggern</font>](#ch4-9)     
  
 ### 5. IPG CarMaker
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Basics</font>](#ch5-1)  
@@ -1067,6 +1068,19 @@ next a
                249
                248
    ```
+              
+&nbsp;
+
+<a name="ch4-9"></a>
+### 4.9 *Binding* manuell triggern
+              
+To activate a binding script, you need an event sent to a widget. The `event generate` command does precisely that. You can generate “real” events (like `<ButtonPress-1>` or `<KeyRelease-command>`) or you can generate “virtual” events (like `<<ComboboxSelected>>`) and in fact all virtual events are generated via `event generate`.  
+              
+ ```c
+event generate <widget_handle> <event_tag>
+ ```  
+\<widget-handle\> := Widget handle, z.B. *.f.btn.start*  
+\<event_tag\> := Binding name, z.B. \<\<ComboboxSelected\>\> oder \<\<Enter\>\>  
 
 &nbsp;
 

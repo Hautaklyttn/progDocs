@@ -266,9 +266,16 @@ Returns the class name for \<window\>, i.e. it returns the kind of widget (e.g. 
 #### 2.2.2 Widget-bezogene Informationen ermitteln - `cget`  
 Um widget-Parameter zu ermitteln (z.B. '-text' oder '-command') wird der einfache *cget*-Befehl verwendet:  
 ```c
-<window> cget -<param>
+<widget-handle> cget -<param>
 ```  
-\<window\> := Fenster handle, z.B. *.f.btn.start*  
+
+oder (um eine Liste aller Parameter mit Werten zu erhalten)
+  
+```c
+<widget-handle> configure
+``` 
+
+\<widget-handle\> := Widget handle, z.B. *.f.btn.start*  
 \<param\> := Parameter handle, z.B. *command* oder *text*  
 &nbsp;  
 

@@ -25,7 +25,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.1 Fenster-bezogene Informationen ermitteln - `winfo`</font>](#ch2-2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.2 Widget-bezogene Informationen ermitteln - `cget`</font>](#ch2-2-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.3 Menü-bezogene Informationen ermitteln - `entrycget`</font>](#ch2-2-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.4 Menü-Eintrag hinzufügen</font>](#ch2-2-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.4 Bindings ermitteln</font>](#ch2-2-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2.5 Menü-Eintrag hinzufügen</font>](#ch2-2-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Unterdrückung des leeren `wish`-Fensters</font>](#ch2-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 `grid` Layout Manager</font>](#ch2-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Darstellung dynamischer Daten (2D-Plot)</font>](#ch2-5)  
@@ -294,7 +295,24 @@ liefert die Funktion die im DropDown-Menü "Realtime System" an vierter Stelle h
 &nbsp;  
 
 <a name="ch2-2-4"></a>
-#### 2.2.4 Menü-Eintrag hinzufügen  
+#### 2.2.4 *Bindings* ermitteln  
+Um alle Bindings aufzulisten die ein Widget beinhaltet:  
+```c
+bind <widget_handle>
+```  
+ 
+Um das Kommando hinter einem Binding zu erhalten:  
+```c
+bind <widget_handle> <event_spec>
+```   
+  
+\<widget-handle\> := Widget handle, z.B. *.f.btn.start*  
+\<event_spec\> := Binding name, z.B. \<\<ComboboxSelected\>\> oder \<\<Enter\>\>    
+
+&nbsp;  
+  
+<a name="ch2-2-5"></a>
+#### 2.2.5 Menü-Eintrag hinzufügen  
 Um einen neuen Menüpunkt an beliebiger Stelle im Untermenü hinzuzufügen:  
 ```c
 <menu_handle> insert <index> <type> -lab <name> -comm <befehl>
@@ -303,7 +321,7 @@ Um einen neuen Menüpunkt an beliebiger Stelle im Untermenü hinzuzufügen:
 \<name\> := gewünschter Name im Menü  
 \<befehl\> := aufzurufendes Tcl-File oder Tcl-Proc  
 
-&nbsp;  
+&nbsp;    
 
 <a name="ch2-3"></a>
 ### 2.3 Unterdrückung des leeren `wish`-Fensters  

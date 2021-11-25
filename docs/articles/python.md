@@ -59,6 +59,11 @@ layout: default
 ### 6. User-Defined Classes (OOP)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Basics</font>](#ch6-1)  
 
+### 7. GUI Development - *tkinter*  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.1 Basics</font>](#ch7-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2 Configuration Options</font>](#ch7-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2.1 Coupling Widget Variables</font>](#ch7-2-1) 
+
 &nbsp;
 
 ---  
@@ -1095,6 +1100,7 @@ ws_new.Cells(3,3).Interior.ColorIndex=#000000
 # Zellenwert auslesen
 value=ws_new.Cells(2,2).Value
 ```
+
 &nbsp;
 
 # User-Defined Classes (OOP)
@@ -1136,6 +1142,135 @@ This class defines a new kind of object that will have *name* and *pay* attribut
 The larger story of classes is that their inheritance mechanism supports software hierarchies that lend themselves to customization by extension. We extend software by
 writing new classes, not by changing what already works. You should also know that classes are an optional feature of Python, and simpler built-in types such as lists and
 dictionaries are often better tools than user-coded classes.  
+
+&nbsp;
+
+# GUI Development - *tkinter*
+
+&nbsp;
+
+<a name="ch7-1"></a>
+## 7.1 Basics  
+The `tkinter` package (“Tk interface”) is the standard Python interface to the Tcl/Tk GUI toolkit. Both Tk and `tkinter` are available on most Unix platforms, including macOS, as well as on Windows systems.  
+
+Running `python -m tkinter` from the command line should open a window demonstrating a simple Tk interface, letting you know that `tkinter` is properly installed on your system, and also showing what version of Tcl/Tk is installed, so you can read the Tcl/Tk documentation specific to that version.  
+
+When your Python application uses a class in Tkinter, e.g., to create a widget, the `tkinter` module first assembles a Tcl/Tk command string. It passes that Tcl command string to an internal *_tkinter* binary module, which then calls the Tcl interpreter to evaluate it. The Tcl interpreter will then call into the Tk and/or Ttk packages, which will in turn make calls to Xlib, Cocoa, or GDI.  
+&nbsp;
+
+Support for Tkinter is spread across several modules. Most applications will need the main `tkinter` module, as well as the `tkinter.ttk` module, which provides the modern themed widget set and API:
+```
+from tkinter import *
+from tkinter import ttk
+```  
+&nbsp;
+
+> class tkinter.Tk (screenName=None, baseName=None, className='Tk', useTk=1)  
+
+The `Tk` class is instantiated without arguments. This creates a toplevel widget of Tk which usually is the main window of an application. Each instance has its own associated Tcl interpreter.
+&nbsp;
+
+**The modules that provide Tk support include:**  
+
+`tkinter`  
+Main Tkinter module.
+
+`tkinter.colorchooser`  
+Dialog to let the user choose a color.  
+
+`tkinter.commondialog`  
+Base class for the dialogs defined in the other modules listed here.  
+
+`tkinter.filedialog`  
+Common dialogs to allow the user to specify a file to open or save.  
+
+`tkinter.font`  
+Utilities to help work with fonts.  
+
+`tkinter.messagebox`  
+Access to standard Tk dialog boxes.  
+
+`tkinter.scrolledtext`  
+Text widget with a vertical scroll bar built in.  
+
+`tkinter.simpledialog`  
+Basic dialogs and convenience functions.  
+
+`tkinter.ttk`  
+Themed widget set introduced in Tk 8.5, providing modern alternatives for many of the classic widgets in the main tkinter module.  
+
+&nbsp;
+
+**Important Tk Concepts**  
+
+`widgets`  
+A Tkinter user interface is made up of individual widgets. Each widget is represented as a Python object, instantiated from classes like ttk.Frame, ttk.Label, and ttk.Button.  
+
+`widget hierarchy`  
+Widgets are arranged in a hierarchy. The label and button were contained within a frame, which in turn was contained within the root window. When creating each child widget, its parent widget is passed as the first argument to the widget constructor.  
+
+`configuration options`  
+Widgets have configuration options, which modify their appearance and behavior, such as the text to display in a label or button. Different classes of widgets will have different sets of options.  
+
+`geometry management`  
+Widgets aren’t automatically added to the user interface when they are created. A geometry manager like grid controls where in the user interface they are placed.  
+
+`event loop`  
+Tkinter reacts to user input, changes from your program, and even refreshes the display only when actively running an event loop. If your program isn’t running the event loop, your user interface won’t update.  
+
+&nbsp;
+
+<a name="ch7-2"></a>
+## 7.2 Configuration Options  
+
+Options control things like the color and border width of a widget. Options can be set in three ways:  
+
+1. At object creation time, using keyword arguments  
+   ``` 
+   fred = Button(self, fg="red", bg="blue")
+   ```
+2. After object creation, treating the option name like a dictionary index  
+   ```
+   fred["fg"] = "red"
+   fred["bg"] = "blue"
+   ```
+3. Use the config() method to update multiple attrs subsequent to object creation
+   ```
+   fred.config(fg="red", bg="blue")
+   ```
+
+&nbsp;
+
+To find out what configuration options are available on any widget, call its `configure()` method, which returns a dictionary containing a variety of information about each object, including its default and current values. Use `keys()` to get just the names of each option.  
+
+```
+btn = ttk.Button(frm, ...)
+print(btn.configure().keys())
+```
+
+### 7.2.1 Coupling Widget Variables 
+The current-value setting of some widgets (like text **entry** widgets) can be connected directly to application variables by using special options. These options are `variable`, `textvariable`, `onvalue`, `offvalue`, and `value`. This connection works both ways: if the variable changes for any reason, the widget it’s connected to will be updated to reflect the new value.
+
+Unfortunately, in the current implementation of `tkinter` it is not possible to hand over an arbitrary Python variable to a widget through a `variable` or `textvariable` option. The only kinds of variables for which this works are variables that are subclassed from a class called Variable, defined in `tkinter`.
+
+There are many useful subclasses of Variable already defined: `StringVar`, `IntVar`, `DoubleVar`, and `BooleanVar`. To read the current value of such a variable, call the `get()` method on it, and to change its value you call the `set()` method. If you follow this protocol, the widget will always track the value of the variable, with no further intervention on your part.
+
+```
+   ...
+
+   # Create the application variable.
+   self.contents = tk.StringVar()
+   
+   # Set it to some value.
+   self.contents.set("this is a variable")
+   
+   # Tell the entry widget to watch this variable.
+   self.entrythingy["textvariable"] = self.contents
+
+   def print_contents(self, event):
+         print("Hi. The current entry content is:", self.contents.get())
+   ...
+```
 
 &nbsp;
 

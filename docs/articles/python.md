@@ -1145,6 +1145,8 @@ The larger story of classes is that their inheritance mechanism supports softwar
 
 ### The importance of <u>self</u>  
 
+To confirm: when you define a class you are, in effect, defining a *custom factory function* that you can then use in your code to create instances:  
+
 ![so](../assets/pics/python_self.png)  
 
 &nbsp;
@@ -1157,7 +1159,7 @@ Check out what Python turns your object creation invocation into.
 
 > Every method’s first argument is *self*.  
 
-In fact, not only does the __init__() method require *self* as its first argument, but *so does every other method defined within your class.*
+In fact, not only does the \_\_init\_\_() method require *self* as its first argument, but *so does every other method defined within your class.*
 
 Python arranges for the first argument of every method to be the invoking (or *calling*) object instance. Let’s extend the sample class to store a value in a object attribute called thing with the value set during initialization. Another method, called *how_big()*, returns the length of *thing* due to the use of the *len()* BIF:  
 ![so](../assets/pics/python_self_02.png)  

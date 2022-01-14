@@ -1110,7 +1110,7 @@ value=ws_new.Cells(2,2).Value
 <a name="ch6-1"></a>
 ## 6.1 Basics  
 
-Example class:
+### Example class
 
 ```
 >>> class Worker:
@@ -1139,9 +1139,33 @@ This class defines a new kind of object that will have *name* and *pay* attribut
 
 > The implied “self” object is why we call this an *object-oriented* model: there is always an implied subject in functions within a class. In a sense, though, the class-based type simply builds on and uses core types—a user-defined *Worker* object here, for example, is just a collection of a string and a number (*name* and *pay*, respectively), plus functions for processing those two built-in objects.  
 
-The larger story of classes is that their inheritance mechanism supports software hierarchies that lend themselves to customization by extension. We extend software by
-writing new classes, not by changing what already works. You should also know that classes are an optional feature of Python, and simpler built-in types such as lists and
-dictionaries are often better tools than user-coded classes.  
+The larger story of classes is that their inheritance mechanism supports software hierarchies that lend themselves to customization by extension. We extend software by writing new classes, not by changing what already works. You should also know that classes are an optional feature of Python, and simpler built-in types such as lists and dictionaries are often better tools than user-coded classes.  
+
+&nbsp;
+
+### The importance of <u>self</u>  
+
+![so](../assets/pics/python_self.png)  
+
+&nbsp;
+
+Check out what Python turns your object creation invocation into.  
+
+> The target identifer is assigned to the self argument.
+  
+*This is a very important argument assignment.* Without it, the Python interpreter can’t work out which object instance to apply the method invocation to. Note that the class code is designed to be shared among all of the object instances: the methods are shared, the attributes are not. The self argument helps identify which object instance’s data to work on.  
+
+> Every method’s first argument is *self*.  
+
+In fact, not only does the __init__() method require *self* as its first argument, but *so does every other method defined within your class.*
+
+Python arranges for the first argument of every method to be the invoking (or *calling*) object instance. Let’s extend the sample class to store a value in a object attribute called thing with the value set during initialization. Another method, called *how_big()*, returns the length of *thing* due to the use of the *len()* BIF:  
+![so](../assets/pics/python_self_02.png)  
+
+&nbsp;
+
+When you invoke a class method on an object instance, Python arranges for the first argument to be the invoking object instance, which is *always* assigned to each method’s self argument. This fact alone explains why *self* is so important and also why self needs to be the *first argument to every object method you write*:  
+![so](../assets/pics/python_self_03.png)  
 
 &nbsp;
 
@@ -1168,9 +1192,10 @@ from tkinter import ttk
 > class tkinter.Tk (screenName=None, baseName=None, className='Tk', useTk=1)  
 
 The `Tk` class is instantiated without arguments. This creates a toplevel widget of Tk which usually is the main window of an application. Each instance has its own associated Tcl interpreter.
+
 &nbsp;
 
-**The modules that provide Tk support include:**  
+**The modules that provide Tk support include**  
 
 `tkinter`  
 Main Tkinter module.
@@ -1247,6 +1272,8 @@ To find out what configuration options are available on any widget, call its `co
 btn = ttk.Button(frm, ...)
 print(btn.configure().keys())
 ```
+
+&nbsp;
 
 ### 7.2.1 Coupling Widget Variables 
 The current-value setting of some widgets (like text **entry** widgets) can be connected directly to application variables by using special options. These options are `variable`, `textvariable`, `onvalue`, `offvalue`, and `value`. This connection works both ways: if the variable changes for any reason, the widget it’s connected to will be updated to reflect the new value.

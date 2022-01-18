@@ -1108,7 +1108,7 @@ for {set i 1} {$i < 4} {incr i} {
   for {set j 1} {$j < 4} {incr j} {
     ...
     set widget CS_BIT::G[set i]_[set j]_CF
-    set idx [expr $::CS_BIT_COUNT - [subst $$widget]]
+    set idx [subst $$widget]
     ...
   }
 }

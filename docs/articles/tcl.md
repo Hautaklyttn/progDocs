@@ -48,7 +48,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.6 Call file in same folder</font>](#ch4-6)   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.7 Increment Characters</font>](#ch4-7)   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.8 XML Handling</font>](#ch4-8)   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.9 Binding manuell triggern</font>](#ch4-9)     
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.9 Binding manuell triggern</font>](#ch4-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.10 Nested Dereferencing</font>](#ch4-10)     
  
 ### 5. IPG CarMaker
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Basics</font>](#ch5-1)  
@@ -1081,6 +1082,38 @@ event generate <widget_handle> <event_tag>
  ```  
 \<widget-handle\> := Widget handle, z.B. *.f.btn.start*  
 \<event_tag\> := Binding name, z.B. \<\<ComboboxSelected\>\> oder \<\<Enter\>\>  
+
+&nbsp;
+
+<a name="ch4-10"></a>
+### 4.10 Nested Dereferencing  
+
+You can read from an arbitrarily-named variable using the `set` command with *one* argument.  
+
+Example 1:
+```c
+set currActECU 0
+set val_0 "misc"
+
+set val [set val_$currActECU]
+
+# Value in 'val' is now "misc"
+```
+
+&nbsp;
+Example 2:
+```c
+for {set i 1} {$i < 4} {incr i} {
+  ...
+  for {set j 1} {$j < 4} {incr j} {
+    ...
+    set widget CS_BIT::G[set i]_[set j]_CF
+    set idx [expr $::CS_BIT_COUNT - [subst $$widget]]
+    ...
+  }
+}
+# Value in variable 'idx' is the value behind 'CS_BIT::G1_1_CF' (for i=1, j=1)
+```
 
 &nbsp;
 

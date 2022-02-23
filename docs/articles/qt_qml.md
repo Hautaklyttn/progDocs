@@ -61,7 +61,7 @@ layout: default
 
 &nbsp; 
 
-<a name="ch8-1"></a>
+<a name="ch1-1"></a>
 ### 1.1 Qt5 / Qt Quick / QML  
 **Qt5** is a complete refreshing of the very successful Qt4 release. Qt5 is focusing on the following:  
 

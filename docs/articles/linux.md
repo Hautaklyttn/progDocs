@@ -103,8 +103,6 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-&nbsp;
-
 ***/ETC* directory**
 
 ![0c](../assets/pics/linux_etc.png)  

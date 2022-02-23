@@ -37,7 +37,7 @@ layout: default
 <a name="ch1-2"></a>
 ### 1.2 Directories Explained  
 
-<font size="-1">&rarr; Info taken from <a href="https://www.youtube.com/watch?v=42iQKuQodW4">here.</a> Very good short video.</font>
+<font size="-1">&rarr; Info taken from <a href="https://www.youtube.com/watch?v=42iQKuQodW4">here.</a> Very good short video.</font>  
 
 The directory structure is written down in the *Filesystem Hierarchy Standard* (FHS 3).
 
@@ -47,7 +47,9 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */BIN* directory  
+&nbsp;
+
+***/BIN* directory**  
 
 ![0c](../assets/pics/linux_bin.png)
 
@@ -56,7 +58,9 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */SBIN* directory  
+&nbsp;
+
+***/SBIN* directory**  
 
 ![0c](../assets/pics/linux_sbin.png)
 
@@ -65,7 +69,9 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */LIB* directory
+&nbsp;
+
+***/LIB* directory**
 
 ![0c](../assets/pics/linux_lib.png)
 
@@ -73,7 +79,9 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */USR/BIN* directory
+&nbsp;
+
+***/USR/BIN* directory**
 
 ![0c](../assets/pics/linux_usr_bin.png)
 
@@ -82,7 +90,9 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */USR/LOCAL/BIN* directory
+&nbsp;
+
+***/USR/LOCAL/BIN* directory**
 
 ![0c](../assets/pics/linux_usr_local_bin.png)
 
@@ -91,7 +101,11 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */ETC* directory
+&nbsp;
+
+&nbsp;
+
+***/ETC* directory**
 
 ![0c](../assets/pics/linux_etc.png)  
 
@@ -101,7 +115,9 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */HOME/*\<name\> directory
+&nbsp;
+
+***/HOME/*\<name\> directory**
 
 ![0c](../assets/pics/linux_home.png)  
 
@@ -110,7 +126,9 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */BOOT* directory
+&nbsp;
+
+***/BOOT* directory**
 
 ![0c](../assets/pics/linux_boot.png)  
 
@@ -118,7 +136,9 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */DEV* directory
+&nbsp;
+
+***/DEV* directory**
 
 ![0c](../assets/pics/linux_dev.png)  
 
@@ -128,7 +148,9 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */OPT* directory
+&nbsp;
+
+***/OPT* directory**
 
 ![0c](../assets/pics/linux_opt.png)
 
@@ -137,7 +159,9 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */VAR* directory
+&nbsp;
+
+***/VAR* directory**
 
 ![0c](../assets/pics/linux_var.png)
 
@@ -146,7 +170,9 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */TMP* directory
+&nbsp;
+
+***/TMP* directory**
 
 ![0c](../assets/pics/linux_tmp.png)
 
@@ -154,7 +180,9 @@ The directory structure is written down in the *Filesystem Hierarchy Standard* (
 
 &nbsp;
 
-#### */PROC* directory
+&nbsp;
+
+***/PROC* directory**
 
 ![0c](../assets/pics/linux_proc.png)
 

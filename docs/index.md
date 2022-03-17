@@ -45,6 +45,11 @@ knx
 
 &nbsp;
 
+vector  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">CAPL</font>](./articles/vectorCAPL.html)  
+
+&nbsp;
+
 projects  
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Revolving Donut</font>](./articles/projects/donut.html)  

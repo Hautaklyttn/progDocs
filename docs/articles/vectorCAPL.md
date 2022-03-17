@@ -73,7 +73,8 @@ CAPL-Programme sind event-orientiert. Das heißt, sie bestehen aus einzelnen Fun
 
 ```c
 includes {
-    #include "D:\..."           Additional CAPL files that contain generic code
+    #include "D:\..."           
+                                Additional CAPL files that contain generic code
                                 that can be reused in other programs
 }
 
@@ -91,8 +92,10 @@ on key 'A' {
 }
 
 void myFunction (int input1, int input2) {
+
+    // Custom code here
                                 You can create your own functions (special 
-    // Custom code here         handler) that contain related code to be
+                                handler) that contain related code to be
                                 executed frequently
 }
 ```

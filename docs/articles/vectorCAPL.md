@@ -13,8 +13,8 @@ layout: default
 
 ### 1. CAPL Programmierung     
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 Basics</font>](#ch1-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Einbinden von CAPL-Programmen</font>](#ch1-2) 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Deklaration von Botschaften</font>](#ch1-3)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Einbinden von CAPL-Programmen</font>](#ch1-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Deklaration von Botschaften</font>](#ch1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Auf Botschaften reagieren</font>](#ch1-4)  
  
 &nbsp;

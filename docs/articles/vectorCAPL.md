@@ -16,7 +16,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Einbinden von CAPL-Programmen</font>](#ch1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Deklaration von Botschaften</font>](#ch1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 Auf Botschaften reagieren</font>](#ch1-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 CAN Protocol Functions</font>](#ch1-5)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 CAN Protocol Functions</font>](#ch1-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Keyword *this* in Event Procedures</font>](#ch1-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Using CAN Protocol Controller Events</font>](#ch1-7)  
  
@@ -332,7 +332,7 @@ The detectable CAN controller events used within the CAPL program environment in
 
 &nbsp;
 
-**1.7.1 CAN controller States**  
+1.7.1 CAN controller States  
 
 The CAN protocol controllers error states detected (from all active CAN protocol controllers) in CAPL as events are
   - Error Active
@@ -356,7 +356,7 @@ The following shows these different error states and the counter values that cau
 
 &nbsp;
 
-**1.7.2 CAN controller Events**  
+1.7.2 CAN controller Events  
 
 |CAN Controller Event|Occurs When|Procedure Executed|
 |:---|:---|:---|

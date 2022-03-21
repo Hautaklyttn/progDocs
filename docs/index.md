@@ -8,7 +8,7 @@
 layout: home
 ---
 
-[c / c++]  
+c / c++  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Language Description</font>](./articles/c_cpp.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Function Collection C</font>](./articles/c_funcCollect.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Function Collection C++</font>](./articles/cpp_funcCollect.html)  
@@ -50,9 +50,10 @@ vector
 
 &nbsp;
 
-projects  
+projects / how to's  
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Revolving Donut</font>](./articles/projects/donut.html)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Raycasting</font>](./articles/projects/raycasting.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Code Walkthrough: Diablo</font>](./articles/projects/code_walkthrough_diablo.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Code Walkthrough: Doom (tbd)</font>](./articles/projects/code_walkthrough_diablo.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Code Walkthrough: Wolfenstein 3D (tbd)</font>](./articles/projects/code_walkthrough_wolf3D.html)  

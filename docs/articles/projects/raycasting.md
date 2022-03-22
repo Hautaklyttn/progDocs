@@ -18,6 +18,7 @@ layout: default
 ### 2. The process of ray-casting   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Creating a World</font>](#ch2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Defining project attributes</font>](#ch2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Finding walls</font>](#ch2-3)  
 
 &nbsp;
 
@@ -25,7 +26,8 @@ layout: default
 
 &nbsp;
 
-Content originally from &rarr; [here](https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/).
+<font size="-1">&rarr; Content originally from </font> [<font size="-1">here</font>](https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/).
+<font size="-1">&rarr; C code taken from video series </font> [<font size="-1">here</font>](https://www.youtube.com/watch?v=gYRrGTC7GtA&t=3s).
 
 &nbsp;
 
@@ -116,4 +118,49 @@ Note: Any kind of cartesian coordinate system would work just as well. However, 
 <a name="ch2-2"></a>
 ## 2.2 Defining project attributes  
 
-... tbd ...
+Now that we have the world, we need to define some attributes before we can project and render the world. Specifically, we need to know these attributes:
+
+1. Player/viewer’s height, player’s field of view (FOV), and player’s position.
+2. Projection plane’s dimension.
+3. Relationship between player and projection plane.
+
+The player should be able to see what is in front of him/her. For this, we will need to define a **field of view (FOV)**. The FOV determines how wide the player sees the world in front of him/her (see Figure below). Most humans have a FOV of 90 degrees or more. However, FOV with this angle does not look good on screen. Therefore, we define the FOV to be 60 degrees through trial and experimentation (on how good it looks on screen). The player’s height is defined to be 32 units because this is a reasonable assumption considering that walls (the cubes) are 64 units high.
+
+![0c](../../assets/pics/raycast_05.png)  
+
+To put the player inside the world, we need to define the **player’s X coordinate**, the **player’s Y coordinate**, and the **angle that the player is facing to**. These three attributes forms the “point of view” of the player.
+
+Suppose that the player is put somewhere in the middle of grid coordinate (1,2) at a viewing angle of 45 degrees relative to the world, then the player’s *point of view* and FOV will be like in the figure below. (One grid consist is 64 x 64 units. Thus, we can also say that the player is in unit coordinate (96,160)).
+
+![0c](../../assets/pics/raycast_06.png)  
+
+We need to define a projection plane so that we can project what the player sees into the projection plane. A projection plane of 320 units wide and 200 units high is a good choice, since this is the resolution of most VGA video cards. (Video resolution is usually referred in pixels, so think of 1 pixel as equal to 1 unit.)  
+
+When the player’s *point of view* is projected into the projection plane, the world should look like the scene in figure below.  
+
+![0c](../../assets/pics/raycast_07.png)  
+
+> By knowing the *field of view* (FOV) and the dimension of the projection plane, we can calculate the angle between subsequent rays and the distance between the player and the projection plane.  
+
+&nbsp;
+
+**Here is what we know:**
+![0c](../../assets/pics/raycast_08.png)  
+
+**Here is what we can calculate** (most of these are high school level math):
+![0c](../../assets/pics/raycast_09.png)  
+
+**So now we know:**
+
+- Dimension of the Projection Plane = 320 x 200 units  
+- Center of the Projection Plane = (160,100)  
+- Distance to the Projection Plane = 277 units  
+- Angle between subsequent rays = 60/320 degrees  
+
+(We will occasionally refer the “angle between subsequent rays” as the “angle between subsequent columns.” Later, this angle will be used to loop from column to column. The distance between player to the projection plane will be used for scaling.)
+
+&nbsp; 
+
+<a name="ch2-3"></a>
+## 2.3 Finding walls  
+

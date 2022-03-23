@@ -19,6 +19,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Creating a World</font>](#ch2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Defining project attributes</font>](#ch2-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Finding walls</font>](#ch2-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 Finding distance to walls</font>](#ch2-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Drawing walls</font>](#ch2-5)  
 
 &nbsp;
 
@@ -26,7 +28,7 @@ layout: default
 
 &nbsp;
 
-&rarr; Content originally from [here](https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/).
+&rarr; Content originally from [here](https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/).  
 &rarr; C code taken from video series [here](https://www.youtube.com/watch?v=gYRrGTC7GtA&t=3s).
 
 &nbsp;
@@ -187,17 +189,19 @@ The trick to **step 2a.** is that instead of checking each pixels, we only have 
 This ray intersects the grids at points A,B,C,D,E, and F:
 ![0c](../../assets/pics/raycast_12.png)  
 
-To find walls, we need to check any grid intersection points that are encountered by the ray; and see if there is a wall on the grid or not. The best way is to check for horizontal and vertical intersections separately. When there is a wall on either a vertical or a horizontal intersection, the checking stops. The distance to both intersection points is then compared, and the closer distance is chosen. This process is illustrated in the following two figures.  
+To find walls, we need to check any grid intersection points that are encountered by the ray; and see if there is a wall on the grid or not. **The best way is to check for horizontal and vertical intersections separately.** When there is a wall on either a vertical or a horizontal intersection, the checking stops. The distance to both intersection points is then compared, and the closer distance is chosen. This process is illustrated in the following two figures.  
+
+&nbsp;
 
 ![0c](../../assets/pics/raycast_13.png)  
 
-Steps of finding intersections with horizontal grid lines:
+Steps of finding intersections with **horizontal grid lines**:
 
 1. Find coordinate of the first intersection (point A in this example).
 2. Find Ya. (Note: Ya is just the height of the grid; however, if the ray is facing up, Ya will be negative, if the ray is facing down, Ya will bepositive.)
 3. Find Xa using the equation given above.
 4. Check the grid at the intersection point. If there is a wall on the grid, stop and calculate the distance.
-5. If there is no wall, extend the to the next intersection point. Notice that the coordinate of the next intersection point -call it (Xnew,Ynew) is Xnew=Xold+Xa, and Ynew=YOld+Ya.
+5. If there is no wall, extend the to the next intersection point. Notice that the coordinate of the next intersection point -call it (Xnew,Ynew) is *Xnew=Xold+Xa*, and *Ynew=YOld+Ya*.
 
 As an example the following is how you can get the point A:  
 
@@ -274,19 +278,46 @@ values will be rounded down.
 
 Programmer’s note: You can see that once we have the value of Xa and Ya, the process is very simple. We just keep adding the old value with Xa and Ya, and perform shift operation, to find out the grid coordinate of the next point hit by the ray.  
 
+&nbsp;
+
 ![0c](../../assets/pics/raycast_14.png)  
 
-Steps of finding intersections with vertical grid lines:
+Steps of finding intersections with **vertical grid lines**:
 
 1. Find coordinate of the first intersection (point B in this example).
-    The ray is facing right in the picture, so B.x = rounded_down(Px/64) * (64) + 64.
-    **If the ray had been facing left B.x = rounded_down(Px/64) * (64) – 1.**
-        A.y = Py + (Px-A.x)*tan(ALPHA);
+    The ray is facing right in the picture, so *B.x = rounded_down(Px/64) \* (64) + 64*.
+    **If the ray had been facing left B.x = rounded_down(Px/64) \* (64) – 1.**  
+        *A.y = Py + (Px-A.x)\*tan(ALPHA)*;
 2. Find Xa. (Note: Xa is just the width of the grid; however, if the ray is facing right, Xa will be **positive**, if the ray is facing left, Ya will be **negative**.)
 3. Find Ya using the equation given above.
 4. Check the grid at the intersection point. If there is a wall on the grid, stop and calculate the distance. 
-5. If there is no wall, extend the to the next intersection point. Notice that the coordinate of the next intersection point -call it (Xnew,Ynew) is just Xnew=Xold+Xa, and Ynew=YOld+Ya.  
+5. If there is no wall, extend the to the next intersection point. Notice that the coordinate of the next intersection point -call it (Xnew,Ynew) is just *Xnew=Xold+Xa*, and *Ynew=YOld+Ya*.  
 
 In the picture, First, the ray hits point B. Grid (2,2) is checked. There no wall on (2,2) so the ray is extended to E. Grid (3,0) is checked. There is a wall there, so we stop and calculate the distance.
 
-In this example, point D is closer than E. So the wall slice at D (not E) will be drawn.
+In this example, point D is closer than E. So the wall slice at D (not E) will be drawn.  
+
+&nbsp; 
+
+<a name="ch2-4"></a>
+## 2.4 Finding distance to walls  
+
+There are several ways to find the distance from the viewpoint (player) to the wall slice. They are illustrated below.  
+
+![0c](../../assets/pics/raycast_15.png)  
+
+The sine or cosine functions are cheaper to implement because they can be pre-computed and put into tables. This can be done because ALPHA (player’s POV) has to be between 0 to 360 degrees, so the number of possibilities are limited (the square root method has a virtually unlimited possible values for the x’s and y’s).  
+
+Before drawing the wall, there is one problem that must be taken care of. This problem is known as the “fishbowl effect.” Fishbowl effect happens because ray-casting implementation mixes polar coordinate and Cartesian coordinate together. Therefore, using the above formula on wall slices that are not directly in front of the viewer will gives a longer distance. This is not what we want because it will cause a viewing distortion such as illustrated below.  
+
+![0c](../../assets/pics/raycast_16.png)  
+
+![0c](../../assets/pics/raycast_17.png)  
+
+Thus to remove the viewing distortion, the resulting distance obtained from equations must be multiplied by cos(BETA); where BETA is the angle of the ray that is being cast relative to the viewing angle. On the figure above, the viewing angle (ALPHA) is 90 degrees because the player is facing straight upward. Because we have 60 degrees field of view, BETA is 30 degrees for the leftmost ray and it is -30 degrees for the rightmost ray.
+
+&nbsp; 
+
+<a name="ch2-5"></a>
+## 2.5 Drawing walls  
+

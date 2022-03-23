@@ -202,7 +202,8 @@ Steps of finding intersections with horizontal grid lines:
 As an example the following is how you can get the point A:  
 
 ```c
-Note: remember the Cartesian coordinate is increasing downward, and any fractional values will be rounded down.  
+Note: remember the Cartesian coordinate is increasing downward, and any fractional 
+values will be rounded down.  
 
 ======Finding horizontal intersection ======
 
@@ -217,8 +218,9 @@ Note: remember the Cartesian coordinate is increasing downward, and any fraction
         A.y=rounded_down(224/64) * (64) - 1 = 191;
    
    Now at this point, we can find out the grid coordinate of y.
-   However, we must decide whether A is part of the block above the line, or the block below the line.  
-   Here, we chose to make A part of the block above the line, that is why we subtract 1 from A.y.
+   However, we must decide whether A is part of the block above the line, or the 
+   block below the line. Here, we chose to make A part of the block above the line, 
+   that is why we subtract 1 from A.y.
    So the grid coordinate of A.y is 191/64 = 2;
 
         A.x = Px + (Py-A.y)/tan(ALPHA);
@@ -248,8 +250,9 @@ Note: remember the Cartesian coordinate is increasing downward, and any fraction
         C.x = 151/64 = 2 (grid coordinate), 
         C.y = 127/64 = 1 (grid coordinate) 
 
-   So the grid coordinate of C is (2, 1).(C programmer's note: Remember we always round down, 
-   this is especially true since you can use right shift by 8 to divide by 64).
+   So the grid coordinate of C is (2, 1).(C programmer's note: Remember we always 
+   round down, this is especially true since you can use right shift by 8 to divide 
+   by 64).
 
 5. Grid (2,1) is checked.  
    Again, there is no wall, so the ray is extended to D.  

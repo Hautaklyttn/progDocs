@@ -227,8 +227,8 @@ values will be rounded down.
    that is why we subtract 1 from A.y.
    So the grid coordinate of A.y is 191/64 = 2;
 
-        A.x = Px + (Py-A.y)/tan(ALPHA);
-   In the picture, (assume ALPHA is 60 degrees), 
+        A.x = Px + (Py-A.y)/tan($\alpha$);
+   In the picture, (assume $\alpha$ is 60 degrees), 
         A.x=96 + (224-191)/tan(60) = about 115;
    The grid coordinate of A.x is 115/64 = 1;
 
@@ -287,7 +287,7 @@ Steps of finding intersections with **vertical grid lines**:
 1. Find coordinate of the first intersection (point B in this example).
     The ray is facing right in the picture, so *B.x = rounded_down(Px/64) \* (64) + 64*.
     **If the ray had been facing left B.x = rounded_down(Px/64) \* (64) – 1.**  
-        *A.y = Py + (Px-A.x)\*tan(ALPHA)*;
+        *A.y = Py + (Px-A.x)\*tan($\alpha$)*;
 2. Find Xa. (Note: Xa is just the width of the grid; however, if the ray is facing right, Xa will be **positive**, if the ray is facing left, Ya will be **negative**.)
 3. Find Ya using the equation given above.
 4. Check the grid at the intersection point. If there is a wall on the grid, stop and calculate the distance. 
@@ -306,7 +306,7 @@ There are several ways to find the distance from the viewpoint (player) to the w
 
 ![0c](../../assets/pics/raycast_15.png)  
 
-The sine or cosine functions are cheaper to implement because they can be pre-computed and put into tables. This can be done because ALPHA (player’s POV) has to be between 0 to 360 degrees, so the number of possibilities are limited (the square root method has a virtually unlimited possible values for the x’s and y’s).  
+The sine or cosine functions are cheaper to implement because they can be pre-computed and put into tables. This can be done because $\alpha$ (player’s POV) has to be between 0 to 360 degrees, so the number of possibilities are limited (the square root method has a virtually unlimited possible values for the x’s and y’s).  
 
 Before drawing the wall, there is one problem that must be taken care of. This problem is known as the “fishbowl effect.” Fishbowl effect happens because ray-casting implementation mixes polar coordinate and Cartesian coordinate together. Therefore, using the above formula on wall slices that are not directly in front of the viewer will gives a longer distance. This is not what we want because it will cause a viewing distortion such as illustrated below.  
 
@@ -314,7 +314,7 @@ Before drawing the wall, there is one problem that must be taken care of. This p
 
 ![0c](../../assets/pics/raycast_17.png)  
 
-Thus to remove the viewing distortion, the resulting distance obtained from equations must be multiplied by cos(BETA); where BETA is the angle of the ray that is being cast relative to the viewing angle. On the figure above, the viewing angle (ALPHA) is 90 degrees because the player is facing straight upward. Because we have 60 degrees field of view, BETA is 30 degrees for the leftmost ray and it is -30 degrees for the rightmost ray.
+Thus to remove the viewing distortion, the resulting distance obtained from equations must be multiplied by cos($\beta$); where $\beta$ is the angle of the ray that is being cast relative to the viewing angle. On the figure above, the viewing angle ($\alpha$) is 90 degrees because the player is facing straight upward. Because we have 60 degrees field of view, $\beta$ is 30 degrees for the leftmost ray and it is -30 degrees for the rightmost ray.
 
 &nbsp; 
 

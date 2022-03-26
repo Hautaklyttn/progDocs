@@ -18,9 +18,15 @@ layout: default
 ### 2. The process of Ray-Casting   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Creating a World</font>](#ch2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Defining project attributes</font>](#ch2-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Finding walls</font>](#ch2-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 Finding distance to walls</font>](#ch2-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Drawing walls</font>](#ch2-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Finding Walls</font>](#ch2-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 Finding distance to Walls</font>](#ch2-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Drawing Walls</font>](#ch2-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.6 Texture mapped Walls</font>](#ch2-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.7 Drawing Floors </font>](#ch2-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.8 Drawing Ceilings </font>](#ch2-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.9 Making the Player Move </font>](#ch2-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.10 Looking Up and Down </font>](#ch2-10)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.11 Shading </font>](#ch2-11)  
 
 &nbsp;
 
@@ -321,3 +327,203 @@ Thus to remove the viewing distortion, the resulting distance obtained from equa
 <a name="ch2-5"></a>
 ## 2.5 Drawing walls  
 
+In the previous steps, 320 rays are casts, when each ray hits a wall, the distance to that wall is computed. Knowing the distance, the wall slice can then be projected onto the projection plane. To do this, the height of the projected wall slice need to be found. It turns out that this can be done with a simple formula:  
+
+```c
+                           Actual Slice Height
+Projected Slice Height = ----------------------- * Distance to Projection Plane
+                          Distance to the Slice
+```
+
+The logic behind this formula is explained in the figure below.  
+
+![0c](../../assets/pics/raycast_18.png)  
+
+Our world consist cubes, where the dimension of each cube is 64x64x64 units, so the wall height is 64 units. We also already know the distance of the player to the projection plane (which is 277). Thus, the equation can be simplified to:  
+**Projected Slice Height = 64 / Distance to the Slice * 277**  
+
+In an actual implementation, several things can be considered:  
+- For instance, 64/277 can be pre-computed, since this will be a constant value. Once this is calculated, the wall slice can be drawn on the screen. This can be done by simply drawing a vertical line on the corresponding column on the projection plane (screen).
+- Remember where the number 277 came from?  This number can actually be deviated a bit without causing any huge impact.  In fact, it will save time to use the value of 255 because the programmer can use shift operator to save computing time (shift right by 3 to multiply, shift left to divide).
+
+For example, suppose the ray at column 200 hits a wall slice at distance of 330 units. The projection of the slice will be 64 / 330 * 277 = 54 (rounded up). Since the center of the projection plane is defined to be at 100. The middle of the wall slice should appear at this point. Hence, the top position where the wall slice should be drawn is 100-27=73. (where 27 is one half of 54). Finally, the projection of the slice will look something like the next figure.  
+
+![0c](../../assets/pics/raycast_19.png)  
+
+&nbsp; 
+
+<a name="ch2-6"></a>
+## 2.6 Texture Mapped Walls  
+
+To make the walls more attractive, the walls can be painted with texture (bitmap) using a technique known as texture mapping. (Texture mapping in general refers to a technique of painting a bitmap/texture onto a surface.) For the cube world, we use bitmaps that have the size of 64 by 64 pixels. This size is chosen because 64 by 64 is also the size of the cube facets that we are using in our world. It is possible to use different size bitmaps, but using the same size simplifies the texture mapping process.  
+
+If we are to map a texture onto an arbitrary polygon, the texture mapping process will be complicated. Fortunately, on the ray-casting world that we are creating, texture mapping is just a matter of scaling a slice (a column) of bitmap (see figure below).  
+
+![0c](../../assets/pics/raycast_20.png)  
+
+When the ray is looking for the wall intersection, the offset (position of the ray relative to the grid) can be found easily. This offset can then be used to determine which column of the bitmap is to be drawn as the wall slice. The following figure illustrates the process of finding the offset.  
+
+![0c](../../assets/pics/raycast_21.png)  
+
+&nbsp; 
+
+<a name="ch2-7"></a>
+## 2.7 Drawing Floors  
+
+To draw floors, we can perform floor-casting (floor-casting refers to a techique of rendering floors). Note however, that it would be wasteful to perform floor-casting without texture mapping or shading. In other words, if the floor is not to be textured or shaded (shading will be explored later), then we can simply paint the floor with a solid color and we are done. Keeping that in mind, let us explore what is required to do floor-casting.
+
+There are several ways to do floor-casting. However, all of them use a similar technique. The technique is explained below.  
+
+1. Find an intersection with the floor.  
+2. Determine the world coordinate of the floor that had been intersected.  
+3. Calculate the distance between the player and the floor intersection.  
+4. Project the floor intersection onto the projection plane.  
+
+Note that it is not necessary to draw all the floors. We should only draw floors that are not covered by walls. For that reason, we should start the casting from the **bottom** of the wall slices. From the bottom of the slices, we then scan every pixels on the projection plane in **downward** direction (i.e.: cast rays subsequently in downward direction). This time, however, instead of looking for intersection with walls, the ray looks for intersection with the floor.
+
+![0c](../../assets/pics/raycast_22.png)  
+
+Remember, the we do not need to cast beyond the projection plane. (Ie: cast from the bottom of the wall slice, row by row in downward direction; stop when the bottom of the projection plane is reached.)  
+
+The math behind floor-casting is explained in the figure below.  
+
+![0c](../../assets/pics/raycast_23.png)  
+
+To reiterate, take a look at the illustration while reading these steps:
+
+\* Start from the bottom of the wall slice.
+
+1. Take the pixel position (you have this value when you did the wall casting).  
+2. Draw a line (a ray) from the pixel to the viewers eye.  
+3. Extends the line so that it intersect the floor.  
+4. The point where the line “intersect” the floor is the point on the texture map that is being hit by the ray.  
+5. Take the pixel value of that point on the texture map (see the next figure to see how this can be done) and draw it on the screen.  
+
+\* Repeat 1-5 until the bottom of the screen is reached.  
+
+![0c](../../assets/pics/raycast_24.png)  
+
+&nbsp; 
+
+<a name="ch2-8"></a>
+## 2.8 Drawing Ceilings  
+
+To draw the ceiling, the floor-casting process can be reversed. Instead of tracing rays from the **bottom** of a wall slice in **downward** direction, trace the ray from the **top** of the wall in the **upward** direction. This is actually pretty straightforward once the theory behind floor-casting has been grasped.  
+
+![0c](../../assets/pics/raycast_25.png)  
+
+Later, we will explain how to simulate the illusion of looking up, looking down, flying, and crouching. If the programmer does not wish to simulate these, it is possible to draw the floor and the ceiling at the same time. This is because the distance of the player’s eyes to the floor and ceiling is equal/symetrical. (Floors and ceilings are symmetrical since the player’s eyes is exactly at the midpoint between floors and ceilings.)  
+
+&nbsp; 
+
+<a name="ch2-9"></a>
+## 2.9 Making the Player move  
+
+The player should be able to move at least in three ways: forward, backward, and turning. The player’s position is defined by a coordinate and a viewing angle. To allow motion, two more attributes are needed. They are the **player’s movement speed**, and the **player’s turning speed**. The player’s movement speed defines how many units the player should move when he/she is moving forward or backward. The player’s turning speed (measured in angle) defines how many angle to be added or subtracted when the player is turning. We will discuss each how we use these attributes to allow motion.  
+
+### A. Moving forward and backward.  
+We define the player’s movement speed to be 10 units. (Generally, this can be any number, but the larger number, the less smooth the movement will appear.) The process of finding the x and y displacement is illustrated below. If the player is moving forward, we add the XDisplacement to the current player’s X coordinate; and add Ydisplacement to the current player’s Y coordinate. If the player is moving backward, we subtract the XDisplacement to the current player’s X coordinate; and subtract Ydisplacement to the current player’s Y coordinate. (Always check for world/wall boundaries so that the player won’t go outside the map or walk through a wall.)  
+
+![0c](../../assets/pics/raycast_26.png)  
+
+&nbsp;
+
+### B. Turning.  
+The process of turning is very simple to implement. All we need to do is to add or subtract an angle increment (aI) to the current player’s viewing angle (wrap around whenever the turn goes to a full circle). Again, larger angle increment will cause the movement appear less smooth.  
+
+![0c](../../assets/pics/raycast_27.png)  
+
+&nbsp; 
+
+<a name="ch2-10"></a>
+## 2.10 Looking Up and Down  
+
+It is possible to simulate the illusion of looking up and down, as well as flying and crouching on a ray-casting environment. However, note that -and this is important- the trick that is about to be explained in here does not always follow the correct three dimensional projection theories. **Ie: These are tricks, they’re not the correct way to do a “realistic” simulation.**  
+
+### A. Looking up and down.  
+Recall that the projection plane is 200 units high. And up to this point, we always set the vertical center of the projection plane to be exactly in the middle (that is, at point y=100). Thus the midpoint of any wall slice will be drawn at projection point y=100. It turns out that the effect of looking up or down can be simulated simply by changing this value.  
+
+That is, to simulate looking up, instead of putting the center of the vertical slice at y=100, we put it at a point where y>100 (this is similar to moving the projection plane upward).  
+
+Similarly, to simulate looking down, instead of putting the center of the vertical slice at y=100, we put it at a point where y<100 (this is similar to moving the projection plane downward).  
+
+And why does this trick work at all? Hopefully, the following illustrations explains it.  
+
+![0c](../../assets/pics/raycast_28.png)  
+
+If you’re confused, imagine holding a mirror with a wall behind you while standing straight.  When the mirror is moved up or down, different part of the wall is shown. The mirror is the projection plane. (Take a moment to imagine this before continuing.)  
+
+&nbsp;
+
+### B. Flying and crouching.  
+Recall that the player’s height is set to be 32 units. This means that the player’s eyes (imagine the player’s eyes are exactly on top of the player’s head) are looking straight at the walls at point 32. Since 32 is one half of the walls’ height, having the player’s height at 32 makes the player’s eyes halfway between the floor and the ceiling (see next figure).  
+
+What if we change this value? Surprisingly (or maybe not), the walls will shift either upward or downward depending on whether the player’s height is increased or decreased.  
+
+Thus, to make the player as if he/she is flying (or leaping), we can simplyincrease the player’s height. Similarly, to make the player as if she/he iscrouching, we can decrease the player’s height. The height should not be allowed to be less than 0 or greater than walls’ height, because doing that will make the player go over the ceiling or sink into the floor.  
+
+The next figure shows why this method works.  
+
+![0c](../../assets/pics/raycast_29.png)  
+
+If you’re confused, again we use the mirror method to clarify how this works. Imagine that that you are standing straight, holding a mirror on a small room. Stand facing away from the wall. Position the mirror so that it’s in front of the eye (i.e.: you do not have to turn your head to see the mirror). Now, imagine what happen if you squat and see what is in the mirror. In the mirror, you should see different part of the wall and more floor area… like 2nd image on this page …. hope you got the idea.  
+
+The mirror is the projection plane, and the eye position is the player’s height.  
+
+There’s one counter intuitive aspect of this vertical-motion method, which is this:  
+
+the projection plane must always be perpendicular with the player’s eyes. (That is: the projection plane must always be parallel to the walls – they cannot be skewed in any way.) The best way to conceptualize this is to imagine a person “aiming” through a camera lens. The person always aims in forward direction at 90 degrees angle; even when he/she is crouching or standing on top of a table.  
+
+The reason for this is that when using this method, we can not skew the projection plane like in the next figure; because if we rotate the projection plane to follow the “normal” eye direction, then the walls will be slanted (no longer parallel with the projection plane); and the rendering process must then take this into account. That means, more complex calculation will be required, and the rendering process will become terribly slow.  
+
+![0c](../../assets/pics/raycast_30.png)  
+
+### C. Combined effects.  
+The effects explained above can be combined to create even more interesting motions such as illustrated below.  
+
+![0c](../../assets/pics/raycast_31.png)  
+
+&nbsp; 
+
+<a name="ch2-11"></a>
+## 2.11 Shading  
+
+When an object is farther away from the viewer, the object should appear less/more bright. To accomplish this, a shading effect is needed. But first, we need to know about how colors are represented.  
+
+The standard 256 color VGA mode registers contains three numbers between 0 to 63 for every color in the palette which are called the RGB (RedGreenBlue) values. For example, full red color has RGB components of (63,0,0); full green has (0,63,0); and full blue has (0,0,63). Color such as full yellow, can be obtained by mixing full red and full green so that (63,63,0) is yellow.  
+
+To change the brightness of the red, green, or blue component of a color, the number representing the color component must be increased or decreased. For instance, to decrease the intensity of a color that have an RGB components (50,10,10) by one half, multiply each component by 0.5. The resulting color will be (25,5,5).  
+
+This is quite simple, but how do we know what intensity to use on what distance? The first option is to use an exact light intensity formula which goes something like this:  
+
+`Intensity = (kI/(d+do))*(N*L)`  
+
+From a game programmer perspective, this formula is too complicated and will be terribly slow, so we are not going to even bother with it. Our main goal will be to make a shading effect that looks-right (or at least reasonable). We do not particularly care whether the formula that we are using is the correct text-book formula or not.  
+
+(Side note.: For game programming, I tend to agree to this principle:  
+it’s better to have something that is fast and look-resonably-right; that to have something that is exactly-right, but slow.)
+
+Hence, the following formula is used instead (Lampton 406).  
+
+`Intensity = Object Intensity/Distance * Multiplier`  
+
+Here, Object Intensityis the intensity that the programmer wish to use (it should be between 0 and 1). This is actually quite simple conceptually. It basically says that as objects gets farther, the intensity of the object gets smaller. Multiplier is a number to prevent Intensity from falling off to fast with distance. This calculation can still be expensive in real time, therefore a distance table such as the following table can be used:  
+
+|Distance to object|Intensity|
+|:---|:---|
+|0 to 500|1|
+|501 to 1000|0.75|
+|1001 to 1500|0.5|  
+
+Ray-casting process lends itself nicely here because when we cast a ray, we also obtain the distance to the object to be rendered. In an actual implementation, we need to take into account also the number of available colors. Since most games can only use 256 colors, some acrobatics will be needed to make sure that the palette contains the correct color range. A possible solution for this is to use a color matching algorithm and map the result into an intensity table. When rendering, we simply fetch the correct color value from the appropriate table. (This is quite fast because a particular wall slice will have the same intensity for all of its pixels. So we only have to switch table between wall slices.)  
+
+|Distance to object|Intensity|Palette Mapping Table Index|
+|:---|:---|:---|
+|0 to 500|1|1|
+|501 to 1000|0.75|2|
+|1001 to 1500|0.5|3|
+|...|...|...|  
+
+Normally, as the intensity of an object approaches zero, the object will appear darker. However, this does not have to be always the case. We can create in interesting effect, such as fog or underwater effect by altering the “target color.” For instance, to create a fog effect, we can make the palette converges to white.  
+
+![0c](../../assets/pics/raycast_32.png)  

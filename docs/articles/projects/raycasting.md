@@ -44,9 +44,6 @@ layout: default
 &nbsp;
 
 &rarr; Content originally from [here](https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/).  
-&rarr; C code taken from video series [here](https://www.youtube.com/watch?v=gYRrGTC7GtA&t=3s).
-
-&nbsp;
 
 # Basics  
 
@@ -545,6 +542,8 @@ Normally, as the intensity of an object approaches zero, the object will appear 
 
 # C code / OpenGL example  
 
+&rarr; C code taken from video series [here](https://www.youtube.com/watch?v=gYRrGTC7GtA&t=3s).
+
 &nbsp;
 
 ---
@@ -560,6 +559,8 @@ Normally, as the intensity of an object approaches zero, the object will appear 
 &nbsp;
 
 # C++ / Qt example  
+
+&rarr; C++ code taken from [here](https://doc.qt.io/archives/qt-4.8/qt-demos-embedded-raycasting-example.html).
 
 &nbsp; 
 

@@ -33,9 +33,9 @@ layout: default
 ### 4. JavaScript example   
 
 ### 5. C++ / Qt example  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 .cpp file</font>](#ch2-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2 .pro file</font>](#ch2-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.3 .qrc file</font>](#ch2-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 .cpp file</font>](#ch5-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2 .pro file</font>](#ch5-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.3 .qrc file</font>](#ch5-3)  
 
 &nbsp;
 

@@ -547,7 +547,7 @@ Normally, as the intensity of an object approaches zero, the object will appear 
 &rarr; C code taken from video series [here](https://www.youtube.com/watch?v=gYRrGTC7GtA&t=3s).
 
 <details><summary markdown="span">Code</summary>  
-    ```c
+  ```c
 
     //WADS to move player, E open door after picking up the key
 
@@ -922,8 +922,8 @@ Normally, as the intensity of an object approaches zero, the object will appear 
     glutMainLoop();
     }
 
-    ```
-</details>
+  ```
+</details>  
 
 &nbsp;
 

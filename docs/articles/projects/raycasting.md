@@ -31,6 +31,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.11 Shading </font>](#ch2-11)  
 
 ### 3. C code / OpenGL example   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 .c file</font>](#ch3-1)  
 
 ### 4. JavaScript example   
 
@@ -546,6 +547,9 @@ Normally, as the intensity of an object approaches zero, the object will appear 
 
 &rarr; C code taken from video series starting [here](https://www.youtube.com/watch?v=gYRrGTC7GtA&t=3s).
 
+<a name="ch3-1"></a>
+## 3.1 .cpp file  
+
 <details><summary markdown="span">Code</summary>  
   ```c
 
@@ -787,7 +791,7 @@ Normally, as the intensity of an object approaches zero, the object will appear 
     void drawSky()     //draw sky and rotate based on player rotation
     {
         int x,y;
-        
+
         for(y=0;y<40;y++)
         {
             for(x=0;x<120;x++)

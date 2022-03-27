@@ -951,7 +951,7 @@ here: **Qt4.8**
 ## 5.1 .cpp file  
 
 <details><summary markdown="span">Code</summary>  
-    ```c++
+  ```c++
 
     #include <QtCore>
     #include <QtGui>
@@ -1303,8 +1303,9 @@ here: **Qt4.8**
 
         return app.exec();
     }
-    ```
-</details> 
+    
+  ```
+</details>  
 
 &nbsp;
 

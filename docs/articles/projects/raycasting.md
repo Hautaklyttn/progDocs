@@ -34,6 +34,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 .c file</font>](#ch3-1)  
 
 ### 4. JavaScript example   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 .js file</font>](#ch4-1)  
 
 ### 5. C++ / Qt example  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 .cpp file</font>](#ch5-1)  
@@ -548,7 +549,7 @@ Normally, as the intensity of an object approaches zero, the object will appear 
 &rarr; C code taken from video series starting [here](https://www.youtube.com/watch?v=gYRrGTC7GtA&t=3s).
 
 <a name="ch3-1"></a>
-## 3.1 .cpp file  
+## 3.1 .c file  
 
 <details><summary markdown="span">Code</summary>  
   ```c
@@ -948,6 +949,9 @@ Normally, as the intensity of an object approaches zero, the object will appear 
 &nbsp;
 
 # Javascript example  
+
+<a name="ch4-1"></a>
+## 4.1 .js file  
 
 &nbsp;
 

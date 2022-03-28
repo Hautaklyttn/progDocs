@@ -974,15 +974,11 @@ here: **Qt4.8**
   ```c++
 
     #include <QtCore>
-    #include <QtGui>
-
-    #include <math.h>
-
-    #ifndef M_PI
-    #define M_PI 3.14159265358979323846
-    #endif
+    #include <QtWidgets>
+    #include <qmath.h>
 
     #define WORLD_SIZE 8
+
     int world_map[WORLD_SIZE][WORLD_SIZE] = {
         { 1, 1, 1, 1, 6, 1, 1, 1 },
         { 1, 0, 0, 1, 0, 0, 0, 7 },
@@ -1007,14 +1003,12 @@ here: **Qt4.8**
                 , angleDelta(0)
                 , moveDelta(0)
                 , touchDevice(false) {
-
             // http://www.areyep.com/RIPandMCS-TextureLibrary.html
-            textureImg.load(":/textures.png");
+            textureImg.load(":/textures/Texlibnubrick2.gif");
             textureImg = textureImg.convertToFormat(QImage::Format_ARGB32);
             Q_ASSERT(textureImg.width() == TEXTURE_SIZE * 2);
             Q_ASSERT(textureImg.bytesPerLine() == 4 * TEXTURE_SIZE * 2);
             textureCount = textureImg.height() / TEXTURE_SIZE;
-
             watch.start();
             ticker.start(25, this);
             setAttribute(Qt::WA_OpaquePaintEvent, true);
@@ -1076,6 +1070,7 @@ here: **Qt4.8**
             qreal dv = -2 * cosa / bufw;
 
             for (int ray = 0; ray < bufw; ++ray, u += du, v += dv) {
+
                 // every time this ray advances 'u' units in x direction,
                 // it also advanced 'v' units in y direction
                 qreal uu = (u < 0) ? -u : u;
@@ -1143,7 +1138,7 @@ here: **Qt4.8**
                 col = qBound(0, col, TEXTURE_SIZE - 1);
                 texture = (texture - 1) % textureCount;
                 const QRgb *tex = texsrc + TEXTURE_BLOCK * texture * 2 +
-                                (TEXTURE_SIZE * 2 * col);
+                                  (TEXTURE_SIZE * 2 * col);
                 if (dark)
                     tex += TEXTURE_SIZE;
 
@@ -1178,22 +1173,12 @@ here: **Qt4.8**
                 for (; pixel2 < finish; pixel2 += stride)
                     *pixel2 = qRgb(96, 96, 96);
             }
-
             update(QRect(QPoint(0, 0), bufferSize));
         }
 
     protected:
-
         void resizeEvent(QResizeEvent*) {
-    #if defined(Q_OS_WINCE_WM)
-            touchDevice = true;
-    #elif defined(Q_OS_SYMBIAN)
-            // FIXME: use HAL
-            if (width() > 480 || height() > 480)
-                touchDevice = true;
-    #else
             touchDevice = false;
-    #endif
             if (touchDevice) {
                 if (width() < height()) {
                     trackPad = QRect(0, height() / 2, width(), height() / 2);
@@ -1209,7 +1194,7 @@ here: **Qt4.8**
                 bufferSize = size();
             }
             update();
-    }
+        }
 
         void timerEvent(QTimerEvent*) {
             updatePlayer();
@@ -1220,23 +1205,18 @@ here: **Qt4.8**
         void paintEvent(QPaintEvent *event) {
             QPainter p(this);
             p.setCompositionMode(QPainter::CompositionMode_Source);
-
             p.drawImage(event->rect(), buffer, event->rect());
-
             if (touchDevice && event->rect().intersects(trackPad)) {
                 p.fillRect(trackPad, Qt::white);
                 p.setPen(QPen(QColor(224, 224, 224), 6));
                 int rad = qMin(trackPad.width(), trackPad.height()) * 0.3;
                 p.drawEllipse(centerPad, rad, rad);
-
                 p.setPen(Qt::NoPen);
                 p.setBrush(Qt::gray);
-
                 QPolygon poly;
                 poly << QPoint(-30, 0);
                 poly << QPoint(0, -40);
                 poly << QPoint(30, 0);
-
                 p.translate(centerPad);
                 for (int i = 0; i < 4; ++i) {
                     p.rotate(90);
@@ -1245,7 +1225,6 @@ here: **Qt4.8**
                     p.translate(0, rad - 20);
                 }
             }
-
             p.end();
         }
 
@@ -1313,16 +1292,14 @@ here: **Qt4.8**
         QApplication app(argc, argv);
 
         Raycasting w;
+
         w.setWindowTitle("Raycasting");
-    #if defined(Q_OS_SYMBIAN) || defined(Q_OS_WINCE_WM)
-        w.showMaximized();
-    #else
         w.resize(640, 480);
         w.show();
-    #endif
 
         return app.exec();
     }
+
 
   ```
 </details>  
@@ -1333,19 +1310,33 @@ here: **Qt4.8**
 ## 5.2 .pro file  
 
 ```js
-TEMPLATE = app
-SOURCES = raycasting.cpp
-RESOURCES += raycasting.qrc
+  QT -= gui
 
-symbian {
-    TARGET.UID3 = 0xA000CF76
-    include($$QT_SOURCE_TREE/demos/symbianpkgrules.pri)
-}
+  CONFIG += c++11 console
+  CONFIG -= app_bundle
 
-target.path = $$[QT_INSTALL_DEMOS]/embedded/raycasting
-sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS *.pro
-sources.path = $$[QT_INSTALL_DEMOS]/embedded/raycasting
-INSTALLS += target sources
+  # The following define makes your compiler emit warnings if you use
+  # any Qt feature that has been marked deprecated (the exact warnings
+  # depend on your compiler). Please consult the documentation of the
+  # deprecated API in order to know how to port your code away from it.
+  DEFINES += QT_DEPRECATED_WARNINGS
+
+  # You can also make your code fail to compile if it uses deprecated APIs.
+  # In order to do so, uncomment the following line.
+  # You can also select to disable deprecated APIs only up to a certain version of Qt.
+  #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
+  QT += widgets
+
+  SOURCES += \
+          raycasting.cpp
+
+  RESOURCES += raycasting.qrc
+
+  # Default rules for deployment.
+  qnx: target.path = /tmp/$${TARGET}/bin
+  else: unix:!android: target.path = /opt/$${TARGET}/bin
+  !isEmpty(target.path): INSTALLS += target
 ```
 
 &nbsp;
@@ -1354,9 +1345,10 @@ INSTALLS += target sources
 ## 5.3 .qrc file  
 
 ```js
-<RCC>
-    <qresource prefix="/" >
-        <file>textures.png</file>
-    </qresource>
-</RCC>
+  <!DOCTYPE RCC>
+  <RCC>
+      <qresource prefix="/" >
+          <file>textures/Texlibnubrick2.gif</file>
+      </qresource>
+  </RCC>
 ```

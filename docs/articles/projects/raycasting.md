@@ -961,7 +961,8 @@ Normally, as the intensity of an object approaches zero, the object will appear 
 
 # C++ / Qt example  
 
-&rarr; C++ code taken from [here](https://doc.qt.io/archives/qt-4.8/qt-demos-embedded-raycasting-example.html).
+&rarr; C++ code taken from [here](https://doc.qt.io/archives/qt-4.8/qt-demos-embedded-raycasting-example.html). (With adaptions afterwards.)   
+&rarr; Textures can be found [here}(http://www.areyep.com/RIPandMCS-TextureLibrary.html).
 
 &nbsp; 
 

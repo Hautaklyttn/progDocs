@@ -12,7 +12,7 @@ layout: default
 
 &nbsp;
 
-<font size="-1">&rarr; Information taken from **Game Engine Black Book DOOM** (*F.Sanglard*)</font>  
+<font size="-1">&rarr; Information taken from "Game Engine Black Book DOOM" (F.Sanglard)  </font>  
 <font size="-1">&rarr; Code taken from <a href="https://github.com/id-Software/DOOM">here.</a></font>  
 
 &nbsp;

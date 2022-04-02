@@ -8,6 +8,8 @@ layout: default
 
 # Doom <font size="-1">(1993 - id Software)</font>  
 
+---
+
 ![d1](../../assets/pics/doom_logo.png)    
 
 &nbsp;
@@ -79,6 +81,10 @@ The developers did not try to hide what was going on during startup. DOOM’s op
 The startup step was fairly fast except for the excruciating renderer initialization in `R_Init` which took forever to complete. It featured not only a line but also a progress bar made up of dots which often required up to a minute to complete on the full version depending on the machine’s hard drive access time.  
 
 ![d1](../../assets/pics/doom_03.png)  
+
+&nbsp;
+
+---
 
 &nbsp;
 

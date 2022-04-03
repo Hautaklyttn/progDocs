@@ -20,7 +20,65 @@ layout: default
 
 &nbsp;
 
-## Architecture
+## Architecture  
+
+### Maps  
+
+Maps were designed in a top-down view. The one limitation was that walls were perpendicular to floors and both floors and ceilings were horizontal so maps were drawn in 2D. A designer worked with five types of element: `VERTEX`, `LINE`, `SIDEDEF`, `SECTOR`, and `THING`.  
+
+![d1](../../assets/pics/doom_04.png)  
+
+A `SECTOR` is a closed area surrounded by `LINE`s with a specified floor height, floor texture, ceiling height, ceiling texture, and light level. A sector can be concave, but lines cannot cross each other.  
+
+A `LINE` can either be a solid wall or a portal between two `SECTOR`s. The difference is in the number of `SIDEDEF`s associated with it. A wall has only one `SIDEDEF` on its right side and is fully opaque. A portal has two `SIDEDEF`s and can usually be partially seen though.  
+
+A `SIDEDEF` describes one side of a `LINE`. To accommodate texturing of both the walls and portals, it can have up to three textures. The middle texture is used by walls for the full area they cover. A `SIDEDEF` can also have a lower and an upper texture for portals connecting `SECTOR`s with different ceiling/floor heights. If the portal leads to a sector with higher floor, the lower texture is used to render the "step". If the `SECTOR` connects to a `SECTOR` with a lower ceiling, the upper texture is used to render the "down step". To help alignment of doors and buttons, `SIDEDEF` textures can have a vertical/horizontal offset.  
+
+A `THING` is much simpler in comparison. It only features a 2D-coordinate X,Y, an angle, and an identifier controlling its type. At the bare minimum a map must have one playerspawning location `THING`.   
+
+![d1](../../assets/pics/doom_05.png)  
+
+The resulting scene in the figure above is ugly but the mismatched colors hopefully help to discern the different elements. All `LINE`s are walls except for E-B which has two `SIDEDEF`s and is therefore a portal. All walls use the `BRIK` middle texture except for the portal which uses `GRAY` for both top and bottom.  
+
+`SECTOR` #0 uses a `RED` floor texture and a `WOOD` ceiling texture. The height of the floor is 20 and its ceiling is at 40. `SECTOR` #1 uses a `BLUE` floor texture and a `GREEN` ceiling texture. Its floor is at 0 and ceiling at 60. Both sectors have the same light level (10).  
+
+Notice the portal `E-B` which does not have a mid-texture but an upper and a lower texture. These were used to draw the up-step and down-step towards sector #0.  
+
+Also notice wall `D-E` on which the mid-texture vertical offset is not correctly set, resulting in a vertical tear when connecting with wall `E-F`. Wall `B-C`’s vertical offset is properly set and has no visual artifact. None of the walls use a horizontal offset, but the corresponding field is labeled `XOFF` to show its location.  
+
+&nbsp;
+
+### WAD archives: Where’s All the Data?  
+
+While Wolfenstein 3D shipped with a `WOLF3D.EXE` engine and a multitude of `.WL6` files, DOOM had only two relevant files. After installation, besides a few TXT files and network drivers, the gaming experience was entirely contained in the engine `DOOM.EXE` and all assets contained in `DOOM.WAD`.  
+
+![d1](../../assets/pics/doom_06.png)  
+
+![d1](../../assets/pics/doom_07.png)  
+
+The goal of the `WAD` format was partly to replace the OS filesystem but mostly to embrace the modding community. In a `WAD`, each asset is stored in a "lump". The `WAD` is made of three parts with a header, the lump content, and a directory at the end.  
+
+```c
+typedef struct {
+    char magicNumber [4]; // " IWAD " or " PWAD "
+    int32_t numDirectories ; // # lumps in directory
+    int32_t directoryOffset ; // Offset to directory
+} header ;
+
+typedef struct {
+    int32_t offset ; // Offset to lump
+    int32_t size ; // Size of the lump
+    char name [8]; // Name of the lump
+} directoryEntry ;
+```
+
+![d1](../../assets/pics/doom_08.png)
+
+The archive format was manipulated via two tools. `lumpy` took a blob and packed it inside a lump, inside a WAD. `wadlink` took several WADs and created/appended them into a single WAD. The structure allows easily adding or removing lumps, since adding a lump only requires moving the small directory at the end and updating the header offset.  
+
+`DOOM.EXE` had a command-line parameter allowing modders to load their own WADs in order to overwrite `DOOM.WAD` lump entries. This mechanism permitted to customize almost everything. A custom WAD containing an `E1M1` lump could be used via a simple `doom -file mylevel.wad` command.  
+
+&nbsp;
 
 ### API 
 

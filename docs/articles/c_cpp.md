@@ -52,6 +52,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.5 Pointer auf Pointer</font>](#ch3-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.6 Pointer auf Funktionen</font>](#ch3-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.7 'void' Pointer in C</font>](#ch3-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.8 Smart Pointer in C++</font>](#ch3-8)  
 
 &nbsp;&nbsp;&nbsp;&rarr; Pointer vs. Arrays   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1"> Basics</font>](#ch_pva_1)  
@@ -1680,6 +1681,142 @@ p = &b;        // void pointer holds address of char 'b'
 
   // -> Output: 10
   ```
+
+&nbsp;  
+
+<a name="ch3-8"></a>
+### 3.8 Smart Pointer in C++  
+
+In der modernen C++-Programmierung enthält die Standardbibliothek *intelligente Zeiger*,die verwendet werden, um sicherzustellen, dass Programme frei von Arbeitsspeicher- und Ressourcenverlusten sind und ausnahmesicher sind.  
+
+Intelligente Zeiger werden im `std` Namespace im \<memory\> header file definiert. Sie sind entscheidend für das *RAII* oder *Resource Acquisition Is Initialization* Prinzip. Das wichtigste Ziel dieses Technik ist sicherzustellen, dass die Ressourcenerfassung zur gleichen Zeit erfolgt wie die Initialisierung des Objekts, damit alle Ressourcen für das Objekt in einer Codezeile erstellt und vorbereitet werden können. In der Praxis besteht das Hauptprinzip von *RAII* darin, den Besitz einer beliebigen Heap-Ressource zu übernehmen, — z. B. dynamisch zugeordnete Speicher- oder Systemobjekthandles — für ein im *Stack* zugeordnetes Objekt, dessen Destruktor den Code zum Löschen oder Freigeben der Ressource sowie den zugehörigen Bereinigungscode enthält.  
+
+> **Wenn Sie einen Rohzeiger oder ein Ressourcenhandle für eine aktuelle Ressource initialisieren, sollten Sie den Zeiger in den meisten Fällen sofort einem intelligenten Zeiger zuweisen.** In modernem C++ werden Rohzeiger nur in kleinen Codeblöcken mit begrenztem Gültigkeitsbereich, in Schleifen oder Hilfsfunktionen verwendet, in denen Leistung ausschlaggebend ist und keine Verwirrung über den Besitzer entstehen kann.  
+
+&nbsp;
+
+Im folgenden Beispiel wird die Deklaration eines Rohzeigers mit der eines intelligenten Zeigers verglichen.
+
+ ```c
+void UseRawPointer()
+{
+    // Using a raw pointer -- not recommended.
+    Song* pSong = new Song(L"Nothing on You", L"Bruno Mars"); 
+
+    // Use pSong...
+
+    // Don't forget to delete!
+    delete pSong;   
+}
+
+
+void UseSmartPointer()
+{
+    // Declare a smart pointer on stack and pass it the raw pointer.
+    unique_ptr<Song> song2(new Song(L"Nothing on You", L"Bruno Mars"));
+
+    // Use song2...
+    wstring s = song2->duration_;
+    //...
+
+} // song2 is deleted automatically here.
+ ```
+
+Wie im Beispiel gezeigt, ist ein *intelligenter Zeiger* eine Klassenvorlage, die auf dem *Stack* deklariert wird. Die Initialisierung erfolgt mit einem Rohzeiger auf ein auf dem *Stack* zugeordnetes Objekt. Nachdem der *intelligente Zeiger* initialisiert wurde, besitzt er den Rohzeiger. Dies bedeutet, dass der intelligente Zeiger für das Löschen des Arbeitsspeichers zuständig ist, den der Rohzeiger angibt. Der Destruktor des *intelligenten Zeigers* enthält den Aufruf zum Löschen, und weil der intelligente Zeiger auf dem *Stack* deklariert wurde, wird sein Destruktor aufgerufen, sobald der intelligente Zeiger ungültig wird, auch wenn eine Ausnahme irgendwo weiter oben im *Stack* ausgelöst wird.  
+
+Greifen Sie auf den gekapselten Zeiger mit den vertrauten Zeigeroperatoren `->` und `*` zu, die von der Klasse des intelligenten Zeigers so überladen werden, dass der gekapselte Rohzeiger zurückgegeben wird.  
+
+&nbsp;
+
+Die Wirkungsweise eines intelligenten C++-Zeigers ähnelt dem Vorgehen bei der Objekterstellung in Sprachen wie C#: Sie erstellen das Objekt und überlassen es dann dem System, das Objekt zur richtigen Zeit zu löschen. Der Unterschied besteht darin, dass im Hintergrund keine separate Speicherbereinigung ausgeführt wird – der Arbeitsspeicher wird durch die C++-Standardregeln für den Gültigkeitsbereich verwaltet, sodass die Laufzeitumgebung schneller und effizienter ist.  
+
+Das folgende Beispiel zeigt, wie ein *unique_ptr* intelligenter Zeigertyp aus der C++-Standardbibliothek verwendet werden kann, um einen Zeiger auf ein großes Objekt zu kapseln.  
+
+```c
+class LargeObject
+{
+public:
+    void DoSomething(){}
+};
+
+void ProcessLargeObject(const LargeObject& lo){}
+void SmartPointerDemo()
+{    
+    // Create the object and pass it to a smart pointer
+    std::unique_ptr<LargeObject> pLarge(new LargeObject());
+
+    //Call a method on the object
+    pLarge->DoSomething();
+
+    // Pass a reference to a method.
+    ProcessLargeObject(*pLarge);
+
+} //pLarge is deleted automatically when function block goes out of scope.
+```
+
+Dieses Beispiel verdeutlicht die folgenden wesentlichen Schritte für die Verwendung von *intelligenten Zeigern*.
+
+1. Deklarieren Sie den *intelligenten Zeiger* als automatische (lokale) Variable. (Verwenden Sie nicht *new* oder *malloc* für den intelligenten Zeiger selbst.)  
+2. Als Typparameter geben Sie den Typ an, auf den der gekapselte Zeiger zeigt.
+3. Übergeben Sie einen rohen Zeiger an ein *new*-Objekt im intelligenten Zeigerkonstruktor. (Einige Hilfsfunktionen oder Konstruktoren für intelligente Zeiger übernehmen das für Sie.)  
+4. Verwenden Sie die überladenen Operatoren `->` und `*` für den Zugriff auf das Objekt.  
+5. Lassen Sie den *intelligenten Zeiger* das Objekt löschen.
+
+&nbsp;
+
+*Intelligente Zeiger* sind dafür konzipiert, im Hinblick auf Leistung und Arbeitsspeicher so effizient wie möglich sein. Beispielsweise ist der einzige Datenmember in `unique_ptr` der gekapselte Zeiger. Dies bedeutet, dass `unique_ptr` genau die gleiche Größe hat wie dieser Zeiger, entweder vier oder acht Bytes. Der Zugriff auf den gekapselten Zeiger mithilfe der Operatoren smart pointer overloaded `*` und `->` ist nicht wesentlich langsamer als der direkte Zugriff auf die rohen Zeiger.  
+
+*Intelligente Zeiger* verfügen über eigene Memberfunktionen, auf die mithilfe der Punkt-Notation zugegriffen wird. Einige intelligente Zeiger der C++-Standardbibliothek verfügen beispielsweise über eine Reset-Memberfunktion, die den Besitz des Zeigers freigibt. Dies ist hilfreich, wenn Sie den Arbeitsspeicher des intelligenten Zeigers freigeben möchten, bevor dieser ungültig wird, wie im folgenden Beispiel gezeigt.  
+
+```c
+void SmartPointerDemo2()
+{
+    // Create the object and pass it to a smart pointer
+    std::unique_ptr<LargeObject> pLarge(new LargeObject());
+
+    //Call a method on the object
+    pLarge->DoSomething();
+
+    // Free the memory before we exit function block.
+    pLarge.reset();
+
+    // Do some other work...
+
+}
+```
+
+&nbsp;
+
+*Intelligente Zeiger* bieten in der Regel eine Möglichkeit, direkt auf ihren rohen Zeiger zuzugreifen. Intelligente Zeiger der C++-Standardbibliothek verfügen zu diesem Zweck über eine Memberfunktion `get` und `CComPtr` hat einen öffentlichen Klassenmember `p`. Wenn Sie direkten Zugriff auf den zugrunde liegende Zeiger bereitstellen, können Sie den intelligenten Zeiger verwenden, um Arbeitsspeicher in Ihrem eigenen Code zu verwalten, und Sie können den Rohzeiger weiterhin an Code übergeben, der keine intelligenten Zeiger unterstützt.  
+
+```c
+void SmartPointerDemo4()
+{
+    // Create the object and pass it to a smart pointer
+    std::unique_ptr<LargeObject> pLarge(new LargeObject());
+
+    //Call a method on the object
+    pLarge->DoSomething();
+
+    // Pass raw pointer to a legacy API
+    LegacyLargeObjectFunction(pLarge.get());    
+}
+```
+
+&nbsp;
+
+#### Intelligente Zeiger der C++-Standardbibliothek  
+
+Verwenden Sie vorrangig diese intelligenten Zeiger zum Kapseln von Zeigern auf einfache alte C++-Objekte.  
+
+- `unique_ptr`  
+Ermöglicht genau einen Besitzer für den zugrunde liegenden Zeiger. Verwenden Sie diesen Zeiger als Standardwahl für POCOs (*Plain Old CLR Objects*), es sei denn, Sie sind sicher, dass Sie einen `shared_ptr` benötigen. Kann zu einem neuen Besitzer verschoben werden, kann aber nicht kopiert oder freigegeben werden. Ersetzt `auto_ptr`, der veraltet ist. Ist vergleichbar mit `boost::scoped_ptr`. `unique_ptr` ist klein und effizient; die Größe ist ein Zeiger und unterstützt rvalue-Verweise für schnelles Einfügen und Abrufen aus C++-Standardbibliotheksauflistungen. Headerdatei: \<memory\>. Weitere Informationen finden Sie unter Vorgehensweise: Erstellen und Verwenden von `unique_ptr`-Instanzen und `unique_ptr`-Klasse.
+
+- `shared_ptr`  
+Intelligenter Zeiger mit Referenzzählung. Verwenden Sie diesen Zeiger, wenn Sie mehreren Besitzern einen Rohzeiger zuweisen möchten. Beispiel: Sie geben eine Kopie eines Zeigers von einem Container zurück, möchten aber das Original behalten. Der Rohzeiger wird erst gelöscht, wenn alle `shared_ptr`-Besitzer den Gültigkeitsbereich verlassen haben oder auf andere Weise nicht mehr Besitzer sind. Die Größe beträgt zwei Zeiger; einen für das Objekt und einen für den freigegebenen Kontrollblock, der den Referenzzähler enthält. Headerdatei: \<memory\>. Weitere Informationen finden Sie unter Vorgehensweise: Erstellen und Verwenden von `shared_ptr`-Instanzen und `shared_ptr`-Klasse.
+
+- `weak_ptr`  
+Spezielle intelligente Zeiger in Verbindung mit `shared_ptr`. Ein weak_ptr ermöglicht den Zugriff auf ein Objekt, das einer oder mehreren `shared_ptr`-Instanzen gehört, ist aber nicht an der Referenzzählung beteiligt ist. Verwenden Sie diesen Zeiger, wenn Sie ein Objekt beobachten möchten, dieses aber nicht gültig bleiben muss. Ist in einigen Fällen erforderlich, um Zirkelverweise zwischen `shared_ptr`-Instanzen zu unterbrechen. Headerdatei: \<memory\>. Weitere Informationen finden Sie unter Vorgehensweise: Erstellen und Verwenden von `weak_ptr`-Instanzen und `weak_ptr`-Klasse.
 
 &nbsp;  
 

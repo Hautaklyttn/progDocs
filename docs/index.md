@@ -32,6 +32,7 @@ c / c++
 git  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Basics</font>](./articles/git_basics.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Use Cases</font>](./articles/git_uc.html)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Frequently Used Commands</font>](./articles/git_comm.html)  
 
 &nbsp;
 

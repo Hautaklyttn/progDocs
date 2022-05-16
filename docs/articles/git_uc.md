@@ -854,40 +854,6 @@ GitHub has an integrated file comparison view, where you can see what has change
     ![gf2](../assets/pics/git_commits02.png)  
   &nbsp;  
 
-
-&nbsp;
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left"><a href="#top">&larr; Back to Top</a></th>
-    </tr>
-  </thead>
-</table>
-
-&nbsp;
-
-***
-
-&nbsp;
-
-## <a name="freqBash"></a>Frequently used commands  
-
-```git
->> git remote -v                    // prints all configured remotes of the repository
-
->> git status                       // prints the status of the current branch and its files
-
->> git log                          // prints the most recent commits and additional information
-
->> git checkout <branch_name>       // change current scope to branch <branch_name>
-
->> git reflog                       // list of every thing you've done in git, across all branches!
-
->> git reset HEAD@{index}           // Going back to old project state ('index' can be seen in 'git reflog')
-
->> ...
-```
-
 &nbsp;
 
 <table>

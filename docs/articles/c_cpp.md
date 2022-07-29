@@ -689,6 +689,18 @@ An die Variable 'Heute' kann jederzeit eines der 7 Elemente aus der Deklarations
 Heute = MON;
 ```
 
+**Nutzung der enum-Strings zur Laufzeit**  
+> Enumerations in C are numbers that have convenient names inside your code. They are not strings, and the names assigned to them in the source code are not compiled into your program, and so they are not accessible at runtime.  
+
+The only way to get what you want is to create an array that translates the enumeration value into a string:  
+```c
+const char* dayNames[] = {"Sunday", "Monday", "Tuesday", /* ... etc ... */ };
+
+/* ... */
+
+printf("%s", dayNames[TheDay]);
+```
+
 &nbsp;
 
 <a name="ch1-10-3"></a>

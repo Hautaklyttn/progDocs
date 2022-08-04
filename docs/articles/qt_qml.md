@@ -1246,24 +1246,26 @@ A text element only displays the given text. It does not render any background d
 <a name="ch4-1"></a>
 ### 4.1 Introduction  
 
-`WebAssembly` is a binary format that allows sand-boxed executable code in web pages. This format is nearly as fast as native machine code, and is now supported by all major web browsers.  
+`WebAssembly` is a binary format that allows sand-boxed executable code in web pages. This format is nearly as fast as native machine code, and is now supported by all major web browsers. We use *Emscripten* to compile Qt into something that runs in a web browser from a web server. Instead of compiling and deploying for multiple platforms, the idea is to compile and deploy on a web server for any platform that has a browser that supports WebAssembly.  
 
 **Supported Qt Modules**  
 
 Qt for WebAssembly supports a subset of the Qt modules. The currently supported modules are  
 
-- qtbase
-- qtdeclarative
-- qtquickcontrols2
-- qtwebsockets
-- qtsvg
-- qtcharts
-- qtmqtt
+- QtBase
+- QtDeclarative
+- QtWebsockets
+- QtSvg
+- QtCharts
+- QtMqtt
+- QtGraphicalEffects
+- QtQuickControls
+- QtQuickControls2
 
 Unsupported:
 
-- qtmultimedia
-- qtwebview
+- QtMultimedia
+- QtWebview
 
 Other modules are not tested and may or may not work.
 
@@ -1277,6 +1279,14 @@ Generated important files (boilerplate):
 |qtloader.js|JS API for loading Qt apps|
 |app.js|JS API for loading Qt apps|
 |app.wasm|(emscripten) app binary|
+
+&nbsp;
+
+**General Notes**  
+
+- Applications do not have access to system fonts. Font files must be distributed with the application, for example in Qt resources. Qt for WebAssembly itself embeds one such font.  
+- Nested event loops are not supported. Applications should not call e.g. QDialog::exec() or create a new QEventLoop object.  
+- ...
 
 &nbsp;
 

@@ -37,6 +37,10 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 `WorkerScript` (=Script in 2nd Thread)</font>](#ch3-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.5 `Text` element</font>](#ch3-5)  
 
+### 4. WebAssembly  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Introduction</font>](#ch4-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Debugging</font>](#ch4-2)  
+
 &nbsp;
 
 ---  
@@ -1231,6 +1235,63 @@ Text {
 To further enhance the text rendering you can use the style and styleColor property which allows you to render the text in outline, raised and sunken mode.  
 
 A text element only displays the given text. It does not render any background decoration. Besides the rendered text, the Text element is transparent. It's part of your overall design to provide a sensible background to the text element.
+
+&nbsp;
+
+&nbsp;
+
+
+# WebAssembly
+
+<a name="ch4-1"></a>
+### 4.1 Introduction  
+
+`WebAssembly` is a binary format that allows sand-boxed executable code in web pages. This format is nearly as fast as native machine code, and is now supported by all major web browsers.  
+
+**Supported Qt Modules**  
+
+Qt for WebAssembly supports a subset of the Qt modules. The currently supported modules are  
+
+- qtbase
+- qtdeclarative
+- qtquickcontrols2
+- qtwebsockets
+- qtsvg
+- qtcharts
+- qtmqtt
+
+Unsupported:
+
+- qtmultimedia
+- qtwebview
+
+Other modules are not tested and may or may not work.
+
+&nbsp;
+
+Generated important files (boilerplate):
+
+|Generated file|Brief Description|
+|---|---|
+|app.html|HTML container (should be renamed to *index.html* to be used on a web host).|
+|qtloader.js|JS API for loading Qt apps|
+|app.js|JS API for loading Qt apps|
+|app.wasm|(emscripten) app binary|
+
+&nbsp;
+
+<a name="ch4-2"></a>
+### 4.2 Debugging  
+
+Qt debug and logging output is printed on the JavaScript console, which can be accessed via browser "Developer Tools" or similar.  
+
+In Chrome:
+1. Go to *Weitere Tools* in the upper right context menu  
+2. Select *Entwicklertools*  &rarr; *Konsole* opens with the debugging infos 
+
+Alternative: **Strg + Shift + i** to open *Entwicklertools* console  
+
+
 
 &nbsp;  
 

@@ -670,6 +670,8 @@ abgeleitet von der 'Urklasse' *QObject*, stellt eine Instanz der Klasse QWidget 
 
 - What does *moc* look for?  
 
+...
+
 &nbsp; 
 
 <a name="ch1-2-1"></a>
@@ -689,6 +691,8 @@ Here an example *\*.pro* file:
     RESOURCES += qml.qrc
 ```
 
+&nbsp;
+
 Let’s run through each of these lines in turn:  
 
 `TEMPLATE = app`  
@@ -697,7 +701,7 @@ Let’s run through each of these lines in turn:
 
 `QT += qml quick`  
 
-Qt is a modular framework that allows you to pull in only the parts you need. The *QT* flag specifies the Qt modules we want to use. The *core* and *gui* modules are included by default. Note that we append additional values to a variable that expects a list with +=:
+Qt is a modular framework that allows you to pull in only the parts you need. The *QT* flag specifies the Qt modules we want to use. The *core* and *gui* modules are included by default. Note that we append additional values to a variable that expects a list with *+=*:
 
 `CONFIG += c++14`  
 

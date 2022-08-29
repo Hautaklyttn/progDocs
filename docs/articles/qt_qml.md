@@ -1352,7 +1352,27 @@ Generated important files (boilerplate):
 
 The official setup page can be found [here](https://doc.qt.io/qt-5/wasm.html).
 
+Needed tools:  
+
+|Tool|Description|
+|---|---|
+|Qt (with *Web Assembly* plugin)|Qt comes with the *Qt Creator* IDE. Important is to select *Web assembly* for installation.|
+|Emscripten compiler|*emscripten* is a toolchain for compiling to asm.js and WebAssembly. It lets you run Qt on the web at near-native speed without plugins.|
+
+&nbsp;
+
+Installation:  
+
+tbd
+
 ...
+
+In case that *Qt Creator* **does not find the *emscripten* compiler anymore**:  
+1. Open *cmd*
+2. Navigate to your *emscripten* installation folder
+3. Activate your *emscripten* compiler, 
+   Type (e.g. for v.1.39.7): "emsdk activate --embedded 1.39.7"
+4. Restart *Qt Creator*
 
 &nbsp;
 

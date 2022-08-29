@@ -1350,7 +1350,7 @@ Generated important files (boilerplate):
 <a name="ch4-2"></a>
 ### 4.2 Environment Setup  
 
-The official setup page can be found [here](https://doc.qt.io/qt-5/wasm.html).
+The official setup page can be found [here](https://doc.qt.io/qt-5/wasm.html) and [here](https://wiki.qt.io/Qt_for_WebAssembly) the Wiki.
 
 Needed tools:  
 

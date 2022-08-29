@@ -1371,7 +1371,7 @@ In case that *Qt Creator* **does not find the *emscripten* compiler anymore**:
 1. Open *cmd*
 2. Navigate to your *emscripten* installation folder
 3. Activate your *emscripten* compiler, 
-   Type (e.g. for v.1.39.7): "emsdk activate --embedded 1.39.7"
+   type (e.g. for *v1.39.7*): `emsdk activate --embedded 1.39.7`
 4. Restart *Qt Creator*
 
 &nbsp;

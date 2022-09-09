@@ -20,16 +20,17 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.1 qmake</font>](#ch1-2-1)  
 
 ### 2. How To's   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Importing a JS resource from another JS resource</font>](#ch2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 [JS] Importing a JS resource from another JS resource</font>](#ch2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.2 Deploying a `static` Application on Windows</font>](#ch2-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 Registering C++ Types with the QML Type System</font>](#ch2-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 Embedding C++ Objects into QML with Context Properties</font>](#ch2-4)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 Dynamic QML element creation</font>](#ch2-5)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.6 Typecast in Qt</font>](#ch2-6)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.7 Access QML properties from C++</font>](#ch2-7)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.8 Animation with `Behaviour`</font>](#ch2-8)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.9 Farbverläufe</font>](#ch2-9)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.10 \*.h file aus \*.ui file erzeugen</font>](#ch2-10)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.3 [C++] Registering C++ Types with the QML Type System</font>](#ch2-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.4 [C++] Embedding C++ Objects into QML with Context Properties</font>](#ch2-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.5 [QML] Dynamic QML element creation</font>](#ch2-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.6 [C++] Typecast in Qt</font>](#ch2-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.7 [C++] Access QML properties from C++</font>](#ch2-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.8 [QML] Animation with `Behaviour`</font>](#ch2-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.9 [QML] Farbverläufe</font>](#ch2-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.10 [QML] \*.h file aus \*.ui file erzeugen</font>](#ch2-10)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.11 [QML] Creating a JS Object (e.g. for a QML `Dictionary`)</font>](#ch2-11)  
 
 ### 3. QML Elements   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 `Repeater`</font>](#ch3-1)  
@@ -731,7 +732,7 @@ Whenever you save a change to your *\*.pro* files, qmake will parse the file. If
 # How To's
 
 <a name="ch2-1"></a>
-### 2.1 Importing a JS resource from another JS resource  
+### 2.1 [JS] Importing a JS resource from another JS resource  
 
 1. A JavaScript resource may import another in the following way:  
     ```js
@@ -768,7 +769,7 @@ By default the Qt5 libraries distributed from qt.io are dynamically linked. This
 &nbsp;  
 
 <a name="ch2-3"></a>
-### 2.3 Registering C++ Types with the QML Type System  
+### 2.3 [C++] Registering C++ Types with the QML Type System  
 
 A *QObject*-derived class can be registered with the QML type system to enable the type to be used as a data type from within QML code.  
 
@@ -803,7 +804,7 @@ Message {
 &nbsp;  
 
 <a name="ch2-4"></a>
-### 2.4 Embedding C++ Objects into QML with Context Properties  
+### 2.4 [C++] Embedding C++ Objects into QML with Context Properties  
 
 When loading a QML object into a C++ application, it can be useful to directly embed some C++ data that can be used from within the QML code. This makes it possible, for example, to invoke a C++ method on the embedded object, or use a C++ object instance as a data model for a QML view.  
 
@@ -847,7 +848,7 @@ Text { text: applicationData.getCurrentDateTime() }
 &nbsp;  
 
 <a name="ch2-5"></a>
-### 2.5 Dynamic QML element creation  
+### 2.5 [QML] Dynamic QML element creation  
 
 ```js
 // Rect.qml
@@ -880,7 +881,7 @@ function createRect()
 &nbsp;  
 
 <a name="ch2-6"></a>
-### 2.6 Typecast in Qt  
+### 2.6 [C++] Typecast in Qt  
 
 In computer programming, run-time type information or run-time type identification (RTTI) is a feature of the C++ programming language that exposes information about an objects data type at runtime. Run-time type information can apply to simple data types, such as integers and characters, or to generic types.  
 
@@ -893,7 +894,7 @@ RTTI in C++ can be used to do safe typecasts using the `dynamic_cast<>` operator
 &nbsp;  
 
 <a name="ch2-7"></a>
-### 2.7 Access QML properties from C++  
+### 2.7 [C++] Access QML properties from C++  
 
 Two steps:  
 1. Get the root object of your QML scene through the 'QQMLApplication' object.  
@@ -959,7 +960,7 @@ QObject *testItem = item->findChild<QObject*>("testItem");
 &nbsp;  
 
 <a name="ch2-8"></a>
-### 2.8 Animation with `Behaviour`  
+### 2.8 [QML] Animation with `Behaviour`  
 
 > This is only one of several ways of decalring an animation in QML.  
 
@@ -987,7 +988,7 @@ Now whenever the property `rotation` of the wheel changes, it will be animated u
 &nbsp;  
 
 <a name="ch2-9"></a>
-### 2.9 Farbverläufe  
+### 2.9 [QML] Farbverläufe  
 
 Besides a fill color and a border, the rectangle also supports custom gradients.  
 
@@ -1010,13 +1011,42 @@ Note: A rectange with no width/height set will not be visible. This happens ofte
 &nbsp;  
 
 <a name="ch2-10"></a>
-### 2.10 \*.h file aus \*.ui file erzeugen  
+### 2.10 [QML] \*.h file aus \*.ui file erzeugen  
 \*.ui Files sind qml Files, die einen im 'Qt Designer' erstellten GUI-Aufbau beschreiben. Um diese Files manuell einbinden zu können. ist eine Umwandlung in ein \*.h File notwendig.  
 
 1. In den Pfad gehen in dem das \*.ui File abgelegt ist (Kommandozeile)  
 2. Eingabe `uic <file_name.ui> -o ui_<file_name>.h`  
 
 **[-!-]** Das Qt-bin-Verzeichnis muss vorher zu den Umgebungsvariablen ('PATH') hinzugefügt worden sein.
+
+&nbsp;  
+
+<a name="ch2-11"></a>
+### 2.11 [QML] Creating a JS Object (e.g. for a QML `Dictionary`)  
+
+In JavaScript/QML, objects are data (variables), with properties and methods. You can also create your own objects.  
+
+This example creates an object called "results", and adds four `properties` to it:
+```c
+property var results: {
+    "passed": 15, 
+    "failed": 2, 
+    "skipped": 1, 
+    "IlikeYourQuestions": 1
+};
+```
+
+You could also add methods to it, but with just a set of properties, it works exactly like a **dictionary**.  
+
+You can access the object properties in two ways:  
+```c
+results.passed;
+results["passed"]; 
+```
+
+&nbsp;
+
+[&rarr; More information](https://www.w3schools.com/js/js_objects.asp)
 
 &nbsp;
 

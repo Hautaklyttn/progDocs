@@ -59,7 +59,7 @@ Every value in a programming language has a **type** that describes the data it 
 
 JavaScript doesn’t have a *char* primitive data type, but it does have `strings`, and a char could be represented by a single-character string.  
 
-JavaScript doesn’t differentiate between integers and floats. It just has a single primitive data type of `Number`.  
+JavaScript doesn’t differentiate between *integers* and *floats*. It just has a single primitive data type of `Number`.  
 
 **Composite data types** are made up of primitive data types in a structured format. JavaScript has two main composite data types: `Arrays`  and `Objects`. Both of these composite data types are *mutable*, which means they can be updated after they’ve been created. Two other *composite data types* are `Set` and `Map`.  
 

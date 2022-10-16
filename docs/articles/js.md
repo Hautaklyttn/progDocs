@@ -448,8 +448,8 @@ A higher-order function is a function that accepts functions as arguments, and/o
 
 &nbsp;
 
-<a name="ch3-1-1"></a>
-### 3.1.1 Multi-dimensional Arrays  
+<a name="ch3-1-2"></a>
+### 3.1.2 Multi-dimensional Arrays  
 
 You can create an array of arrays, known as a multi-dimensional array, by placing multiple arrays inside a container array. This could be used to create a coordinate system, for example:  
 

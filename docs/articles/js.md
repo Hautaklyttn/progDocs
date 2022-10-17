@@ -473,6 +473,34 @@ coordinates[1][1]; // The second value of the second array
 
 &nbsp;
 
+**Creating/Filling NxN Array**  
+
+Here an example for 3-dimensional array:
+
+```js
+function _3DimArray (cols, lines) {
+
+    var arr = [];
+
+    for (var i=1; i<=cols; i++){
+        arr[i] = [];
+
+        for (var j=1; j<=lines; j++) {
+            arr[i][j] = [];
+        }
+    }
+    return arr;
+}
+
+// Creating array with size 10x10xN
+var container = _3DimArray(10, 10);
+
+// Adding string "item" to cols=2, lines=4
+container[2][4].push("item")
+```
+
+&nbsp;
+
 # How To's
 
 <a name="ch4-1"></a>

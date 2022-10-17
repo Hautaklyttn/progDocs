@@ -318,7 +318,7 @@ In JavaScript, all arrays are constructed from the global **Array** class. All a
   ```                 
 &nbsp;
 
-**Higher-order array methods**
+**Higher-order array methods**  
 A higher-order function is a function that accepts functions as arguments, and/or returns a function. So, higher-order functions are functions that operate on other functions. In JavaScript, these methods are shared between array instances via prototypal inheritance from **Array.prototype**.  
 
 - `forEach()`  

@@ -30,7 +30,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.8 [QML] Animation with `Behaviour`</font>](#ch2-8)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.9 [QML] Farbverläufe</font>](#ch2-9)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.10 [QML] \*.h file aus \*.ui file erzeugen</font>](#ch2-10)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.11 [QML] Creating a JS Object (e.g. for a QML `Dictionary`)</font>](#ch2-11)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.11 [QML] Creating Javascript Objects (e.g. for a QML `Dictionary`)</font>](#ch2-11)  
 
 ### 3. QML Elements   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 `Repeater`</font>](#ch3-1)  
@@ -39,10 +39,14 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 `WorkerScript` (=Script in 2nd Thread)</font>](#ch3-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.5 `Text` element</font>](#ch3-5)  
 
-### 4. WebAssembly  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Introduction</font>](#ch4-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Environment Setup</font>](#ch4-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.3 Debugging</font>](#ch4-3)  
+### 4. Writing Files  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 .xml format</font>](#ch4-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 .json format</font>](#ch4-2)  
+
+### 5. WebAssembly  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Introduction</font>](#ch5-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.2 Environment Setup</font>](#ch5-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.3 Debugging</font>](#ch5-3)  
 
 &nbsp;
 
@@ -1022,7 +1026,7 @@ Note: A rectange with no width/height set will not be visible. This happens ofte
 &nbsp;  
 
 <a name="ch2-11"></a>
-### 2.11 [QML] Creating a JS Object (e.g. for a QML `Dictionary`)  
+### 2.11 [QML] Creating Javascript Objects (e.g. for a QML `Dictionary`)  
 
 In JavaScript/QML, objects are data (variables), with properties and methods. You can also create your own objects.  
 
@@ -1325,13 +1329,163 @@ A text element only displays the given text. It does not render any background d
 
 &nbsp;
 
+# Writing Files
+
+<a name="ch4-1"></a>
+### 4.1 .xml format  
+
+&nbsp;
+
+<a name="ch4-2"></a>
+### 4.2 .json format  
+
+JSON is a data store and transfer format which can be used to be send data between different type of platforms and systems. JSON stands for **JavaScript Object Notation**.  
+
+Below a JSON data sample:
+```yaml
+{
+    "name": "Burak Hamdi",
+    "surname": "TUFAN",
+    "age": 26,
+    "address": {
+        "city": "Istanbul",
+        "country": "TURKEY"
+    },
+    "phone": [
+        "0555555555",
+        "01111111111"
+    ]
+}
+```
+
+&nbsp;
+
+The manipulation and handling of the JSON data is done with the `QJsonObject` class in C++.  
+
+Related libraries:
+```c
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonArray>
+```
+
+&nbsp;
+
+First **encode** some personal data into JSON format.  
+
+```c
+// Create main object for the whole json data
+QJsonObject mainObject;
+
+//  Insert single datas first
+mainObject.insert("name", "Burak Hamdi");
+mainObject.insert("surname", "TUFAN");
+mainObject.insert("age",26);
+
+// Create an object for inner object of main object
+QJsonObject address;
+address.insert("city", "Istanbul");
+address.insert("country", "TURKEY");
+
+// Insert the inner json object inside main object
+mainObject.insert("address",address);
+
+// Create a json array for main jsonobject
+QJsonArray phones;
+phones.push_back("0555555555");
+phones.push_back("01111111111");
+
+// Add JSON array into our main json object
+mainObject.insert("phone", phones);
+
+// Lastly we created a JSON document and set mainObject as the object of the document
+QJsonDocument jsonDoc;
+jsonDoc.setObject(mainObject);
+
+// Write our jsondocument to a QByteArray variable
+QByteArray bytes = document.toJson( QJsonDocument::Indented );
+
+// Write data to file in path
+QFile file( path );
+if( file.open( QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate ) ) {
+    QTextStream iStream( &file );
+    iStream.setCodec( "utf-8" );
+    iStream << bytes;
+    file.close();
+} else {
+    cout << "file open failed: " << path.toStdString() << endl;
+}
+```
+
+&nbsp;
+
+Now let's **decode** a JSONEncoded data.  
+
+```c
+// Read data from file in QByteArray
+QByteArray jsonData;
+QFile file( path );
+if( file.open( QIODevice::ReadOnly ) )
+{
+    jsonData = file.readAll();
+    file.close();
+} else {
+    ...
+}
+
+// Assign the json text to a JSON object
+QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonData);
+if(jsonDocument.isObject() == false) qDebug() << "It is not a JSON object";
+
+// Then get the main JSON object and get the datas in it
+QJsonObject object = jsonDocument.object();
+
+// Access the single values
+QJsonValue name = object.value("name");
+QJsonValue surname = object.value("surname");
+QJsonValue age = object.value("age"); //this value is integer
+
+// Access the inner JSON object and its inside data. Objects will be within { } curly braces
+QJsonObject address = object.value("address").toObject();
+QJsonValue addr_city = address.value("city");
+QJsonValue addr_country = address.value("country");
+
+// Access the array within the JSON object. arrays will be within [ ] squared braces
+QJsonArray phones = object.value("phone").toArray();
+qDebug() << "There are " + QString::number(phones.size()) + " items in phones array";
+QString phoneList = "";
+for(unsigned int i=0; i<phones.size(); i++ ) phoneList.append(phones.at(i).toString() + "\n");
+
+QString decodedData = "";
+
+decodedData.append("Name : " + name.toString() + "\n");
+decodedData.append("Surname : " + surname.toString() + "\n");
+decodedData.append("Age : " + QString::number(age.toInt()) + "\n");
+
+decodedData.append("Address : \n");
+decodedData.append("-City : " + addr_city.toString() + "\n");
+decodedData.append("-Country : " + addr_country.toString() + "\n");
+
+decodedData.append("Phones : \n" + phoneList + "\n");
+
+ui->txtJsonDecoded->setPlainText(decodedData);
+
+if(name.isString() == true) qDebug() << "name is a string";
+qDebug() << "Firstname : " + name.toString();
+```
+
+
+
+
 &nbsp;
 
 
 # WebAssembly
 
-<a name="ch4-1"></a>
-### 4.1 Introduction  
+<a name="ch5-1"></a>
+### 5.1 Introduction  
 
 `WebAssembly` is a binary format that allows sand-boxed executable code in web pages. This format is nearly as fast as native machine code, and is now supported by all major web browsers. We use *Emscripten* to compile Qt into something that runs in a web browser from a web server. Instead of compiling and deploying for multiple platforms, the idea is to compile and deploy on a web server for any platform that has a browser that supports WebAssembly.  
 
@@ -1377,8 +1531,8 @@ Generated important files (boilerplate):
 
 &nbsp;
 
-<a name="ch4-2"></a>
-### 4.2 Environment Setup  
+<a name="ch5-2"></a>
+### 5.2 Environment Setup  
 
 The official setup page can be found [here](https://doc.qt.io/qt-5/wasm.html) and [here](https://wiki.qt.io/Qt_for_WebAssembly) the Wiki.
 
@@ -1406,8 +1560,8 @@ In case that *Qt Creator* **does not find the *emscripten* compiler anymore**:
 
 &nbsp;
 
-<a name="ch4-3"></a>
-### 4.3 Debugging  
+<a name="ch5-3"></a>
+### 5.3 Debugging  
 
 Qt debug and logging output is printed on the JavaScript console, which can be accessed via browser "Developer Tools" or similar.  
 

@@ -18,6 +18,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1.3 `Signals` and `Slots`</font>](#ch1-1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Application Basics</font>](#ch1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.1 qmake</font>](#ch1-2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.2 Scope and Naming Resolution</font>](#ch1-2-1)  
 
 ### 2. How To's   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 [JS] Importing a JS resource from another JS resource</font>](#ch2-1)  
@@ -73,7 +74,7 @@ layout: default
 &nbsp; 
 
 <a name="ch1-1"></a>
-### 1.1 Qt5 / Qt Quick / QML  
+## 1.1 Qt5 / Qt Quick / QML  
 **Qt5** is a complete refreshing of the very successful Qt4 release. Qt5 is focusing on the following:  
 
 - Outstanding graphics:  
@@ -147,7 +148,7 @@ The global declarations include *types*, *functions* and *macros*.
 &nbsp; 
 
 <a name="ch1-1-1"></a>
-#### 1.1.1 Basic QML Concepts  
+### 1.1.1 Basic QML Concepts  
 
 ```js
 Image {
@@ -201,7 +202,7 @@ For example, if a width property is changed, you can observe it with ``onWidthCh
 &nbsp; 
 
 <a name="ch1-1-2"></a>
-#### 1.1.2 Properties  
+### 1.1.2 Properties  
 Elements are declared by using their element name but are defined by using their properties or by creating custom properties. A property is a simple key-value pair, e.g. *width : 100*, *text: 'Greetings'*, *color: '#FF0000'*. A property has a well-defined type and can have an initial value.  
 
 ```js
@@ -336,7 +337,7 @@ height: Qt.binding(function() {return <js_var>})
 &nbsp; 
 
 <a name="ch1-1-3"></a>
-#### 1.1.3 `Signals` and `Slots`  
+### 1.1.3 `Signals` and `Slots`  
 
 Signals and slots are used for communication between objects. The signals and slots mechanism is a central feature of Qt and probably the part that differs most from the features provided by other frameworks. Signals and Slots are made possible by Qt's *meta-object system*.  
 
@@ -630,7 +631,7 @@ Note: The following code will compile and run, but due to signature normalizatio
 &nbsp;
 
 <a name="ch1-2"></a>
-### 1.2 Application Basics  
+## 1.2 Application Basics  
  
 ````c
 #include <QApplication>
@@ -680,7 +681,7 @@ abgeleitet von der 'Urklasse' *QObject*, stellt eine Instanz der Klasse QWidget 
 &nbsp; 
 
 <a name="ch1-2-1"></a>
-#### 1.2.1 *qmake*  
+### 1.2.1 *qmake*  
 
 Our project (*.pro*) files are parsed by a utility called `qmake`, which in turn generates Makefiles that drive the building of the application. We define the type of project output we want, what source files are included as well as the dependencies and much more.  
 
@@ -727,6 +728,122 @@ Whenever you save a change to your *\*.pro* files, qmake will parse the file. If
 &nbsp;
 
 > To get `qmake` to take a fresh look at your project and generate new *Makefiles*, right-click on your project in the *Projects* pane and select *Run qmake*. It may be slightly tedious, but it’s a good habit to manually run qmake in this way on each of your projects before building and running your application. I’ve found that certain types of code changes can “slip under the radar” and leave you scratching your head when you run your application and they don’t seem to have had any effect. If you ever see your application ignoring the changes you’ve just made, run qmake on each of your projects and try again. The same applies if you get spurious linker errors.
+
+&nbsp; 
+
+<a name="ch1-2-2"></a>
+### 1.2.2 Scope and Naming Resolution  
+
+> QML property bindings, inline functions, and imported JavaScript files **all run in a JavaScript scope**.  
+
+As JavaScript's built-in scope mechanism is very simple, QML enhances it to fit more naturally with the QML language extensions.  
+
+In the following example, the `addConstant()` method will add 13 to the parameter passed just as the programmer would expect irrespective of the value of the QML object's `a` and `b` properties (*QtObject* stands for any QML object).  
+
+```js
+QtObject {
+    property int a: 3
+    property int b: 9
+
+    function addConstant(b) {
+        var a = 13;
+        return b + a;
+    }
+}
+```
+
+&nbsp;
+
+**Component Scope**  
+
+Each QML component in a QML document defines a logical scope. Each document has at least one root component, but can also have other inline sub-components. 
+
+> The component scope is the union of the object ids within the component and the component's root object's properties.  
+
+```js
+Item {
+    property string title
+
+    Text {
+        id: titletype
+        text: "<b>" + title + "</b>"
+        font.pixelSize: 22
+        anchors.top: parent.top
+    }
+
+    Text {
+        text: titletype.text
+        font.pixelSize: 18
+        anchors.bottom: parent.bottom
+    }
+}
+```
+
+The example above shows a simple QML component that displays a rich text title string at the top, and a smaller copy of the same text at the bottom. The first `Text` type directly accesses the component's `title` property when forming the text to display. That the root type's properties are directly accessible makes it trivial to distribute data throughout the component.  
+
+The second `Text` type uses an id to access the first's text directly. IDs are specified explicitly by the QML programmer so they always take precedence over other property names (except for those in the *JavaScript Scope*). For example, in the unlikely event that the binding's scope object had a `titletype` property in the previous example, the `titletype` id would still take precedence.
+
+&nbsp;
+
+**Component Instance Hierarchy**  
+
+In QML, component instances connect their component scopes together to form a scope hierarchy. 
+
+> Component instances can directly access the component scopes of their ancestors.  
+
+The easiest way to demonstrate this is with inline sub-components whose component scopes are implicitly scoped as children of the outer component.  
+
+```js
+Item {
+    property color defaultColor: "blue"
+
+    ListView {
+        delegate: Component {
+            Rectangle {
+                color: defaultColor
+            }
+        }
+    }
+}
+```
+
+&nbsp;
+
+The component instance hierarchy allows instances of the delegate component to access the `defaultColor` property of the `Item` type. Of course, had the delegate component had a property called `defaultColor` that would have taken precedence.  
+
+The component instance scope hierarchy extends to out-of-line components, too. In the following example, the `TitlePage.qml` component creates two `TitleText` instances. 
+
+>Even though the `TitleText` type is in a separate file, it still has access to the `title` property when it is used from within the `TitlePage`. 
+
+QML is a dynamically scoped language - depending on where it is used, the `title` property may resolve differently.
+
+```js
+// TitlePage.qml
+import QtQuick 2.0
+Item {
+    property string title
+
+    TitleText {
+        size: 22
+        anchors.top: parent.top
+    }
+
+    TitleText {
+        size: 18
+        anchors.bottom: parent.bottom
+    }
+}
+
+// TitleText.qml
+import QtQuick 2.0
+Text {
+    property int size
+    text: "<b>" + title + "</b>"
+    font.pixelSize: size
+}
+```
+
+
 
 &nbsp;
 

@@ -29,6 +29,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1.1 Common Methods</font>](#ch3-1-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1.2 Multi-dimensional Arrays</font>](#ch3-1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 Objects</font>](#ch3-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 Classes</font>](#ch3-3)  
 
 ### 4. HowTo's
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Dynamic variable names</font>](#ch4-1)  
@@ -179,6 +180,8 @@ Functions always **return** (or output) a value. This can can be specified in th
 
 **Returning *Undefined***  
 If a return value isn’t explicitly stated, it will return `undefined` by default. This is because a function must return a value in order to be considered a function. You’ll often see `undefined` appear in the console after calling a function that in essence is just a procedure and doesn’t need to return a value.  
+
+&nbsp;
 
 **Default Parameters**  
 JavaScript provides a convenient way to specify default parameters for a function. These are values that will be used by the function if no arguments are provided when it’s called. To specify a default parameter, you simply assign the default value to it in the function definition. For example, the following function accepts a parameter that’s then added to the end of the string `'Hello '` . The parameter is given a default value of `'World'`:  
@@ -712,9 +715,16 @@ To create an object from a constructor function, we use the `new` keyword.
 
 &nbsp;
 
-> An object literal is typically used to create a **single object** whereas a constructor is useful for creating **multiple objects**.  
+> An object literal is typically used to create a **single object** whereas a constructor function is useful for creating **multiple objects**.  
 
 > **Note:** It is considered a good practice to capitalize the first letter of your constructor function.
+
+&nbsp;  
+
+<a name="ch3-3"></a>
+## 3.3 Classes
+
+... tbd ...
 
 &nbsp;
 

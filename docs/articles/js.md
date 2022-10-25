@@ -21,12 +21,14 @@ layout: default
 
 ### 2. Functions
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basic Functions</font>](#ch2-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1.1 Arrow Function</font>](#ch2-1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1.2 Callbacks</font>](#ch2-1-2)  
 
 ### 3. Build-In Types  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 Arrays</font>](#ch3-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1.1 Common Methods</font>](#ch3-1-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1.2 Multi-dimensional Arrays</font>](#ch3-1-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 ...</font>](#ch3-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 Objects</font>](#ch3-2)  
 
 ### 4. HowTo's
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Dynamic variable names</font>](#ch4-1)  
@@ -148,6 +150,106 @@ score;
 
 <a name="ch2-1"></a>
 ## 2.1 Basic Functions  
+
+The most common way to define a function in Javascript is to use a function declaration like the one shown below.  
+
+```js
+function hello(){
+alert('Hello, World!');
+}
+```
+
+Another way of defining a function is to create a **function expression**. This assigns an “anonymous function” to a variable  
+
+```js
+const goodbye = function(){
+alert('Goodbye, World!');
+};
+```
+
+A function expression is called in the same way as a function declaration—by writing the name of the variable it was assigned to, followed by parentheses:  
+
+```js
+goodbye();
+```
+
+&nbsp;
+
+Functions always **return** (or output) a value. This can can be specified in the body of the function using the `return` keyword.
+
+**Returning *Undefined***  
+If a return value isn’t explicitly stated, it will return `undefined` by default. This is because a function must return a value in order to be considered a function. You’ll often see `undefined` appear in the console after calling a function that in essence is just a procedure and doesn’t need to return a value.  
+
+**Default Parameters**  
+JavaScript provides a convenient way to specify default parameters for a function. These are values that will be used by the function if no arguments are provided when it’s called. To specify a default parameter, you simply assign the default value to it in the function definition. For example, the following function accepts a parameter that’s then added to the end of the string `'Hello '` . The parameter is given a default value of `'World'`:  
+
+```js
+function hello(name='World') {
+alert(`Hello, ${name}!`);
+}
+```
+
+Now if we call this function without any arguments, it will default to using `'World'` as the name argument:  
+
+```js
+hello();
+<< 'Hello, World!'
+```
+
+&nbsp;
+
+<a name="ch2-1-1"></a>
+### 2.1.1 Arrow Functions  
+
+**Arrow functions** use a less verbose syntax, making them quicker to write, and they’re identified by the “arrow” symbol *( => )* that gives them their name.  
+
+Arrow functions are always anonymous, so if you want to refer to them, you must assign them to a variable, like we did with function  expressions. The example below shows how to create an arrow function that’s assigned to the variable `hola`:  
+
+```js
+const hola = () => alert('Hola, Mundo!');
+```
+The arrow function starts with the parentheses and arrow, *() =>* . Everything after that is the code that will run when the function is called. Notice that this code doesn’t need to be put inside any curly braces (as long as it’s only one line of code), which makes the function appear much more concise.  
+
+Short, one-line functions are good candidates for using arrow functions.
+
+&nbsp;
+
+<a name="ch2-1-2"></a>
+### 2.1.2 Callbacks  
+
+A function that’s passed as an argument to another function is known as a **callback**. The callback can then be called from within the body of the function that it’s an argument of. Being able to call different functions from within functions makes functions even more flexible.  
+
+This example is a function that’s called from within the `bake` function and allows us to add some extra information. Update the `bake` function by entering the code below into the console:  
+
+```js
+function bake(ingredients,callback){
+  console.log(`Mix together ${ingredients}`);
+  console.log('Bake in the oven');
+  callback();
+}
+```
+
+Now we can call the bake function with a callback that logs another message to the console. In the example below, the callback is an anonymous arrow function:  
+
+```js
+bake('flour, water & sugar', () => console.log('Add icing on top...'));
+<< "Mix together flour, water & sugar..."
+<< "Bake in the oven...'
+<< "Add icing on top..."
+```
+
+or
+
+```js
+function eat(){
+  console.log('Eat every last crumb!');
+}
+
+bake('flour,water & sugar', eat);
+<< "Mix together flour, water & sugar..."
+<< "Bake in the oven...'
+<< "Eat every last crumb!"
+```
 
 &nbsp;
 
@@ -499,7 +601,125 @@ var container = _3DimArray(10, 10);
 container[2][4].push("item")
 ```
 
+&nbsp;  
+
+<a name="ch3-2"></a>
+## 3.2 Objects  
+
+**Objects** are abstract data types used in programming. They can be used to represent real-world objects such as people, animals or places, as well as more abstract concepts such as bank account details, dates or file structures.  
+
+JavaScript is not a class-based language (although you can define classes if you want to). 
+
+> It allows you to create objects quickly and easily without the need for defining a class first.  
+
+Objects can have *properties* and *methods*. **Properties** are information about the object and **methods** are actions that the object can perform. Objects are often used to keep any related information and functionality together in the same place  
+
+Object literals are a distinguishing feature of the JavaScript language, as they allow objects to be created quickly without the need for defining a class, which is common in many other languages. An **object literal** is a self-contained set of related values. Properties can be of almost any data type, such as numbers, strings, Booleans, arrays, or even other objects. If a property is a function, then it’s known as a **method**.  
+
+To create an object literal in JavaScript, simply enter a pair of curly braces.  
+
+```js
+const square = {
+  sides: 4,
+  length: 5,
+  perimeter: 20,
+  area: 25
+}
+```
+
+Methods look similar to the other properties, but are defined as a function. The following code shows how we would create an object literal to represent a duck with a quack() method:  
+
+```js
+const duck = {
+  name: 'Quacky',
+  legs: 2,
+  quack: function() {
+    alert('QUACK! QUACK!');
+  }
+};
+```
+
+You can access the properties and methods of an object using the dot notation.  
+
+```js
+elephant.name;
+<< "Dumbo"
+
+elephant.fly()
+<< "Fly, fly away!"
+```
+
+Objects are **mutable** by default, which means that their properties and methods can be changed or removed and new properties and methods can be added, even if they were declared using `const`.  
+
 &nbsp;
+
+It’s even possible for an object to contain other objects. These are known as **nested objects**. 
+
+Here’s an example of an object that contains a group of nested objects. Each nested object represents a different shape. The container object has been assigned to the variable `shapes`:  
+
+```js
+const shapes = {
+  triangle: { sides: 3 },
+  square: { sides: 4 },
+  pentagon: { sides: 5 },
+  hexagon: { sides: 6 },
+  octagon: { sides: 8 },
+  megagon: { sides: 10e6 },
+}
+```
+
+The values in nested objects can be accessed by referencing each property name in order using either dot or bracket notation:  
+
+```js
+shapes.triangle.sides;
+<< 3
+shapes['megagon']['sides'];
+<< 1000000
+```
+
+&nbsp;
+
+**this**  
+The keyword this needs to be be used inside an object to refer to the object itself. It’s often used in methods to gain access to the object’s properties.  
+
+```js
+const square = {
+  sides: 4,
+  length: 5,
+  perimeter() { return this.sides * this.length },
+  area() { return this.length * this.length }
+}
+```
+
+&nbsp;
+
+**Constructor function**  
+
+The purpose of a constructor is to **create a new object dynamically** and set values for any existing object properties.
+
+```js
+//Constructor function
+function User (name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+var user1 = new User('Bob', 25);
+var user2 = new User('Alice', 27);
+```
+
+To create an object from a constructor function, we use the `new` keyword.
+
+&nbsp;
+
+> An object literal is typically used to create a **single object** whereas a constructor is useful for creating **multiple objects**.  
+
+> **Note:** It is considered a good practice to capitalize the first letter of your constructor function.
+
+&nbsp;
+
+&nbsp;
+
 
 # How To's
 

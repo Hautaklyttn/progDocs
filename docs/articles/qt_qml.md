@@ -1197,7 +1197,7 @@ A Repeater item is usually enclosed in a positioner type such as `Row` or `Colum
 
 &nbsp;
 
-***index***
+***index***  
 Delegates are exposed to a read-only `index` property that indicates the index of the delegate within the repeater. For example, the following `Text` delegate displays the index of each repeated item:  
 ```js
 Column {
@@ -1215,7 +1215,7 @@ Output:
 ```
 &nbsp;
 
-***count***
+***count***  
 This *int* property holds the number of items in the model.
 
 

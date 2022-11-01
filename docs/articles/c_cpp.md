@@ -2254,6 +2254,18 @@ The C library function **char \*strcat(char \*dest, const char \*src)** appends 
 #include <string.h>
 ```
 
+
+*Example:* Concate multiple literals  
+```c
+char str[80];
+strcpy(str, "these ");
+strcat(str, "strings ");
+strcat(str, "are ");
+strcat(str, "concatenated.");
+```
+For the first parameter, you need to provide the destination buffer itself. The destination buffer must be a char array buffer.
+
+
 &nbsp;
 
 <a name="ch4-4-6"></a>

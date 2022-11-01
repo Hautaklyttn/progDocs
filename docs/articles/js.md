@@ -30,6 +30,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1.2 Multi-dimensional Arrays</font>](#ch3-1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 Objects</font>](#ch3-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 Classes</font>](#ch3-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 The Document Object Model (DOM)</font>](#ch3-4)  
 
 ### 4. HowTo's
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Dynamic variable names</font>](#ch4-1)  
@@ -725,6 +726,82 @@ To create an object from a constructor function, we use the `new` keyword.
 ## 3.3 Classes
 
 ... tbd ...
+
+&nbsp;  
+
+<a name="ch3-4"></a>
+## 3.4 The Document Object Model (DOM)  
+
+The *Document Object Model*, or *DOM* for short, allows us to **access the elements of a web page** from within our code. It provides tools for adding and removing elements, and for updating the content and style of a page.  
+
+The DOM is **language agnostic**, which means that it can be used in any programming language, although JavaScript is the language it’s most associated with.  
+
+&nbsp;
+
+### The Document Object Model  
+
+> The Document Object Model represents an HTML document as a **network of connected nodes** that form a tree-like structure.  
+
+The DOM treats everything on a web page as a node. It represents HTML tags as **element nodes** and any text inside the tags as **text nodes**. All these nodes are connected to make a node-tree that describes the overall structure of the web page.  
+
+To demonstrate this, let’s take a look at the following short snippet of HTML code:  
+
+```html
+<h1 id='greeting'>Hello, <em>World!</em></h1>
+```
+
+This can be represented as the node-tree diagram shown below.  
+
+![dt](../assets/pics/domTree.png)  
+
+The `<h1>` tag contains everything, so this appears as an element node at the top of the node tree. The word “Hello” is text, so this is a child text node. The `<em>` element is inside the `<h1>` tag, so it’s a child element node. This makes the `<h1>` element node a parent node of these child nodes. The text inside the `<em>` tags is a text child node of the `<em>` element node.  
+
+> Being able to visualize the HTML markup as a node tree will make navigating the DOM a much easier experience.
+
+&nbsp;
+
+**HTML Document vs the DOM**  
+> When you visit a web page, your browser first downloads the page document with all its HTML, text, images and so on. The browser then creates a representation (or mental model, if you like) of that document, which is the *Document Object Model*. Then the browser uses that DOM to display the web page on your device. JavaScript allows changes to be made to the web page, but those changes are made to the DOM, rather than to the original, hard-coded HTML.  
+
+&nbsp;
+
+**Inspecting the DOM**  
+> Browsers actually let you view the Document Object Model of a web page, and you can even play around with it in all sorts of ways. (It’s a bit like looking under the hood of a car.) If you right-click anywhere on a web page, you’ll see an option to “inspect” the page. That will display the DOM, along with all sorts of other developer tools. The DOM will look similar to the original HTML, but not exactly the same — especially if JavaScript has modified it.  
+
+&nbsp;
+
+### Getting/Editing an element  
+
+The DOM provides a useful method called `getElementById()` that returns a reference to the element with a particular ID attribute. For example, we can get a reference to the `<h1>` heading element in the previous example using its `id` of `'greeting'`.  
+
+We can get a reference to the `<h1>` element by adding the following code to the JS section:  
+```js
+const hello = document.getElementById('greeting');
+```
+We can see what gets returned by typing the name of the variable we assigned the element to ( `hello` ) into the console:  
+```html
+hello;
+<< "<h1 id='greeting'>Hello, <em>World!</em></h1>"
+```
+
+As you can see, the variable `hello` now points to the HTML element with the ID of `'greeting'` . Now that we have a reference to that element in our code, it means we can do things with it!  
+
+&nbsp;
+
+The easiest way to update the HTML on a page is to use the `innerHTML` property. This will return all the HTML that’s enclosed inside that element’s tags as a string.  
+```html
+hello.innerHTML;
+<< "Hello, <em>World!</em>"
+```
+
+The great thing about the `innerHTML` property is that it’s also writable, so it gives us a convenient way to insert a chunk of HTML inside an element, e.g.  
+```js
+const name = prompt('What is your name?');
+hello.innerHTML = `Hello, <em>${name}!</em>`;
+```
+Notice that we’ve used a template literal to produce the HTML. These are incredibly useful when creating chunks of HTML to dynamically insert into a web page, as they allow variables to be inserted directly into them.  
+
+
 
 &nbsp;
 

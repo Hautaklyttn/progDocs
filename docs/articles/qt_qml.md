@@ -860,18 +860,21 @@ Text {
 
 The Windows deployment tool `windeployqt` is designed to automate the process of creating a deployable folder containing the Qt-related dependencies (libraries, QML imports, plugins, and translations) required to run the application from that folder. It creates an installation tree for Windows desktop applications, which can be easily bundled into an installation package.  
 
-The tool can be found in `<QT_DIR>/bin/windeployqt.exe` and can be run in the command line. Output folder will be the file of the .exe file of the application (usually the `*/release` folder).  
+The tool can be found in `<QT_DIR>/bin/windeployqt.exe` and can be run in the command line. 
+
+Output folder of the following process will be the folder of the .exe file of the application (usually the `*/release` folder).  
 
 1. Open `cmd` and navigate to `<QT_DIR>/bin`
-2. Write "windeployqt.exe --qmldir " and...
-   1. In the Explorer copy the path to the folder with all your *.qml files (project folder)
-   2. Append it in `cmd` with right-click on the mouse
-   3. In the Explorer copy the path to the `*/release` folder (containing the .exe file, the binary)
-   4. Append it in `cmd` with right-click on the mouse
-3. The command should now look like this: `windeployqt.exe --qmldir D:\...\<project_folder> D:\...\release`
-4. Press Enter and the process should start
+2. Write `windeployqt.exe --qmldir ` and...
+   1. ..in the Explorer, copy the path to the folder with all your *.qml files (*project folder*)
+   2. ..append it in `cmd` with right-click on the mouse
+   3. ..in the Explorer, copy the path to the `*/release` folder (containing the .exe file, the binary)
+   4. ..append it in `cmd` with right-click on the mouse
+3. The command should now look like this:  
+   `windeployqt.exe --qmldir D:\...\<project_folder> D:\...\release`
+4. Press Enter and the creation process should start
 
-After starting the .exe in the `*/release` fodler, there might be some *.dll's missing. Copy them to the folder from the Qt folder (usually the same folder as the *windeployqt.exe*, so `<QT_DIR>/bin`).
+After starting the .exe in the `*/release` folder, there might be some \*.dll's missing. Copy them to the folder from the Qt folder (usually the same folder the *windeployqt.exe* file is in, so `<QT_DIR>/bin`).
 
 &nbsp; 
 

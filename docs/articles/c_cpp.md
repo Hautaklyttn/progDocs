@@ -168,6 +168,28 @@ The declaration of an external object tells the compiler the type and name of th
 
 &nbsp;
 
+**Initialisation vs Assignment**  
+
+When we write  
+```c
+data_type variableName = someValue;
+```
+we are first declaring *variableName* to be a variable of the type *data_type*.  
+
+Subsequently, an assignment of a value is being done so it's **initialising** it to *someValue*.
+> This is a special type of **function**, a system function, known as **initialisation**.
+
+&nbsp;
+But writing  
+```c
+variableName = someValue;
+```
+means we are attempting to assign *someValue* to *variableName* outside the scope of any function, and outside the scope of an initialisation. This is not possible outside a function.  
+
+> Code only executes from within called functions, with the exception of **initialisation**, which occurs during an initial assignment.
+
+&nbsp;
+
 <a name="ch1-2"></a>
 ### 1.2 C und C++
 

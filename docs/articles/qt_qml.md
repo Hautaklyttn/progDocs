@@ -43,9 +43,10 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 `WorkerScript` (=Script in 2nd Thread)</font>](#ch3-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.5 `Text` element</font>](#ch3-5)  
 
-### 4. Writing Files  
+### 4. Writing Files & DataStorage  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 .xml format</font>](#ch4-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 .json format</font>](#ch4-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.3 'Local Storage' (SQLite db)</font>](#ch4-3)  
 
 ### 5. WebAssembly  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Introduction</font>](#ch5-1)  
@@ -1517,6 +1518,16 @@ A text element only displays the given text. It does not render any background d
 <a name="ch4-1"></a>
 ### 4.1 .xml format  
 
+Qt provides two classes for reading and writing XML through a simple streaming API: `QXmlStreamReader` and `QXmlStreamWriter`.  
+
+A stream reader reports an XML document as a stream of tokens. The `QXmlStreamReader` drives the loop, pulling tokens from the reader when they are needed. This pulling approach makes it possible to build recursive descent parsers, allowing XML parsing code to be split into different methods or classes.  
+
+`QXmlStreamReader` is a well-formed XML parser that excludes external parsed entities. Hence, data provided by the stream reader adheres to the W3C's criteria for well-formed XML, as long as no error occurs.  
+
+An example of QXmlStreamReader implementation is shown below  
+
+... tbd ...
+
 &nbsp;
 
 <a name="ch4-2"></a>
@@ -1659,11 +1670,35 @@ if(name.isString() == true) qDebug() << "name is a string";
 qDebug() << "Firstname : " + name.toString();
 ```
 
+&nbsp;
+
+<a name="ch4-3"></a>
+### 4.3 'Local Storage' (SQLite db)  
+
+`Local Storage` is a singleton type for reading and writing to SQLite databases.  
+
+To use the types in this module, import the module and call the relevant functions using the `LocalStorage` type:  
+
+```c
+import QtQuick
+import QtQuick.LocalStorage
+
+Item {
+    Component.onCompleted: {
+        var db = LocalStorage.openDatabaseSync(...)
+    }
+}
+```
+
+These databases are user-specific and QML-specific, but accessible to all QML applications. They are stored in the *Databases* subdirectory of `QQmlEngine::offlineStoragePath()`, currently as SQLite databases.  
+
+> Database connections are automatically closed during Javascript garbage collection.
 
 
 
 &nbsp;
 
+&nbsp;
 
 # WebAssembly
 

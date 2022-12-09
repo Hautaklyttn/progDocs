@@ -18,7 +18,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1.3 `Signals` and `Slots`</font>](#ch1-1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Application Basics</font>](#ch1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.1 qmake</font>](#ch1-2-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.2 Scope and Naming Resolution</font>](#ch1-2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.2 Including external Libraries</font>](#ch1-2-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.3 Scope and Naming Resolution</font>](#ch1-2-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3 Deployment</font>](#ch1-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3.1 windeployqt</font>](#ch1-3-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.3.2 'Static' deployment</font>](#ch1-3-2)  
@@ -736,7 +737,54 @@ Whenever you save a change to your *\*.pro* files, qmake will parse the file. If
 &nbsp; 
 
 <a name="ch1-2-2"></a>
-### 1.2.2 Scope and Naming Resolution  
+### 1.2.2 Including external Libraries  
+
+**INCLUDEPATH**  
+> References the folder containing the .h files of the external library. Important for the compilation stage.
+
+```c
+# external 'includes'
+INCLUDEPATH += D:/IPG/carmaker/win64-11.0.1/include
+DEPENDPATH += D:/IPG/carmaker/win64-11.0.1/include
+INCLUDEPATH += D:/Programme/Qt/Tools/mingw810_64/x86_64-w64-mingw32/include
+DEPENDPATH += D:/Programme/Qt/Tools/mingw810_64/x86_64-w64-mingw32/include
+```
+
+&nbsp;
+
+**LIBS**  
+> Specifies a list of libraries to be linked into the project. If you use the Unix -l (library) and -L (library path) flags, qmake handles the libraries correctly on Windows (that is, passes the full path of the library to the linker). The library must exist for qmake to find the directory where a -l lib is located.
+
+```c
+# libs
+win32:CONFIG(release, debug|release): LIBS += -LD:/IPG/carmaker/win64-11.0.1/lib/ -lapo-client-win32
+else:CONFIG(debug, debug|release): LIBS += -LD:/IPG/carmaker/win64-11.0.1/lib/ -lapo-client-win32d
+win32:CONFIG(release, debug|release): LIBS += -LD:/Programme/Qt/Tools/mingw810_64/x86_64-w64-mingw32/lib/ -lws2_32
+else:win32:CONFIG(debug, debug|release): LIBS += -LD:/Programme/Qt/Tools/mingw810_64/x86_64-w64-mingw32/lib/ -lws2_32d
+```
+
+&nbsp;
+
+**PRE_TARGETDEPS**  
+> Lists libraries that the target depends on. Qt uses the PRE_TARGETDEPS variable to store dependencies for statically linked libraries. It forces your library to get relinked everytime you build your application. If you don't have this variable specified and you update and rebuild your library, your program will still use the old library.
+
+```c
+# pre_targetdeps (forces given lib to get relinked at build)
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += D:/IPG/carmaker/win64-11.0.1/lib/libapo-client-win64.a
+else:win32:CONFIG(release, debug|release): PRE_TARGETDEPS += D:/IPG/carmaker/win64-11.0.1/lib/libapo-client-win64.a
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += D:/Programme/Qt/Tools/mingw810_64/x86_64-w64-mingw32/lib/libws2_32.a
+else:win32:CONFIG(release, debug|release): PRE_TARGETDEPS += D:/Programme/Qt/Tools/mingw810_64/x86_64-w64-mingw32/lib/libws2_32.a
+```
+
+&nbsp;
+
+>  If you use static libraries, you should (almost) **always use both**, *LIB* and *PRE_TARGETDEPS*.
+
+
+&nbsp; 
+
+<a name="ch1-2-3"></a>
+### 1.2.3 Scope and Naming Resolution  
 
 > QML property bindings, inline functions, and imported JavaScript files **all run in a JavaScript scope**.  
 

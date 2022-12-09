@@ -757,10 +757,10 @@ DEPENDPATH += D:/Programme/Qt/Tools/mingw810_64/x86_64-w64-mingw32/include
 
 ```c
 # libs
-win32:CONFIG(release, debug|release): LIBS += -LD:/IPG/carmaker/win64-11.0.1/lib/ -lapo-client-win32
-else:CONFIG(debug, debug|release): LIBS += -LD:/IPG/carmaker/win64-11.0.1/lib/ -lapo-client-win32d
-win32:CONFIG(release, debug|release): LIBS += -LD:/Programme/Qt/Tools/mingw810_64/x86_64-w64-mingw32/lib/ -lws2_32
-else:win32:CONFIG(debug, debug|release): LIBS += -LD:/Programme/Qt/Tools/mingw810_64/x86_64-w64-mingw32/lib/ -lws2_32d
+win32:CONFIG(release, debug|release): LIBS += -LD:/IPG/carmaker/win64-11.0.1/lib/ -lapo-client-win64
+else:CONFIG(debug, debug|release): LIBS += -LD:/IPG/carmaker/win64-11.0.1/lib/ -lapo-client-win64d
+win32:CONFIG(release, debug|release): LIBS += -LD:/Programme/Qt/Tools/mingw810_64/x86_64-w64-mingw32/lib/ -lws2_64
+else:win32:CONFIG(debug, debug|release): LIBS += -LD:/Programme/Qt/Tools/mingw810_64/x86_64-w64-mingw32/lib/ -lws2_64d
 ```
 
 &nbsp;

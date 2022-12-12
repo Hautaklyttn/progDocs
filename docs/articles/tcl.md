@@ -1130,6 +1130,7 @@ package require Thread 2.7.2
 ```
 
 &nbsp;
+              
 The simplest way of taking advantage of this package is to run your code inside a little master execution context like this:
 ```tcl
 set app_runner [thread::create { thread::wait }]
@@ -1154,6 +1155,7 @@ proc app_cancel {} {
 ```
 
 &nbsp;
+              
 Execution is done by
 ```tcl
 app_eval {

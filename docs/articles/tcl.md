@@ -49,7 +49,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.7 Increment Characters</font>](#ch4-7)   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.8 XML Handling</font>](#ch4-8)   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.9 Binding manuell triggern</font>](#ch4-9)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.10 Nested Dereferencing</font>](#ch4-10)     
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.10 Nested Dereferencing</font>](#ch4-10)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.11 Threads</font>](#ch4-11)  
  
 ### 5. IPG CarMaker
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 Basics</font>](#ch5-1)  
@@ -1113,6 +1114,52 @@ for {set i 1} {$i < 4} {incr i} {
   }
 }
 # Value in variable 'idx' is the value behind 'CS_BIT::G1_1_CF' (for i=1, j=1)
+```
+
+&nbsp;
+
+<a name="ch4-11"></a>
+### 4.11 Threads  
+
+The **thread** extension creates threads that contain Tcl interpreters, and it lets you send scripts to those threads for evaluation. Additionally, it provides script-level access to basic thread synchronization primitives, like mutexes and condition variables.  
+
+Including thread package in project:
+```tcl
+set auto_path [linsert $auto_path 0 $<projDir>/lib/thread]
+package require Thread 2.7.2
+```
+
+&nbsp;
+The simplest way of taking advantage of this package is to run your code inside a little master execution context like this:
+```tcl
+set app_runner [thread::create { thread::wait }]
+
+proc app_eval {args} {
+    global app_runner
+    thread::send -async $app_runner [concat {*}$args] app_result
+}
+
+# Simple receiver for async returns - reacts on 'app_result' being written
+trace add variable app_result write {apply {args {
+    global app_result
+    if {$app_result ne ""} {
+        puts $app_result
+    }
+}}}
+
+proc app_cancel {} {
+    global app_runner
+    thread::cancel $app_runner
+}
+```
+
+&nbsp;
+Execution is done by
+```tcl
+app_eval {
+    while 1 {puts -nonewline .;after 100}
+}
+app_cancel
 ```
 
 &nbsp;

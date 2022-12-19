@@ -2684,7 +2684,7 @@ Im Code-Beispiel wurde der Funktion 'TuWas()' eine Deklaration hinzugefügt, die
 <a name="ch5-11"></a>
 ### 5.11 [c++] 'reinterpret_cast' type casting  
 
-**reinterpret_cast** is a type of casting operator used in C++. It converts between types by reinterpreting the underlying bit pattern.  
+*reinterpret_cast<>* is a type of casting operator used in C++. It converts between types by **reinterpreting the underlying bit pattern**.  
 
 - It is used to convert **<u>a pointer</u> of some data type into <u>a pointer</u> of another data type**, even if the data types before and after conversion are different.  
 - It **does not check** if the pointer type and data pointed by the pointer is same or not.  
@@ -2717,9 +2717,9 @@ int main()
 
 &nbsp;
 
-**Purpose for using reinterpret_cast**   
+**Purpose for using *reinterpret_cast<>***   
 
-1. *reinterpret_cast* is a very special and dangerous type of casting operator. And is suggested to use it using proper data type i.e., (pointer data type should be same as original data type).
+1. *reinterpret_cast* is a very special and dangerous type of casting operator. And is suggested to use it using proper data type, i.e. pointer data type should be same as original data type.
 2. It can typecast any pointer to any other data type.
 3. It is used when we want to work with bits.
 4. If we use this type of cast then it becomes a non-portable product. So, it is suggested not to use this concept unless required.

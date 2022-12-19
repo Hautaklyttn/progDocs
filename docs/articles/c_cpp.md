@@ -81,6 +81,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.8 Das Schlüsselwort `pragma`</font>](#ch5-8)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9 `Handle` in C++</font>](#ch5-9)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.10 'Exceptions' - `Try / Catch`</font>](#ch5-10)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.11 [c++] 'reinterpret_cast' type casting</font>](#ch5-11)  
 
 ### 6. Bibliotheken, API's und *make*   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Static Library Basics</font>](#ch6-1)  
@@ -2677,6 +2678,111 @@ int main () {
 ```
 Wie immer bei der Polymorphie wird ein Zeiger auf das übergebene Objekt verwendet, um die virtuelle Funktion aufzurufen. Das Objekt kennt sich selbst und ruft über die eigene VTable die zugehörige Funktion 'MeldeFehler()' auf.  
 Im Code-Beispiel wurde der Funktion 'TuWas()' eine Deklaration hinzugefügt, die anzeigt, welche Ausnahmen sie auslöst. Diese Informationen sollen darauf hinweisen, dass die Funktion 'throw'-Befehle enthält. Der Compiler würde einen Fehler werfen, wenn die Funktion versucht, eine Ausnahme auszulösen, die in der Deklaration nicht angekündigt ist.  
+
+&nbsp; 
+
+<a name="ch5-11"></a>
+### 5.11 [c++] 'reinterpret_cast' type casting  
+
+**reinterpret_cast** is a type of casting operator used in C++. It converts between types by reinterpreting the underlying bit pattern.  
+
+- It is used to convert **<u>a pointer</u> of some data type into <u>a pointer</u> of another data type**, even if the data types before and after conversion are different.  
+- It **does not check** if the pointer type and data pointed by the pointer is same or not.  
+
+```c
+data_type *var_name = reinterpret_cast <data_type *>(pointer_variable);
+```
+
+&nbsp;
+
+Example:
+
+```c
+#include <iostream>
+using namespace std;
+ 
+int main()
+{
+    int* p = new int(65);
+    char* ch = reinterpret_cast<char*>(p);
+
+    cout << *p << endl;     // 65
+    cout << *ch << endl;    // A
+    cout << p << endl;      // 0x1609c20
+    cout << ch << endl;     // A
+
+    return 0;
+}
+```
+
+&nbsp;
+
+**Purpose for using reinterpret_cast**   
+
+1. *reinterpret_cast* is a very special and dangerous type of casting operator. And is suggested to use it using proper data type i.e., (pointer data type should be same as original data type).
+2. It can typecast any pointer to any other data type.
+3. It is used when we want to work with bits.
+4. If we use this type of cast then it becomes a non-portable product. So, it is suggested not to use this concept unless required.
+5. It is only used to typecast any pointer to its original type.
+6. Boolean value will be converted into integer value i.e., 0 for false and 1 for true.
+
+&nbsp;
+
+***reinterpret_cast<>*** vs ***static_cast<>***  
+
+When you convert for example `int(12)` to `unsigned float (12.0f)` your processor needs to invoke some calculations as both numbers have different bit representation. This is what **`static_cast`** stands for.  
+
+On the other hand, when you call **`reinterpret_cast`** the CPU does not invoke any calculations. **It just treats a set of bits in the memory like if it had another type.** So when you convert `int*` to `float*` with this keyword, the new value (after pointer dereferecing) has nothing to do with the old value in mathematical meaning (ignoring the fact that it is undefined behavior to read this value).  
+
+&nbsp;
+
+**Use Case**  
+
+One case when `reinterpret_cast` is necessary is when interfacing with *opaque* data types. This occurs frequently in vendor APIs over which the programmer has no control. Here's a contrived example where a vendor provides an API for storing and retrieving arbitrary global data:  
+
+```c
+// vendor.h
+typedef struct _Opaque * VendorGlobalUserData;
+void VendorSetUserData(VendorGlobalUserData p);
+VendorGlobalUserData VendorGetUserData();
+```
+
+To use this API, the programmer must cast their data to `VendorGlobalUserData` and back again. `static_cast` won't work, one must use `reinterpret_cast`:  
+
+```c
+// main.cpp
+#include "vendor.hpp"
+#include <iostream>
+using namespace std;
+
+struct MyUserData {
+    MyUserData() : m(42) {}
+    int m;
+};
+
+int main() {
+    MyUserData u;
+
+        // store global data
+    VendorGlobalUserData d1;
+//  d1 = &u;                                          // compile error
+//  d1 = static_cast<VendorGlobalUserData>(&u);       // compile error
+    d1 = reinterpret_cast<VendorGlobalUserData>(&u);  // ok
+    VendorSetUserData(d1);
+
+        // do other stuff...
+
+        // retrieve global data
+    VendorGlobalUserData d2 = VendorGetUserData();
+    MyUserData * p = 0;
+//  p = d2;                                           // compile error
+//  p = static_cast<MyUserData *>(d2);                // compile error
+    p = reinterpret_cast<MyUserData *>(d2);           // ok
+
+    if (p) { cout << p->m << endl; }
+    return 0;
+}
+```
 
 &nbsp;
 

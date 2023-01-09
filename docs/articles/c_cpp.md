@@ -33,10 +33,10 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 'Header Guard' (oder 'Include Guard')</font>](#ch1-12)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.13 'Calling Convention' (`__stdcall`)</font>](#ch1-13)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.14 Namespaces</font>](#ch1-14)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.15 `extern c` in C++</font>](#ch1-15)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.16 'Forward Declaration' in C++</font>](#ch1-16)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.15 [c++] `extern c`</font>](#ch1-15)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.16 [c++] 'Forward Declaration'</font>](#ch1-16)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.17 Function 'Prototype' and Visibility in C</font>](#ch1-17)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18 Präprozessor/Compiler/Linker in C/C++</font>](#ch1-18)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18 Präprozessor/Compiler/Linker</font>](#ch1-18)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.19 'Name Mangling' (or 'Name decoration')</font>](#ch1-19)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.20 Single quotes vs. double quotes</font>](#ch1-20)  
 
@@ -52,7 +52,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.5 Pointer auf Pointer</font>](#ch3-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.6 Pointer auf Funktionen</font>](#ch3-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.7 'void' Pointer in C</font>](#ch3-7)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.8 Smart Pointer in C++</font>](#ch3-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.8 [c++] Smart Pointer</font>](#ch3-8)  
 
 &nbsp;&nbsp;&nbsp;&rarr; Pointer vs. Arrays   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1"> Basics</font>](#ch_pva_1)  
@@ -77,9 +77,9 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.4 Das Schlüsselwort `static`</font>](#ch5-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.5 `printf` Formatierungszeichen</font>](#ch5-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.6 `True` and `False` in C</font>](#ch5-6)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.7 Konstruktor in C++</font>](#ch5-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.7 [c++] Konstruktoren</font>](#ch5-7)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.8 Das Schlüsselwort `pragma`</font>](#ch5-8)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9 `Handle` in C++</font>](#ch5-9)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9 [c++] `Handle`</font>](#ch5-9)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.10 'Exceptions' - `Try / Catch`</font>](#ch5-10)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.11 [c++] 'reinterpret_cast' type casting</font>](#ch5-11)  
 
@@ -87,7 +87,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Static Library Basics</font>](#ch6-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.2 [Win API] `#define DECLARE_HANDLE(n)`</font>](#ch6-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.3 [Win API] `HWND` (Fenster Handle)</font>](#ch6-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.4 'The C++ Standard Template Library' (Container-Klasse)</font>](#ch6-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.4 [c++] 'STL: The Standard Template Library' (Container-Klasse)</font>](#ch6-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.5 [make] Call 'Makefile' in Subdirectory</font>](#ch6-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.6 String</font>](#ch6-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.7 Code examining tools</font>](#ch6-7)  

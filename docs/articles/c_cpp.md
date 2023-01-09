@@ -32,7 +32,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.11 Precompiled Header</font>](#ch1-11)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 'Header Guard' (oder 'Include Guard')</font>](#ch1-12)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.13 'Calling Convention' (`__stdcall`)</font>](#ch1-13)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.14 Namespaces</font>](#ch1-14)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.14 [c++] Namespaces</font>](#ch1-14)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.15 [c++] `extern c`</font>](#ch1-15)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.16 [c++] 'Forward Declaration'</font>](#ch1-16)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.17 Function 'Prototype' and Visibility in C</font>](#ch1-17)  
@@ -82,6 +82,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.9 [c++] `Handle`</font>](#ch5-9)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.10 'Exceptions' - `Try / Catch`</font>](#ch5-10)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.11 [c++] 'reinterpret_cast' type casting</font>](#ch5-11)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.12 [c++] 'Compile Time Constants': 'constexpr'</font>](#ch5-12)  
 
 ### 6. Bibliotheken, API's und *make*   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Static Library Basics</font>](#ch6-1)  
@@ -974,7 +975,7 @@ The most popular calling conventions on windows are
 &nbsp;
 
 <a name="ch1-14"></a>
-### 1.14 Namespaces  
+### 1.14 [c++] Namespaces  
 
 In C++, namespaces provide a method for preventing name conflicts in large projects.
 
@@ -1020,8 +1021,43 @@ namespace Q {
   ```
 &nbsp;
 
+**Anonymous namespace**  
+```c
+namespace {
+  const led led_b5 {
+    // ...
+  };
+}
+```
+A unnamed namespace is called an *anonymous namespace*. **An anonymous namespace limits the scope of anything within itself to file-level.** A file-local anonymous namespace guarantees unique names for otherwise same-named symbols occurring in different files. The anonymous namespace may be considered superior to C-style ***static***. In fact, some developers consider the anonymous namespace to be the preferred mechanism for file-level scope localization and reduction of naming ambiguity in C++ projects.
+
+&nbsp;
+
+**Nested namespaces**  
+C++17 introduced support for a new proclamation of nested namespace definitions. This can reduce typing effort when defining multiple layers of nested namespaces. Consider, for instance, the traditional definition of a made-up nested namespace called `X::Y::Z`.  
+```c
+// A traditional namespace definition.
+namespace X {
+  namespace Y {
+    namespace Z {
+      int value;
+    }
+  }
+}
+```
+
+As of C++17, the definition of a nested namespace such as `X::Y::Z` can be written equivalently as
+```c
+// A C++17 nested namespace definition.
+namespace X::Y::Z {
+  int value;
+}
+```
+
+&nbsp;
+
 <a name="ch1-15"></a>
-### 1.15 `extern c` in C++  
+### 1.15 [c++] `extern c`  
 
 [&rarr;&nbsp;&nbsp; How to mix C and C++](https://isocpp.org/wiki/faq/mixing-c-and-cpp)  
 
@@ -1075,7 +1111,7 @@ What this accomplishes is that it allows you to use that C header file with your
 &nbsp;
 
 <a name="ch1-16"></a>
-### 1.16 *Forward Declaration* in C++  
+### 1.16 [c++] *Forward Declaration*  
 
 Two ways of including a class:
 1. including header file: `#include A.h`
@@ -2783,6 +2819,60 @@ int main() {
     return 0;
 }
 ```
+&nbsp;
+
+<a name="ch5-12"></a>
+### 5.12 [c++] 'Compile Time Constants': 'constexpr'
+
+In embedded C++ programming for example, the registers in a program are defined with C++’s generalized constant expression syntax using the ***constexpr*** keyword.  
+
+Example:  
+```c
+namespace mcal {
+  // Compile-time constant register addresses.
+  namespace reg {
+    // The address of portb.
+    constexpr std::uint8_t portb = 0x25U;
+    
+    // The values of bit0 through bit7.
+    constexpr std::uint8_t bval0 = 1U;
+    constexpr std::uint8_t bval1 = 1U << 1U;
+    constexpr std::uint8_t bval2 = 1U << 2U;
+    constexpr std::uint8_t bval3 = 1U << 3U;
+    constexpr std::uint8_t bval4 = 1U << 4U;
+    constexpr std::uint8_t bval5 = 1U << 5U;
+    constexpr std::uint8_t bval6 = 1U << 6U;
+    constexpr std::uint8_t bval7 = 1U << 7U;
+  }
+}
+```
+
+A generalized constant expression, denoted with the keyword **constexpr**, is guaranteed to be a compile-time constant. In general, using **constexpr** is considered superior to the preprocessor **#define** because generalized constant expressions have clearly defined type information.  
+
+An alternative for ensuring that an integral value is a compile-time constant is with a static constant member of a class type - (the older) **static const**.   
+
+Using *compile-time constants* almost always facilitates optimization in C++. For example, for a class the constructor code is equivalent the following:  
+```c
+const led led_b5 {
+  0x25, // Address of portb.
+  0x20 // Bit-value of portb.5.
+};
+```
+Since the constructor’s parameters are compile-time constants, the compiler can directly initialize *led_b5*’s member variables without using the stack or
+intermediate CPU registers. This efficient kind of optimization is called ***constant folding***, and is often useful in real-time C++ programming.  
+
+> **Constant folding** is the process of recognizing and evaluating constant expressions <u>at compile time rather than computing them at runtime</u>.  
+
+&nbsp;
+
+The code below depicts various ways to use the **constexpr** keyword to make compile-time constants.  
+```c
+// A compile-time constant version number.
+constexpr unsigned int version = 3U;
+// A compile-time floating-point value.
+constexpr float pi = 3.1415926535’8979323846F;
+```
+The **constexpr** keyword can make compile-time constants from a wider variety of things than the original **const** keyword.
 
 &nbsp;
 

@@ -101,6 +101,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.5 Hash Tables</font>](#ch7-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.6 Datei Schreiben/Lesen in C</font>](#ch7-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.7 X-Macros in C</font>](#ch7-7)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.8 [c++] Embedded C++: Build process</font>](#ch7-8)  
 
 ### 8. Warnings and Errors  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 'Warning': no previous prototype for 'function'</font>](#ch8-1)  
@@ -3792,7 +3793,93 @@ char* toString(enum colors value)
     }
 }
 ```
+&nbsp;
+  
+<a name="ch7-8"></a>
+### 7.8 [c++] Embedded C++: Build process  
+  
+The workflow for building and flashing a C++ program is shown in the picture below  
+  
+![xx](../assets/pics/bs_workflow.png)  
+  
+The main steps include compiling the sources, linking the object files, extracting the HEX-file and flashing it in the microcontroller.  
+  
+The startup code `crt0.s` is assembled with the following command.  
+```
+avr-g++ -mmcu=atmega328p -x assembler crt0.s -c -o bin/crt0.o
+```  
+This command means:  
+- Invoke the cross compiler avr-g++ as an assembler. Here and subsequently, we use the decorated name of g++ specially built for our target with the 8-bit microcontroller  
+- Select the microcontroller architecture with the `-mmcu=atmega328p` flag  
+- Assemble *crt0.s* using `-x assembler crt0.s -c -o bin/crt0.o`. This produces the object file *bin/crt0.o*
 
+&nbsp;
+
+The source file *led.cpp* is compiled with the following command:  
+```
+avr-g++ -mmcu=atmega328p -O2 -std=c++11 -I. -c led.cpp -o bin/led.o
+```
+This command means:  
+- Invoke the cross compiler avr-g++ as a C++ compiler  
+- Select the microcontroller architecture with the `-mmcu=atmega328p` flag  
+- Use level 2 optimization (a medium-high level) with the `-O2` flag  
+- Use the C++11 language standard with the `-std=c++11` flag  
+- Include the current directory in the compiler’s default include path with the -I. flag. This is needed for finding the self-written header file *<cstdint>*  
+- Compile led.cpp using `-c led.cpp -o bin/led.o`. This produces the object file *bin/led.o*
+  
+&nbsp; 
+  
+The following command links the program to create an absolute object file. Here, the compiled startup code in *bin/crt0.o* will be linked with *bin/led.o* to create the absolute object file *led.elf*.  
+``` 
+avr-g++ -mmcu=atmega328p -nostartfiles -nostdlib -Wl,-Tavr.ld,-Map,bin/led.map bin/led.o bin/crt0.o -o bin/led.elf
+```
+This command means:  
+- Invoke the cross compiler avr-g++ as a linker
+- Select the microcontroller architecture with the `-mmcu=atmega328p` flag
+- Use the `-nostartfiles` flag to prevent the linker from linking with the compiler’s own startup files. We have provided our own startup code in *crt0.s*  
+- Use the `-nostdlib` flag to eliminate any standard library object code since we do not use any standard library functions
+- Use the memory definitions in the linker input file *avr.ld* and create an output memory map file *led.map* with the flags `-Wl,-Tavr.ld,-Map,led.map`  
+- Link the object files *bin/led.o* and *bin/crt0.o*. This command creates the absolute object file *bin/led.elf* using `bin/led.o bin/crt0.o -o bin/led.elf`. **The absolute object file is in ELF binary format, the Executable and Linkable Format.**  
+  
+&nbsp;
+  
+The following command extracts the HEX-file from the absolute object file using the program *objcopy*. This command creates the executable HEX-file *bin/led.hex*:
+```
+avr-objcopy -O ihex bin/led.elf bin/led.hex
+```
+This command means:  
+- Invoke object copy *avr-objcopy*
+- Create an output HEX-file in a well-known 16-bit text-based hexadecimal file format with the `-O ihex` flags  
+- Extract *bin/led.hex* from *bin/led.elf* supplying the input filename and output filename as `bin/led.elf bin/led.hex`  
+
+We should now have the HEX-file *bin/led.hex* that contains the executable code of the LED program. It is a short, text-based file that should be similar to the one shown in the listing below.  
+```
+:040000000E94020058
+:1000040011241FBEC0E0D8E0DEBFCDBF0E941100A6
+:100014000E941D000E9426000E943700FFCF11E0BD
+:10002400A0E0B1E0ECE9F0E002C005900D92A03050
+:10003400B107D9F7089511E0A2E0B1E001C01D9223
+:10004400A230B107E1F7089510E0C6E6D0E004C09D
+:100054002297FE010E943300C436D107C9F70895E0
+:1000640040000590F491E02D0994E0910001F0E046
+:1000740090910101808189278083FCCFE0E0F1E049
+:1000840085E2808380E281832D98E081E150F0E075
+:080094008081806280830895E1
+:040000030000006495
+:00000001FF  
+```
+  
+This executable HEX-file file can be flashed into the microcontroller’s program FLASH memory.
+
+&nbsp;
+  
+**.elf file vs .hex file**  
+> **ELF** is the full build output - it contains symbol information, debug information, etc in addition to the code itself. BIN and HEX are generated from the ELF.  
+
+> **HEX** is a text representation of the image - it has addresses and checksums, so it can be "sparse". Intel HEX format is a file format that conveys binary information in ASCII text form. It is commonly used for programming microcontrollers, EEPROMs and other types of programmable logic devices and hardware emulators.
+
+**ELF files** are Executable Linkable Format which consists of a symbol look-ups and relocatable table, that is, <u>it can be loaded at any memory address by the kernel and automatically, all symbols used, are adjusted to the offset from that memory address</u> where it was loaded into. Usually ELF files have a number of sections, such as 'data', 'text', 'bss', to name but a few...it is within those sections where the run-time can calculate where to adjust the symbol's memory references dynamically at run-time.  
+  
 &nbsp;
 
 &nbsp;

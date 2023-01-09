@@ -22,7 +22,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Headers und Libraries</font>](#ch1-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Memory Management - 'Heap' vs 'Stack'</font>](#ch1-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Die Funktion `main`</font>](#ch1-7)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.8 Übersicht Datentypen in C</font>](#ch1-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.8 Übersicht Datentypen</font>](#ch1-8)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9 Threads und Prozesse</font>](#ch1-9)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10 Benutzerdefinierte Datentypen</font>](#ch1-10)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10.1 `typedef`</font>](#ch1-10-1)  
@@ -541,7 +541,7 @@ Der erste Wert des Parameter-Arrays 'argv' ist immer der Programmname selbst, in
 &nbsp;
 
 <a name="ch1-8"></a>
-### 1.8 Übersicht Datentypen in C  
+### 1.8 Übersicht Datentypen  
 
 |Type |Storage Size |Value range |  
 |:---|:---:|:---:|  
@@ -566,6 +566,29 @@ Operands with different types get converted when you do arithmetics. Everything 
 
 > Avoid unnecessary complexity by minimizing your use of unsigned types. Specifically, don't use an unsigned type to represent a quantity just because it will never be negative. Use a signed type like 'int' and you won't have to worry about boundary cases in the detailed rules for promoting mixed types.  
 > Only use unsigned types for bitfields or binary masks. Use casts in expressions, to make all the operands signed or unsigned, so the compiler does not have to chose the result type.
+
+&nbsp;
+
+**[c++] the *bool* type**  
+C++ includes a built-in Boolean type bool that has two and only two possible values, **true** and **false**. In C++, the result of a Boolean test has the type **bool** and its value is either **true** or **false**. Using C++’s built-in Boolean type can improve the clarity of logic and simplify coding.  
+
+The code below, for instance, uses C++’s built-in Boolean type **bool** in logical statements.  
+```c
+bool valid();
+bool login();
+
+void start_session();
+
+void do_something() {
+  // This Boolean test yields true or false.
+  const bool session_is_ok = (valid() && login());
+  
+  // This tests if (session_is_ok == true).
+  if(session_is_ok) {
+    start_session();
+  }
+}
+```
 
 &nbsp;
 

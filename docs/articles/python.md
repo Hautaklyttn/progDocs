@@ -26,6 +26,10 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9 `import`</font>](#ch1-9)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10 `call-by-value` / `call-by-reference`</font>](#ch1-10)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.11 Variable Scope</font>](#ch1-11)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 'Best' Program Structure</font>](#ch1-12)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.1 `__init__.py` in every subfolder</font>](#ch1-12-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.2 `venv` — Creation of virtual environments</font>](#ch1-12-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.3 `ci` folder **— Continous Integration</font>](#ch1-12-3)
 
 ### 2. Functions
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basic Functions</font>](#ch2-1)  
@@ -299,6 +303,28 @@ exec(open('someFile.py').read())
 
 <a name="ch1-8"></a>
 ### 1.8 Decorators
+The Python language provides a simple yet powerful syntax called ‘decorators’. A decorator is a function or a class that wraps (or decorates) a function or a method. The ‘decorated’ function or method will replace the original ‘undecorated’ function or method. Because functions are first-class objects in Python, this can be done ‘manually’, but using the `@decorator` syntax is clearer and thus preferred.  
+
+```
+def foo():
+    # do something
+
+def decorator(func):
+    # manipulate func
+    return func
+
+foo = decorator(foo)  # Manually decorate
+
+@decorator
+def bar():
+    # Do something
+# bar() is decorated
+```
+**This mechanism is useful for separating concerns and avoiding external unrelated logic ‘polluting’ the core logic of the function or method.**  
+A good example of a piece of functionality that is better handled with decoration is memoization or caching: you want to store the results of an expensive function in a table and use them directly instead of recomputing them when they have already been computed. This is clearly not part of the function logic.
+
+**Examples:**
+
 `@staticmethod`  
 The *staticmethod* decorator modifies a method function so that it does not use the self variable. The method function will not have access to a specific instance of the class. It behaves like a plain function except that you can call it from an instance or the class.  
 
@@ -490,6 +516,138 @@ print("From Global:", x)
 # From Global: inner
 ```
 Note that in the scope of `outer` the variable is unchanged. This is because the binding of `global` only takes effect within the scope it is used. As expected, in `inner`, x will refer to the global variable and change it to `"inner"`.
+
+&nbsp;
+
+<a name="ch1-12"></a>
+### 1.12 'Best' Program Structure  
+
+Folder Layout
+<font size="3">
+```
+<project_name>
+            |
+            |- .venv/
+                   |- Lib/
+                   |- Scripts/
+                   |- .gitignore
+                   |- pyvenv.cfg
+            |- build/
+            |- ci/
+                |- build_setup/
+                             |- scripts/
+                                      |- __init__.py
+                                      |- build_console_app.bat
+                                      |- build_gui_app.bat
+                                      |- freeze.bat
+                             |- specs/
+                                    |- __init__.py
+                                    |- console.spec
+                                    |- gui.spec
+                             |- __init__.py
+                             |- <project>.ico
+                | -tc/
+                    |- scripts/
+                             |- __init__.py
+                             |- build_environment_manual.bat
+                             |- build_environment_manual_no_proxy.bat
+                |- __init__.py
+            |- dist/
+            |- <project_name>/
+                            |- utils/
+                                   |- apps/
+                                         |- gui/
+                                              |- __init__.py
+                                              |- app.py
+                                         |- __init__.py
+                                   |- __init__.py
+                            |- __init__.py
+                            |- core.py
+                            |- version.py
+            |- test/
+            |- .gitattributes
+            |- .gitignore
+            |- requirements.txt
+            |- requirements_develop.txt
+```
+</font>
+
+&nbsp;
+  
+**Core features**  
+  - Development is always done in a virtual environment (`venv`) to make sure packages are used in specific versions (and are used in this versions also when on the global level the version changed!)
+  - Created .py files are placed in the folder `utils` and its subfolders  
+  - In a GUI project, the folder `utils/apps/gui` contains the `app.py` file with the startup code  
+  - `namespaces` are realised by importing files from subfolders (or from external packages) with `import <package/file> as <namespaceName>` or just `import <package/file>` (so the name of the *namespace* is preserved)
+
+&nbsp;
+  
+**Files**  
+
+`./requirements.txt`  
+A *pip requirements file* should be placed at the root of the repository. It should specify the dependencies required to contribute to the project: testing, building, and generating documentation. *Requirements files* are files containing a list of items to be installed using `pip install`.  
+  
+`./requirements_develop.txt`  
+
+  
+&nbsp;
+  
+<a name="ch1-12-1"></a>
+#### `__init__.py` **in every subfolder**  
+The `__init__.py` files are required to make Python treat directories containing the file as packages (*include* paths in C language).  
+This prevents directories with a common name, such as `string`, unintentionally hiding valid modules that occur later on the module search path. In the simplest case, `__init__.py` can just be an empty file, but it can also execute initialization code for the package or set the `__all__` variable.  
+  
+```
+sound/
+     |- __init__.py
+     |- formats/
+               |- __init__.py
+               |- wavread.py
+     |- effects/
+               |- __init__.py
+               |- echo.py
+     |- filters/
+               |- __init__.py
+               |- equalizer.py
+```
+
+Users of the package can import individual modules from the package, for example:  
+```
+import sound.effects.echo as see
+```
+
+This loads the submodule `sound.effects.echo`, which can be referenced with  
+```
+see.echofilter(input, output, delay=0.7, atten=4)
+```
+  
+&nbsp;
+  
+<a name="ch1-12-2"></a>
+#### `venv` **— Creation of virtual environments**  
+The `venv` module supports creating lightweight “virtual environments”, each with their **own independent set of Python packages** installed in their `site` directories. A virtual environment is created on top of an existing Python installation, known as the virtual environment’s "base" Python, and may optionally be isolated from the packages in the base environment, so only those explicitly installed in the virtual environment are available.  
+  
+> When used from within a virtual environment, common installation tools such as pip will install Python packages into a virtual environment without needing to be told to do so explicitly. 
+  
+&nbsp;    
+  
+Creation of virtual environments is done by executing the command `venv`:  
+```
+  python3 -m venv /path/to/new/virtual/environment
+```
+  
+Running this command creates the target directory (creating any parent directories that don’t exist already) and places a `pyvenv.cfg` file in it with a `home` key pointing to the Python installation from which the command was run (a common name for the target directory is `.venv`).  
+  
+&nbsp;
+  
+**How venvs work**  
+When a Python interpreter is running from a virtual environment, `sys.prefix` and `sys.exec_prefix` point to the directories of the virtual environment, whereas `sys.base_prefix` and `sys.base_exec_prefix` point to those of the base Python used to create the environment. It is sufficient to check `sys.prefix == sys.base_prefix` to determine if the current interpreter is running from a virtual environment.
+  
+&nbsp;
+  
+<a name="ch1-12-3"></a>
+#### `ci` folder **— Continous Integration**  
+
 
 
 

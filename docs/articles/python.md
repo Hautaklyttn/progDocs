@@ -29,7 +29,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 'Best' Program Structure</font>](#ch1-12)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.1 `__init__.py` in every subfolder</font>](#ch1-12-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.2 `venv` — Creation of virtual environments</font>](#ch1-12-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.3 `ci` folder **— Continous Integration</font>](#ch1-12-3)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.3 `ci` folder — Continous Integration</font>](#ch1-12-3)
 
 ### 2. Functions
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basic Functions</font>](#ch2-1)  
@@ -576,9 +576,9 @@ Folder Layout
   
 **Core features**  
   - Development is always done in a virtual environment (`venv`) to make sure packages are used in specific versions (and are used in this versions also when on the global level the version changed!)
-  - Created .py files are placed in the folder `utils` and its subfolders  
+  - Created .py files (==modules) are placed in the folder `utils` and its subfolders  
+  - `namespaces` are realised by importing files from subfolders (or from external packages) with `import <package/file> as <namespaceName>` or just `import <package/file>` (so the name of the *namespace* is preserved)  
   - In a GUI project, the folder `utils/apps/gui` contains the `app.py` file with the startup code  
-  - `namespaces` are realised by importing files from subfolders (or from external packages) with `import <package/file> as <namespaceName>` or just `import <package/file>` (so the name of the *namespace* is preserved)
 
 &nbsp;
   
@@ -588,7 +588,7 @@ Folder Layout
 A *pip requirements file* should be placed at the root of the repository. It should specify the dependencies required to contribute to the project: testing, building, and generating documentation. *Requirements files* are files containing a list of items to be installed using `pip install`.  
   
 `./requirements_develop.txt`  
-
+A *pip requirements development file* contains the pacakges/modules which are needed for the development environment, e.g. *pyInstaller*.
   
 &nbsp;
   
@@ -633,23 +633,33 @@ The `venv` module supports creating lightweight “virtual environments”, each
   
 Creation of virtual environments is done by executing the command `venv`:  
 ```
-  python3 -m venv /path/to/new/virtual/environment
+python3 -m venv /path/to/new/virtual/environment
 ```
   
 Running this command creates the target directory (creating any parent directories that don’t exist already) and places a `pyvenv.cfg` file in it with a `home` key pointing to the Python installation from which the command was run (a common name for the target directory is `.venv`).  
   
 &nbsp;
   
-**How venvs work**  
+How venvs work  
 When a Python interpreter is running from a virtual environment, `sys.prefix` and `sys.exec_prefix` point to the directories of the virtual environment, whereas `sys.base_prefix` and `sys.base_exec_prefix` point to those of the base Python used to create the environment. It is sufficient to check `sys.prefix == sys.base_prefix` to determine if the current interpreter is running from a virtual environment.
   
 &nbsp;
   
 <a name="ch1-12-3"></a>
-#### `ci` folder **— Continous Integration**  
+#### `ci` **folder — Continous Integration**  
 
+**build_setup/scripts/build_gui_app.bat**  
+Contains the batch code for creating the .exe file from python script using *pyInstaller*.  
+Last command is the call for *pyInstaller* by using the *gui.spec* file from folder `build_setup/specs`.  
 
+**build_setup/specs/gui.spec**  
+*.spec* file for the *pyInstaller*. Used in `build_setup/scripts/build_gui_app.bat`. The *.spec* file tells PyInstaller how to process the script.  
 
+**build_setup/tc/build_environment_manual_no_proxy.bat**  
+Contains the batch code for creating 
+  - the virtual environment (`venv`) for this project, 
+  - the required project packages/modules (given in `requirements.txt`)
+  - the required development packages/modules (given in `requirements_develop.txt`, e.g. *pyInstaller*)
 
 &nbsp;
 

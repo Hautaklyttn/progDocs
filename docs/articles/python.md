@@ -524,7 +524,6 @@ Note that in the scope of `outer` the variable is unchanged. This is because the
 ### 1.12 'Best' Program Structure  
 
 Folder Layout
-<font size="3">
   
 ```
 <project_name>
@@ -573,8 +572,6 @@ Folder Layout
             |- requirements_develop.txt
 ```
   
-</font>
-
 &nbsp;
   
 **Core features**  

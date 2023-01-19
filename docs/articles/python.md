@@ -321,6 +321,7 @@ def bar():
 # bar() is decorated
 ```
 **This mechanism is useful for separating concerns and avoiding external unrelated logic ‘polluting’ the core logic of the function or method.**  
+
 A good example of a piece of functionality that is better handled with decoration is memoization or caching: you want to store the results of an expensive function in a table and use them directly instead of recomputing them when they have already been computed. This is clearly not part of the function logic.
 
 **Examples:**
@@ -524,6 +525,7 @@ Note that in the scope of `outer` the variable is unchanged. This is because the
 
 Folder Layout
 <font size="3">
+  
 ```
 <project_name>
             |
@@ -570,6 +572,7 @@ Folder Layout
             |- requirements.txt
             |- requirements_develop.txt
 ```
+  
 </font>
 
 &nbsp;

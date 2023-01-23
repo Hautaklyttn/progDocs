@@ -3098,80 +3098,166 @@ For the record:
 Um String-Funktionen nutzen zu können, muss die Bibliothek *string.h* eingebunden werden.  
 &nbsp;
 
-**strlen (char \*str)**  
-Funktion ermittelt die Länge eines Strings bzw. die Anzahl seiner Zeichen.  
+#### **<font size="+2">Kopieren</font>**  
 
-&nbsp;
+|Funktion|Bedeutung|  
+|---|---|  
+|[memcpy()](#ch6-6-1)|Kopiert einen Speicherblock|  
+|[memmove()](#ch6-6-2)|Verschiebt einen Speicherblock|  
+|[strcpy()](#ch6-6-3)|Kopiert einen String|  
+|[strncpy()](#ch6-6-4)|Kopiert eine angegeben Anzahl von Zeichen eines Strings|  
 
-**char \*strcpy (char \*dest, char \*src)**  
-Mit *string copy* können wir den Inhalt eines Strings kopieren.  
-- *\*dest* ist Zeiger auf Ziel-Array
-- *\*src* ist Zeiger auf Quell-Array
+<a name="ch6-6-1"></a>  
+**memcpy()**  
+memcpy() kopiert einen Speicherblock. Der zu kopierende Speicherblock wird byteweise kopiert und erstellt eine binäre Kopie von dessen Inhalt.  
 
-Rückgabewert ist char-Zeiger auf Ziel-Array.
-
+<u>Signatur:</u>
 ```c
-char textA[5] = "abc";
-printf("textA: %s", textA);    // textA: abc
-
-strcpy(textA, "xyz");
-printf("textA: %s", textA);    // textA: xyz
+#include <string.h>
+void * memcpy( void * target, void const * source, size_t size );
 ```
+**target**: Zielspeicherblock (mindestens `size` Byte groß)  
+**source**: Quellspeicherblock (mindestens `size` Byte groß)  
+**size**: Anzahl zu kopierender Bytes (Der Typ `size_t` entspricht i.d.R. Int))  
 
-**char \*strcpy (char \*dest, char \*src, int n)**  
-Mit *strcpy* kopiert man n Zeichen von *src* nach *dest*. Das String-Ende-Zeichen (*\\0*) muss manuell gesetzt werden.  
+**Return value**: Die Rückgabe entspricht `target`.  
 
-&nbsp;
+<u>Fehlerquellen:</u>  
+Die Anzahl Bytes, die zu kopieren sind, müssen kleiner oder gleich der Größe der Quell- und Zielspeicherblöcke sein. Weiterhin dürfen sich die Speicherblöcke nicht überlagern.  
 
-**char \*strcat (char \*dest, char \*src)**  
-Mit *strcat* können wir Strings verketten, also aneinenaderhängen. Das Ergebnis wird in *dest* gespeichert.
-
-**char \*strncat (char \*dest, char \*src, int n)**  
-Mit *strncat* können wir n Zeichen ans *src* anhängen.  
-
-&nbsp;
-
-**int \*strcmp (char \*str1, char \*str2)**  
-Mit *strcmp* können wir zwei Strings vergleichen.  
-Rückgabewerte:  
-- 0 := die Strings sind gleich
-- \>0 := das erste ungleiche Zeichen in *str1* ist größer als in *str2*
-- \<0 := das erste ungleiche Zeichen in *str1* ist kleiner als in *str2*  
-
-**int \*strncmp (char \*str1, char \*str2, int n)**  
-Mit *strncmp* und dem Parameter n können wir die ersten n Zeichen der Strings vergleichen.
-
-&nbsp;
-
-**char \*strstr (char \*string, char \*needle)**  
-Mit *strstr* können wir nach Zeichenketten in einem String suchen. Der Rückgabewert ist die Adresse vom Anfang des gefundenen *needle* in String (gespeichert in *needle*) ansonsten *NULL*.  
-
-&nbsp;
-
-**char \*strchr (char \*s, int c)**  
-Mit *string char* können wir ein Zeichen in einem String suchen. Das zu suchende Zeichen wird mit dem Parameter *c* als ASCII-Code übergeben. Rückgabewert ist *NULL* wenn Zeichen nicht gefunden, ansonsten Adresse des ersten gefundenen Zeichens.  
-
-&nbsp;
-
-**char \*strtok (char \*str1, char \*delimiters)**  
-Mit *strtok* können wir einen String anhand von Trennzeichen zerteilen und die einzelnen Abschnitte herauslesen. Die Trennzeichen werden im Parameter *delimiter* übergeben.  
-Beim ersten Aufruf muss *strtok* mit einem String initialisiert werden. Die Rückgabe ist hierbei der erste Abschnitt. Bei Folgeaufrufen wird statt *string* der *NULL*-Wert übergeben, da *strtok* bereits initialisiert ist und intern einen Zeiger auf *String* gespeichert hat. Der Zeiger *ptr*, welcher den Rückgabewert abfängt, zeigt auf das erste Zeichen des jeweiligen Abschnitts in *string*. Das jeweilige Ende wird mit *\\0* in *string* gesetzt, d.h. der String wird verändert. Man sollte bei *strtok* immer eine Kopie des Strings verwenden.  
-
+<u>Beispiel:</u>  
 ```c
-char string[] = "Kurt; ist, der; Größte";
-char delimiter[] = ",;";
-ptr strtok(string, delimiter);    // Initialisieren und ersten Abschnitt erstellen
-
-while (ptr != NULL) {
-  printf("Ausgabe: %s\n", ptr);
-  ptr = strtok(NULL, delimiter);
+#include <string.h>
+ 
+char const * source = "Hello World\n";
+char target[20];
+ 
+int main( void )
+{
+  memcpy( target, source, 1 + strlen( source ) );
+ 
+  printf( "Ziel: %s\n", target )
+ 
+  return EXIT_SUCCESS; 
 }
-
-// Ausgabe: Kurt
-// Ausgabe: ist 
-// Ausgabe: der
-// Ausgabe: Größte
 ```
+
+&nbsp;
+
+<a name="ch6-6-2"></a>  
+**memmove()**  
+memmove() verschiebt einen Speicherblock der Größe `size` von `source` an `target`. Quelle und Ziel dürfen sich überlappen, die Quelle wird nicht überschrieben. Der zu kopierende Speicherblock wird byteweise kopiert und erstellt eine binäre Kopie von dessen Inhalt, unabhängig vom Datentyp.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+void * memmove( void * target, const void * source, size_t size );
+```
+**target**: Zielspeicherblock (mindestens `size` Byte groß)  
+**source**: Quellspeicherblock (mindestens `size` Byte groß)  
+**size**: Anzahl zu kopierender Bytes (Der Typ `size_t` entspricht i.d.R. Int))  
+
+**Return value**: Die Rückgabe entspricht `target`.  
+
+<u>Fehlerquellen:</u>  
+Die Anzahl Bytes, die zu kopieren sind, müssen kleiner oder gleich der Größe der Quell- und Zielspeicherblöcke sein.  
+
+<u>Beispiel:</u>  
+```c
+#include <stdio.h>
+#include <string.h>
+ 
+int main ()
+{
+  char str[20] = "Moin User!";
+  memmove( str+5, str, 12 );
+  puts( str );
+  return 0;
+}
+```
+
+&nbsp;
+
+<a name="ch6-6-3"></a>  
+**strcpy()**  
+strcpy kopiert einen String.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+char * strcpy ( char * destination, const char * source );
+```
+**destination**: Ziel des Kopiervorganges, enthält nach der Ausführung den selben String wie `source`   
+**source**: Ausgangsstring, der kopiert werden soll.  
+
+**Return value**: Die Rückgabe entspricht `destination`.  
+
+<u>Fehlerquellen:</u>  
+Wichtig ist, dass destination groß genug ist, um source aufzunehmen. Andernfalls wird in einen ungültigen Speicherbereich geschrieben.  
+
+<u>Beispiel:</u>  
+```c
+#include <stdio.h>
+#include <string.h>
+ 
+int main ()
+{
+  char source[] = "proggen.org";
+  char destination[] = "hier wird der andere String hin kopiert";
+ 
+  strcpy( destination, source );
+ 
+  printf( "%s\n", destination );
+ 
+  return 0;
+}
+```
+
+&nbsp;
+
+<a name="ch6-6-4"></a>  
+**strncpy()**  
+Kopiert einen String bis zum ersten Nullbyte oder bis `size` Bytes kopiert wurden. Ist der Quellstring zu klein, so wird der Zielstring bis `size` mit Nullbytes aufgefüllt.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+char * strncpy( char * target, const char * source, size_t size );
+```
+**target**: Ziel des Kopiervorganges, enthält nach der Ausführung den selben String wie `source`   
+**source**: Ausgangsstring, der kopiert werden soll.  
+**size**: Anzahl zu kopierender Chars (Der Typ size_t entspricht i.d.R. unsigned Int)  
+
+**Return value**: Die Rückgabe entspricht `target`.  
+
+<u>Fehlerquellen:</u>  
+Ist `size` kleiner als die Länge des Quellstrings, so werden genau `size` Bytes kopiert. Der Zielstring wird nicht mit einem Nullbyte abgeschlossen. Dies muss gegebenenfalls durch den Programmierer nachgeholt werden, wie es im Beispiel mit dem zweiten „Moin“-String geschieht.  
+
+<u>Beispiel:</u>  
+```c
+#include <stdio.h>
+#include <string.h>
+ 
+int main ()
+{
+  char source[] = "Moin User!";
+  char target[] = "01234567890123456789";
+  char moin[20];
+ 
+  strncpy( target, source, 20 );  // kopiert nur 11 Zeichen (source inklusive Nullbyte)
+  printf( "'%s'\n", target );
+ 
+  strncpy( moin, source, 4 );
+  moin[4] = '\0';
+  printf( "'%s'\n", moin );
+ 
+  return 0;
+}
+```
+
+&nbsp;
+
+
 
 &nbsp;
 

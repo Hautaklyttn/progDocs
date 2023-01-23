@@ -3586,8 +3586,600 @@ size_t strxfrm(char *str1, const char *str2, size_t num);
 
 &nbsp;
 
+<a name="ch6-6-12"></a>  
+**memchr()**  
+memchr() sucht ein Zeichen (char) in einem Speicherbereich.  
 
+<u>Signatur:</u>
+```c
+#include <string.h>
+void const * memchr( void const * block, int value, size_t size );
+void       * memchr( void       * block, int value, size_t size );
+```
+**block**: Zeiger auf den Speicherblock, der durchsucht werden soll   
+**value**: Zeichen, dass gesucht werden soll. Das Zeichen wird als Integer-Datentypen übergeben, tatsächlich werden allerdings nur die unteren 8 Bit gesucht. Es sollte also ein char übergeben werden.  
+**size**:  Gibt an, wie groß der zu durchsuchende Speicherblock ist(Der Typ `size_t` entspricht i.d.R. Int))  
 
+**Return value**: Zeiger auf das gefundene Element oder NULL  
+
+<u>Fehlerquellen:</u>  
+Ist der zu durchsuchende Speicherblock kleiner als durch `size` angegeben, so findet ein lesender Zugriff auf Speicherbereiche statt, die nicht dem Programm zugeordnet sind. Dies endet daher häufig in einem Programmabsturz.  
+
+<u>Beispiel:</u>  
+```c
+#include <string.h>      // definiert memchr
+ 
+#include <stdio.h>       // definiert printf
+#include <stdlib.h>      // definiert EXIT_SUCCESS
+ 
+char const * included = "Hello hautaklyttn";
+char const * notIncluded = "Salut";
+ 
+int main( void )
+{
+  /*
+  ** In C darf (void *) auf beliebige Zeigertypen gesetzt werden.
+  ** Da wir ein (char *) als Block eingeben, werden wir entsprechend ein (char *)
+  ** zurückbekommen.
+  */
+ 
+  char * pos = memchr( included, 104, strlen( included ) );  // 'h' als ascii
+ 
+  if( pos ) printf( "%s: 'h' gefunden an Position: %d\n", included, pos - included );
+  else      printf( "%s: kein 'h' gefunden\n", included );
+ 
+  pos = memchr( notIncluded, 'h', strlen( notIncluded ) );
+ 
+  if( pos ) printf( "%s: 'h' gefunden an Position: %d\n", notIncluded, pos - notIncluded );
+  else      printf( "%s: kein 'h' gefunden\n", notIncluded );
+ 
+  return EXIT_SUCCESS;
+}
+```
+<u>Ausgabe:</u>  
+```
+Hello hautaklyttn: 'h' gefunden an Position: 6
+Salut: kein 'h' gefunden
+```
+
+&nbsp;
+
+<a name="ch6-6-13"></a>  
+**strchr()**  
+strchr() sucht ein Zeichen (char) in einem Speicherbereich.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+char const * strchr( char const * string, int value );
+```
+**string**: Zeiger auf den Speicherblock, der durchsucht werden soll   
+**value**: Zeichen, dass gesucht werden soll. Das Zeichen wird als Integer-Datentypen übergeben, tatsächlich werden allerdings nur die unteren 8 Bit gesucht. Es sollte also ein char übergeben werden.  
+**size**:  Gibt an, wie groß der zu durchsuchende Speicherblock ist(Der Typ `size_t` entspricht i.d.R. Int))  
+
+**Return value**: Zeiger auf das gefundene Element oder NULL  
+
+<u>Fehlerquellen:</u>  
+Wird das Nullbyte am Ende des Strings vergessen, so endet die Suche nicht am Ende des Strings und es findet ein lesender Zugriff auf Speicherbereiche statt, die nicht dem Programm zugeordnet sind. Dies endet daher häufig in einem Programmabsturz.  
+
+<u>Beispiel:</u>  
+```c
+#include <string.h>      // definiert strchr
+ 
+#include <stdio.h>       // definiert printf
+#include <stdlib.h>      // definiert EXIT_SUCCESS
+ 
+char const * string = "Hello hautaklyttn";
+ 
+int main( void )
+{
+  char const * pos = strchr( string, 'h' );
+ 
+  if( pos ) printf( "%s: 'h' gefunden an Position: %d\n", string, pos - string );
+  else      printf( "%s: kein 'h' gefunden\n", string );
+ 
+  pos = strchr( string, 'x' );
+ 
+  if( pos ) printf( "%s: 'x' gefunden an Position: %d\n", string, pos - string );
+  else      printf( "%s: kein 'x' gefunden\n", string );
+ 
+  return EXIT_SUCCESS;
+}
+}
+```
+<u>Ausgabe:</u>  
+```
+Hello hautaklyttn: 'h' gefunden an Position: 6
+Hello hautaklyttn: kein 'x' gefunden
+```
+
+&nbsp;
+
+<a name="ch6-6-14"></a>  
+**strcspn()**  
+strcspn() sucht nach dem ersten Auftreten eines Zeichens. Es kann eine ganze Folge von Zeichen gleichzeitig gesucht werden, die gesuchten Zeichen werden in Form eines Strings an die Funktion übergeben. Wird eins der Zeichen im Suchstring entdeckt, so endet die Suche und es wird die Position des gefundenen Zeichens zurückgegeben.
+
+Wird kein Zeichen gefunden, so gibt strcspn() die Länge des Strings zurück: Es wurde das Null-Byte gefunden.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+size_t strcspn( char const * string, char const * characters );
+```
+**string**: Zeiger auf den Speicherblock, der durchsucht werden soll   
+**characters**: Eine Zeichenkette mit Zeichen, die im `string` gesucht werden.  
+
+**Return value**: Ein `size_t`, das die Position des Zeichens im Suchstring angibt, das auch in `characters` auftaucht.  
+
+<u>Fehlerquellen:</u>  
+Beide Strings müssen mit einen Nullbyte enden.  
+
+<u>Beispiel:</u>  
+```c
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+ 
+int main ()
+{
+  char str[] = "http://www.proggen.org/drawer/page.html";
+  char regardServer[] = ".:/";
+  char ignoreServer[] = ":/";
+ 
+  char * keys = regardServer;
+  char * description;
+ 
+  int l = strlen( str );
+  int pos = -1, oldpos;
+ 
+  while( pos < l )
+  {
+    oldpos = pos + 1;
+    pos = oldpos + strcspn( &str[oldpos], keys );
+    char item = str[pos];
+    str[pos] = '\0';
+ 
+    switch( item )
+    {
+      case ':':
+            description = "Protocol";
+            pos += 2; // ignore the '//';
+            break;
+      case '.':
+            description = "Server";
+            break;
+      case '/':
+            if( keys == regardServer )         // TopLevel-Domain vor dem ersten Verzeichnis
+            {
+              keys = ignoreServer;             // nach dem ersten Verzeichnis kommt keine Server-Information mehr, Punkte gehören nun zum File oder Verzeichnis
+              description = "TopLevelDomain";
+            }
+            else
+              description = "Drawer";
+            break;
+      case '\0':
+            if( keys == regardServer )         // TopLevel-Domain vor dem ersten Verzeichnis
+            {
+              keys = ignoreServer;             // nach dem ersten Verzeichnis kommt keine Server-Information mehr, Punkte gehören nun zum File oder Verzeichnis
+              description = "TopLevelDomain";
+            }
+            else
+              description = "File";
+            break;
+    }
+ 
+    printf( "%s: %s (Position: %d-%d/%d)\n", description, &str[oldpos], oldpos, pos, l );
+    if( !pos ) break;
+  }
+ 
+  return EXIT_SUCCESS;
+}
+```
+<u>Ausgabe:</u>  
+```
+Protocol: http (Position: 0-6/39)
+Server: www (Position: 7-10/39)
+Server: proggen (Position: 11-18/39)
+TopLevelDomain: org (Position: 19-22/39)
+Drawer: drawer (Position: 23-29/39)
+File: page.html (Position: 30-39/39)
+```
+
+&nbsp;
+
+<a name="ch6-6-15"></a>  
+**strpbrk()**  
+strpbrk() sucht nach dem ersten Auftreten eines Zeichens. Es kann eine ganze Folge von Zeichen gleichzeitig gesucht werden, die gesuchten Zeichen werden in Form eines Strings an die Funktion übergeben. Wird eins der Zeichen im Suchstring entdeckt, so endet die Suche und es wird die Position des gefundenen Zeichens zurückgegeben.
+
+Wird kein Zeichen gefunden, so gibt strpbrk() NULL zurück.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+char const * strpbrk( char const * string, char const * characters );
+char       * strpbrk( char       * string, char const * characters );
+```
+**string**: Zeiger auf den Speicherblock, der durchsucht werden soll   
+**characters**: Eine Zeichenkette mit Zeichen, die im `string` gesucht werden.  
+
+**Return value**: Ein Zeiger auf das gefundene Zeichen (char \*) oder NULL, falls kein Zeichen gefunden wurde.  
+
+<u>Fehlerquellen:</u>  
+Beide Strings müssen mit einen Nullbyte enden.  
+
+<u>Beispiel:</u>  
+```c
+#include <string.h>      // definiert strpbrk
+ 
+#include <stdio.h>       // definiert printf
+#include <stdlib.h>      // definiert EXIT_SUCCESS
+ 
+int main( void )
+{
+  char * string   = "Programmieren lernen auf proggen.org";
+  char   vowels[] = "aeiou";
+ 
+  printf( "Selbstlaute in '%s': ", string );
+ 
+  while( 1 )
+  {
+    string = strpbrk( string, vowels );  // Nächsten Selbstlaut finden
+ 
+    if( string )
+      printf( "%c ", *string );
+    else
+      break;
+ 
+    string++;                            // gefundenen Selbstlaut überspringen
+  }
+  printf( "\n" );
+ 
+  return EXIT_SUCCESS;
+}
+```
+<u>Ausgabe:</u>  
+```
+Selbstlaute in 'Programmieren lernen auf proggen.org': o a i e e e e a u o e o
+```
+
+&nbsp;
+
+<a name="ch6-6-16"></a>  
+**strrchr()**  
+strrchr() sucht das letzte Auftreten eines Zeichens (char) in einem Speicherbereich.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+char const * strrchr( char const * string, int value );
+char       * strrchr( char       * string, int value );
+```
+**string**: Zeiger auf den Speicherblock, der durchsucht werden soll   
+**value**: Zeichen, dass gesucht werden soll. Das Zeichen wird als Integer-Datentypen übergeben, tatsächlich werden allerdings nur die unteren 8 Bit gesucht. Es sollte also ein char übergeben werden.  
+
+**Return value**: Zeiger auf das gefundene Element oder NULL.  
+
+<u>Fehlerquellen:</u>  
+Wird das Nullbyte am Ende des Strings vergessen, so endet die Suche nicht am Ende des Strings und es findet ein lesender Zugriff auf Speicherbereiche statt, die nicht dem Programm zugeordnet sind. Dies endet daher häufig in einem Programmabsturz.  
+
+<u>Beispiel:</u>  
+```c
+#include <string.h>      // definiert strrchr
+ 
+#include <stdio.h>       // definiert printf
+#include <stdlib.h>      // definiert EXIT_SUCCESS
+ 
+char const * string = "Hello proggen.org";
+ 
+int main( void )
+{
+  char const * pos = strchr( string, 'o' );               // Vorwärtssuche
+ 
+  if( pos ) printf( "%s: -> 'o' gefunden an Position: %d\n", string, pos - string );
+  else      printf( "%s: -> kein 'o' gefunden\n", string );
+ 
+  pos = strrchr( string, 'o' );                           // Rückwärtssuche
+ 
+  if( pos ) printf( "%s: <- 'o' gefunden an Position: %d\n", string, pos - string );
+  else      printf( "%s: <- kein 'o' gefunden\n", string );
+ 
+  pos = strrchr( string, 'x' );                           // Rückwärtssuche
+ 
+  if( pos ) printf( "%s: <- 'x' gefunden an Position: %d\n", string, pos - string );
+  else      printf( "%s: <- kein 'x' gefunden\n", string );
+ 
+  return EXIT_SUCCESS;
+}
+```
+<u>Ausgabe:</u>  
+```
+Hello proggen.org: -> 'o' gefunden an Position: 4
+Hello proggen.org: <- 'o' gefunden an Position: 14
+Hello proggen.org: <- kein 'x' gefunden
+```
+
+&nbsp;
+
+<a name="ch6-6-17"></a>  
+**strspn()**  
+strspn() prüft wieviele Zeichen im String aus den gewünschten Zeichen besteht. Es kann eine ganze Folge von Zeichen gleichzeitig gesucht werden; die gesuchten Zeichen werden in Form einer Zeichenkette an die Funktion übergeben. Die Position des ersten Zeichens, das **nicht** in der Zeichenkette erlaubter Zeichen enthalten ist, wird zurückgeben.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+size_t strspn( char const * string, char const * characters );
+```
+**string**: Zeiger auf den Speicherblock, der durchsucht werden soll   
+**characters**: Eine Zeichenkette mit Zeichen, die vorne im `string` erwartet werden.  
+
+**Return value**: Ein `size_t`, das die Position des ersten Zeichens im Suchstring angibt, das nicht in `characters` auftaucht.  
+
+<u>Fehlerquellen:</u>  
+Beide Strings müssen mit einen Nullbyte enden.  
+
+<u>Beispiel:</u>  
+```c
+#include <string.h>      // definiert strspn
+ 
+#include <stdio.h>       // definiert printf
+#include <stdlib.h>      // definiert EXIT_SUCCESS
+ 
+int main( void )
+{
+  char string[]     = "192.168.0.1";
+  char characters[] = "0123456789";
+  int pos;
+ 
+  pos = strspn( string, characters );
+  printf( "Die erste Zahl der IP-Adresse '%s' ist %d Ziffern lang.\n", string, pos );
+ 
+  return EXIT_SUCCESS;
+}
+```
+<u>Ausgabe:</u>  
+```
+Die erste Zahl der IP-Adresse '192.168.0.1' ist 3 Ziffern lang.
+```
+
+&nbsp;
+
+<a name="ch6-6-18"></a>  
+**strstr()**  
+strstr() sucht einen Zeichenkette innerhalb eines Strings.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+const char * strstr( char const * string, char const * pattern );
+      char * strstr( char       * string, char const * pattern );
+```
+**string**: Zeiger auf den Speicherblock, der durchsucht werden soll   
+**pattern**: Eine Zeichenkette, der im ersten gesucht wird.  
+
+**Return value**: Der Adresse (char const \*) des ersten Auftretens des gesuchten Musters im String oder NULL, falls das Suchmuster nicht im String gefunden werden konnte. Der zurückgegebene Zeiger zeigt auf das erste Zeichen des Suchstrings im `string`. Es wird also kein neuer Speicher angefordert.  
+
+<u>Fehlerquellen:</u>  
+Beide Strings müssen mit einen Nullbyte enden. Wird der Speicher des strings freigegeben, wird auch der zurückgegebene Pointer ungültig.  
+
+<u>Beispiel:</u>  
+```c
+#include <string.h>      // definiert strstr
+ 
+#include <stdio.h>       // definiert printf
+#include <stdlib.h>      // definiert EXIT_SUCCESS
+ 
+int main ()
+{
+  char string[]  = "http://hautaklyttn.org";
+  char pattern[] = "klyttn";
+  char * pointer;
+ 
+  pointer = strstr( string, pattern );
+ 
+  if( pointer )
+  {
+    int length = pointer - string;
+ 
+    printf( "String ab Pattern '%s' im String '%s': %s\n", pattern, string, pointer );
+    printf( "Pattern gefunden ab dem %d Zeichen\n", length );
+  }
+  else 
+    puts( "Suchmuster nicht gefunden" );
+ 
+  return EXIT_SUCCESS;
+}
+```
+<u>Ausgabe:</u>  
+```
+String ab Pattern 'klyttn' im String 'http://hautaklyttn.org': klyttn.org
+Pattern gefunden ab dem 13 Zeichen
+```
+
+&nbsp;
+
+<a name="ch6-6-19"></a>  
+**strtok()**  
+strtok() wird ein veränderbarer String übergeben und eine Zeichenkette von Trennzeichen (Delimiters). Die Aufgabe von strtok ist nun, alle Trennzeichen durch Null-Bytes zu ersetzen, so dass sie eigenständiger als String verwendbar sind, da jeder Teilstring am Ende ein Nullbyte trägt. Beim ersten Aufruf von strtok() wird der Funktion der zu zerlegende String übergeben. strtok() merkt sich intern die Adresse des Strings und die Position des zuletzt gefundenen Trennzeichen. Bei jedem folgenden Aufruf wird nun als String NULL übergeben, sowie die nun Trennzeichen. Die Trennzeichen können sich dabei von den zuvor verwendeten Trennzeichen unterscheiden.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+char * strtok( char * string, char const * delimiters );
+```
+**string**: Zeiger auf den String, der in unterteilt werden soll   
+**delimiters**: Zeichen, an denen der übergebene String unterteilt werden soll  
+
+**Return value**: Zeiger auf das zuletzt im String gefundene Token oder NULL, falls keine weiteren Tokens gefunden werden konnten.  
+
+<u>Fehlerquellen:</u>  
+Der übergebene String wird in Unterstrings zerteilt, indem die Trennzeichen mit Nullbytes überschrieben werden. Der benutzte Speicherblock bleibt jedoch in einem Stück, er enthält entsprechend mehrere Teilstrings in einem Speicherblock. Muss der Speicherblock wieder freigegeben werden, so muss die Anfangsadresse des Strings, der in strtok() übergeben wird, sich gemerkt werden und diese Adresse als einzige wieder freigegeben werden. Die Unterstrings, die strtok() zurückliefert dürfen nicht freigegeben werden!  
+
+<u>Beispiel:</u>  
+```c
+#include <string.h>      // definiert strtok
+ 
+#include <stdio.h>       // definiert printf
+#include <stdlib.h>      // definiert EXIT_SUCCESS
+ 
+int main( void )
+{
+  char string[]     = "http://www.proggen.org/drawer/page.html";
+  char delimiter1[] = ":";
+  char delimiter2[] = "./";
+  char * token;
+ 
+  printf ("Zerlege URL: %s\n", string );
+  token = strtok( string, delimiter1 );
+  while( token )
+  {
+    printf("Token: %s\n", token);
+    token = strtok( NULL, delimiter2 );
+  }
+ 
+  printf( "Ausgabe zerlegter String: %s\n", string );
+ 
+  return EXIT_SUCCESS;
+}
+```
+<u>Ausgabe:</u>  
+```
+Zerlege URL: http://www.hautaklyttn.org/drawer/page.html
+Token: http
+Token: www
+Token: hautaklyttn
+Token: org
+Token: drawer
+Token: page
+Token: html
+Ausgabe zerlegter String: http
+```
+
+&nbsp;
+
+<a name="ch6-6-20"></a>  
+**memset()**  
+Initialisiert bzw. überschreibt einen Speicherblock mit dem übergebenen Wert `value`. Obwohl ein Integer übergeben wird, werden nur die unteren 8 Bit als Wert übernommen. Dies entspricht einem unsigned Char, welches byteweise in den Speicher geschrieben wird.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+char * memset( char * target, int value, size_t size );
+```
+**target**: Zielspeicherblock bzw. C-String   
+**value**: Byte, dass zum überschrieben benutzt wird  
+**size**: Anzahl zu kopierender Chars (Der Typ `size_t` entspricht i.d.R. Int))  
+
+**Return value**: Die Rückgabe entspricht `target`.  
+
+<u>Beispiel:</u>  
+```c
+#include <stdio.h>
+#include <string.h>
+ 
+int main ()
+{
+  char target[21] = "01234567890123456789";
+ 
+  memset( target, '0', 20 );
+  printf( "'%s'\n", target );
+ 
+  return 0;
+}
+```
+<u>Ausgabe:</u>  
+```
+'00000000000000000000'
+```
+
+&nbsp;
+
+<a name="ch6-6-21"></a>  
+**strerror()**  
+Die Funktion strerror nimmt einen Fehlercode der Standardbibliothek, den man mit errno erhält und liefert eine dazu passende kurze Fehlerbeschreibung zurück.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+char * strerror ( int errnum );
+```
+**errnum**: Fehlernummer   
+
+**Return value**: String mit Fehlerbeschreibung  
+
+<u>Fehlerquellen:</u>  
+Der zurückgelieferte String ist in einem statischen Array gespeichert und sollte vom Programm nicht überschrieben werden. Der Inhalt des Strings auf den der Zeiger zeigt ändert sich beim nächsten Aufruf von strerror. Wenn man den Fehlerstring später noch braucht, sollte man ihn sich kopieren.  
+
+<u>Beispiel:</u>  
+```c
+#include <stdio.h>
+#include <string.h>
+ 
+int main ()
+{
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+ 
+int main( void )
+{
+  FILE * file = fopen( "nicht-existierende-datei", "r" );
+  if( file )
+    fclose( file );
+  else
+    printf( "Fehler: %s\n", strerror(errno) );
+ 
+  return EXIT_SUCCESS; 
+}
+```
+<u>Ausgabe:</u>  
+```
+Fehler: No such file or directory
+```
+
+&nbsp;
+
+<a name="ch6-6-22"></a>  
+**strlen()**  
+Die Funktion strlen wird verwendet um die Länge eines Strings zu bestimmen. Wichtig ist, dass das letzte Zeichen des Strings '\0' ist, da strlen die Zeichen bis zum Nullbyte liest.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+size_t strlen ( const char * str );
+```
+**str**: String, dessen Zeichen gezählt werden sollen  
+
+**Return value**: Anzahl der Zeichen des übergebenen Strings  
+
+<u>Fehlerquellen:</u>  
+Enthält der String kein Nullzeichen, so sucht strlen solange weiter, bis es an ein Nullzeichen kommt. Es kann also auch passieren, dass strlen einen falschen Wert zurückgibt, wenn der String nicht korrekt mit '\0' beendet wird.  
+
+<u>Beispiel:</u>  
+```c
+#include <stdio.h>
+#include <string.h>
+ 
+int main ()
+{
+ 
+  char str[] = "proggen.org";
+  int anz;
+ 
+  anz = strlen (str);
+ 
+  printf ("%d Zeichen\n", anz);
+ 
+  return 0;
+ 
+}
+```
+<u>Ausgabe:</u>  
+```
+11 Zeichen
+```
+
+&nbsp;
 
 &nbsp;
 

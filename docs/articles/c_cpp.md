@@ -3124,7 +3124,6 @@ Um String-Funktionen nutzen zu können, muss die Bibliothek *string.h* eingebund
 |---|---|  
 |[memcmp()](#ch6-6-7)|Zwei Speicherblöcke vergleichen|  
 |[strcmp()](#ch6-6-8)|Zwei Strings vergleichen|  
-|[strcoll()](#ch6-6-9)|Zwei Strings nach lokalen Regeln vergleichen (Groß-/Kleinschreibung beachten)|  
 |[strncmp()](#ch6-6-10)|Eine angegeben Anzahl von Zeichen zweier Strings vergleichen|  
 |[strxfrm()](#ch6-6-11)|Einen String den lokalen Einstellungen entsprechend transformieren|
 
@@ -3155,6 +3154,7 @@ Um String-Funktionen nutzen zu können, muss die Bibliothek *string.h* eingebund
 
 &nbsp;
 
+&nbsp;
 
 <a name="ch6-6-1"></a>  
 **memcpy()**  
@@ -3305,6 +3305,287 @@ int main ()
 ```
 
 &nbsp;
+
+<a name="ch6-6-5"></a>  
+**strcat()**  
+Mit der Funktion strcat werden zwei Strings verkettet.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+char * strcat ( char * destination, const char * source );
+```
+**destination**: destination ist der ursprüngliche String, der um `source` erweitert wird   
+**source**: `source` wird inklusive '\0' ans Ende von `destination` kopiert. Das Nullbyte von `destination` wird dabei überschrieben.  
+
+**Return value**: Die Rückgabe entspricht `destination`.  
+
+<u>Fehlerquellen:</u>  
+`destination` muss groß genug sein, um `source` aufnehmen zu können. Andernfalls schreibt man in einen ungültigen Speicherbereich. Um dies zu vermeiden kann man anstatt von strcat die Funktion strncat() verwenden.  
+
+<u>Beispiel:</u>  
+```c
+#include <stdio.h>
+#include <string.h>
+ 
+int main ()
+{
+ 
+  char str[12];
+  char s1[] = "proggen";
+  char s2[] = ".org";
+ 
+  strcpy (str, s1);
+  strcat (str, s2);
+ 
+  printf ("%s\n", str);
+ 
+  return 0;
+ 
+}
+```
+
+&nbsp;
+
+<a name="ch6-6-6"></a>  
+**strncat()**  
+strncat() fügt einem String eine wählbare Anzahl von Zeichen von eines zweiten Strings an. Das Nullbyte des ersten Strings wird gesucht und mit dem zweiten String überschrieben. Nachdem die angebene Zahl von Zeichen des zweiten Strings kopiert wurden, wird abschließend ein neues Nullbyte gesetzt.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+void * strncpy( char * target, char * source, size_t size );
+```
+**target**: Zielspeicherblock (mindestens zusätzliche `size` Byte als der bereits enthaltende String)   
+**source**: Quellspeicherblock  
+**size**: Anzahl maximal zu kopierender Bytes (Der Typ `size_t` entspricht i.d.R. unsigned Int))  
+
+**Return value**: Die Rückgabe entspricht `target`.  
+
+<u>Fehlerquellen:</u>  
+Ist der `target`-String kleiner als die Länge des bisherigen Strings und den angefügten `size` Bytes, so wird in fremde Speicherbereiche geschrieben, so dass das Programm abstürzen kann oder andere Daten überschreibt, so dass das Programm beim Zugriff auf die überschriebenen Daten abstürzen kann.  
+
+<u>Beispiel:</u>  
+```c
+#include <string.h>      // definiert strncat
+ 
+#include <stdio.h>       // definiert printf
+#include <stdlib.h>      // definiert EXIT_SUCCESS
+ 
+char const * source = " World\n";
+char target[20] = "Hallo";
+ 
+int main( void )
+{
+  strncat( target, source, 6 );
+ 
+  printf( "Zusammengefügt: \"%s\"\n", target );
+ 
+  return EXIT_SUCCESS;
+}
+```
+
+&nbsp;
+
+<a name="ch6-6-7"></a>  
+**memcmp()**  
+memcmp() vergleicht zwei Speicherbereiche über eine wählbare Größe. Der Rückgabewert ist 0, wenn die Speicherbereiche gleich sind.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+void * memcmp( void const * first, void const * second, size_t size );
+```
+**first**: Speicherblock (mindestens der Größe `size`)   
+**source**: zu vergleichender Speicherblock (mindestens der Größe `size`)  
+**size**: Anzahl maximal zu vergleichender Bytes (Der Typ `size_t` entspricht i.d.R. Int))  
+
+**Return value**: Ein Integer, das wie folgt interpretiert wird  
+
+|Rückgabewert|Bedeutung|
+|---|---|
+|0|Die verglichenen Zeichen hatten identische Werte|
+|> 0|Die verglichenen Zeichen waren nicht identisch, der erste unterschiedliche Wert war bei `first` größer als bei `second`|
+|< 0|Die verglichenen Zeichen waren nicht identisch, der erste unterschiedliche Wert war bei `first` kleiner als bei `second`|
+
+<u>Fehlerquellen:</u>  
+Ist size größer als einer der beiden zu vergleichenden Speicherblöcke findet ein lesender Zugriff auf Speicherbereiche statt, die nicht dem Programm zugeordnet sind. Dies endet daher häufig in einem Programmabsturz.  
+
+<u>Beispiel:</u>  
+```c
+#include <string.h>      // definiert memcmp
+ 
+#include <stdio.h>       // definiert printf
+#include <stdlib.h>      // definiert EXIT_SUCCESS
+ 
+char const * string = "programming is fun";
+char const * identical = "programming is fun";
+char const * greater = "programming is the best";
+char const * less = "programming is boring";
+ 
+int main( void )
+{
+  int length = strlen( string );
+ 
+  printf( "%s - %s: %d\n", identical, string, memcmp( identical, string, length ) );
+  printf( "%s - %s: %d\n",   greater, string, memcmp(   greater, string, length ) );
+  printf( "%s - %s: %d\n",      less, string, memcmp(      less, string, length ) );
+ 
+  return EXIT_SUCCESS;
+}
+}
+```
+<u>Ausgabe:</u>  
+```
+programming is fun - programming is fun: 0
+programming is the best - programming is fun: 1
+programming is boring - programming is fun: -1
+```
+
+&nbsp;
+
+<a name="ch6-6-8"></a>  
+**strcmp()**  
+Die Funktion wird verwendet um zu prüfen, ob zwei Strings die gleichen Zeichen enthalten.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+int strcmp (const char * str1, const char * str2);
+```
+**str1**: string, wird mit str2 verglichen   
+**str2**: string, wird mit str1 verglichen  
+
+**Return value**: 0, wenn die Strings gleich sind, andernfalls ein anderer Wert  
+
+|Rückgabewert|Bedeutung|
+|---|---|
+|0|Die verglichenen Zeichen sind identisch|
+|> 0|Die verglichenen Zeichen waren nicht identisch, der erste unterschiedliche Wert war bei `str1` größer als bei `str2`|
+|< 0|Die verglichenen Zeichen waren nicht identisch, der erste unterschiedliche Wert war bei `str1` kleiner als bei `str2`|
+
+<u>Fehlerquellen:</u>  
+Beide Strings müssen mit einem Nullbyte enden, da es sonst zu falschen Ergebnissen kommt.  
+
+<u>Beispiel:</u>  
+```c
+#include <stdio.h>
+#include <string.h>
+ 
+void result (int diff);
+ 
+int main ()
+{
+  char str[]              = "proggen.org";
+  char same_as_str[]      = "proggen.org";
+  char smaller_than_str[] = "a_proggen.org";
+  char bigger_than_str[]  = "z_proggen.org";
+  int diff;
+ 
+  diff = strcmp (str, same_as_str);
+  result (diff);
+ 
+  diff = strcmp (str, smaller_than_str);
+  result (diff);  
+ 
+  diff = strcmp (str, bigger_than_str);
+  result (diff);
+ 
+  return 0;
+}
+ 
+void result (int diff)
+{
+  if (diff == 0)
+    printf ("Strings sind gleich.\n");
+  else if (diff > 0)
+    printf ("Der erste String ist groeßer.\n");
+  else
+    printf ("Der zweite String ist groeßer.\n");
+}
+```
+<u>Ausgabe:</u>  
+```
+Strings sind gleich.
+Der erste String ist groeßer.
+Der zweite String ist groeßer.
+```
+
+&nbsp;
+
+<a name="ch6-6-10"></a>  
+**strncmp()**  
+strncmp() vergleicht zwei Strings bis maximal zum angegebenen Zeichen oder in einem der beiden Strings ein Nullbyte gefunden wurde.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+void * strncmp( char const * first, char const * second, size_t size );
+```
+**first**: erster String   
+**second**: zweiter String  
+**size**:  Anzahl maximal zu vergleichender Zeichen (Der Typ `size_t` entspricht i.d.R. unsigned Int))  
+
+**Return value**:    
+
+|Rückgabewert|Bedeutung|
+|---|---|
+|0|Die verglichenen Strings sind bis zum angegebenen Zeichen identisch|
+|> 0|Die verglichenen Strings sind nicht identisch, das erste unterschiedliche Zeichen war bei `first` größer als bei `second`|
+|< 0|Die verglichenen Strings sind nicht identisch, der erste unterschiedliche Zeichen war bei `first` kleiner als bei `second`|
+
+<u>Fehlerquellen:</u>  
+Wurde bei einem Strings das Nullbyte vergessen und ist `size` größer als der jeweilige String ohne Nullbyte, so findet ein lesender Zugriff auf Speicherbereiche statt, die nicht dem Programm zugeordnet sind. Dies endet daher häufig in einem Programmabsturz.  
+
+<u>Beispiel:</u>  
+```c
+#include <string.h>      // definiert strncmp
+ 
+#include <stdio.h>       // definiert printf
+#include <stdlib.h>      // definiert EXIT_SUCCESS
+ 
+char const * string = "Hello World";
+char const * identical = "Hello hautaklyttn";
+char const * greater = "Salut";
+char const * less = "Hallo";
+ 
+int main( void )
+{
+  int const length = 5;
+ 
+  printf( "%s - %s: %d\n", identical, string, strncmp( identical, string, length ) );
+  printf( "%s - %s: %d\n",   greater, string, strncmp(   greater, string, length ) );
+  printf( "%s - %s: %d\n",      less, string, strncmp(      less, string, length ) );
+ 
+  return EXIT_SUCCESS;
+}
+```
+<u>Ausgabe:</u>  
+```
+Hello hautaklyttn - Hello World: 0
+Salut - Hello World: 11
+Hallo - Hello World: -4
+```
+
+&nbsp;
+
+<a name="ch6-6-11"></a>  
+**strxfrm()**  
+Die Funktion strxfrm() transformiert einen NULL-terminierten C-String gemäß den lokalen Einstellungen. Dadurch kann der String sicher per strcmp() mit einem anderen verglichen werden. Der transformierte String wird in einem neuen String gespeichert.  
+
+<u>Signatur:</u>
+```c
+#include <string.h>
+size_t strxfrm(char *str1, const char *str2, size_t num);
+```
+**str1**: Enthält nach Ausführung den transformierten String   
+**str2**: Zu transformierender String  
+**num**: Maximale Anzahl zu transformierender Zeichen  
+
+**Return value**: Die Funktion gibt die Länge das transformierten Strings zurück ( '\0' wird nicht mitgezählt). Ist der Rückgabewert größer oder gleich `num`, dann ist `str1` undefiniert.  
+
+&nbsp;
+
 
 
 

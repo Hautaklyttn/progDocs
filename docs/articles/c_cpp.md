@@ -3098,7 +3098,7 @@ For the record:
 Um String-Funktionen nutzen zu können, muss die Bibliothek *string.h* eingebunden werden.  
 &nbsp;
 
-#### **<font size="+2">Kopieren</font>**  
+#### **<font size="+1">Kopieren</font>**  
 
 |Funktion|Bedeutung|  
 |---|---|  
@@ -3106,6 +3106,55 @@ Um String-Funktionen nutzen zu können, muss die Bibliothek *string.h* eingebund
 |[memmove()](#ch6-6-2)|Verschiebt einen Speicherblock|  
 |[strcpy()](#ch6-6-3)|Kopiert einen String|  
 |[strncpy()](#ch6-6-4)|Kopiert eine angegeben Anzahl von Zeichen eines Strings|  
+
+&nbsp;
+
+#### **<font size="+1">Aneinanderhängen</font>**  
+
+|Funktion|Bedeutung|  
+|---|---|  
+|[strcat()](#ch6-6-5)|Einen String an einen anderen String anhängen|  
+|[strncat()](#ch6-6-6)|Eine angegeben Anzahl von Zeichen eines Strings an einen anderen String anhängen|  
+
+&nbsp;
+
+#### **<font size="+1">Vergleichen</font>**  
+
+|Funktion|Bedeutung|  
+|---|---|  
+|[memcmp()](#ch6-6-7)|Zwei Speicherblöcke vergleichen|  
+|[strcmp()](#ch6-6-8)|Zwei Strings vergleichen|  
+|[strcoll()](#ch6-6-9)|Zwei Strings nach lokalen Regeln vergleichen (Groß-/Kleinschreibung beachten)|  
+|[strncmp()](#ch6-6-10)|Eine angegeben Anzahl von Zeichen zweier Strings vergleichen|  
+|[strxfrm()](#ch6-6-11)|Einen String den lokalen Einstellungen entsprechend transformieren|
+
+&nbsp;
+
+#### **<font size="+1">Suchen</font>**  
+
+|Funktion|Bedeutung|  
+|---|---|  
+|[memchr()](#ch6-6-12)|Ein Zeichen in einem Speicherblock finden|  
+|[strchr()](#ch6-6-13)|Das erste Auftreten eines Zeichens in einem String finden|  
+|[strcspn()](#ch6-6-14)|Die Anzahl von Zeichen eines Strings vor dem Auftreten des ersten einer Liste von vorgegebenen Zeichen|  
+|[strpbrk()](#ch6-6-15)|Das erste autretende Zeichen aus einer Liste von Zeichen finden|  
+|[strrchr()](#ch6-6-16)|Das letzte Auftreten eines Zeichens in einem String finden|  
+|[strspn()](#ch6-6-17)|Den Länge des längsten zusammenhängenden Blocks in einem String aus einer Liste von vergegeben Zeichen|  
+|[strstr()](#ch6-6-18)|Einen Teilstring in einem anderen String finden|  
+|[strtok()](#ch6-6-19)|Einen String in Token unterteilen|  
+
+&nbsp;
+
+#### **<font size="+1">Andere Funktionen</font>**  
+
+|Funktion|Bedeutung|  
+|---|---|  
+|[memset()](#ch6-6-20)|Einen Speicherblock mit bestimmten Zeichen auffüllen|  
+|[strerror()](#ch6-6-21)|Den String mit einer Fehlermeldung zu einem Fehlercode bekommen|  
+|[strlen()](#ch6-6-22)|Die Länge eines Strings bestimmen|  
+
+&nbsp;
+
 
 <a name="ch6-6-1"></a>  
 **memcpy()**  

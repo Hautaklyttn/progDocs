@@ -83,6 +83,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.10 'Exceptions' - `Try / Catch`</font>](#ch5-10)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.11 [c++] 'reinterpret_cast' type casting</font>](#ch5-11)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.12 [c++] 'Compile Time Constants': 'constexpr'</font>](#ch5-12)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.13 Zeichenkonstanten</font>](#ch5-13)  
 
 ### 6. Bibliotheken, API's und *make*   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Static Library Basics</font>](#ch6-1)  
@@ -2897,6 +2898,52 @@ constexpr unsigned int version = 3U;
 constexpr float pi = 3.1415926535’8979323846F;
 ```
 The **constexpr** keyword can make compile-time constants from a wider variety of things than the original **const** keyword.
+
+&nbsp;
+
+<a name="ch5-13"></a>
+### 5.13 Zeichenkonstanten  
+
+Eine *Zeichenkonstante* ist ganzzahlig und wird als ein Einzelzeichen innerhalb von Anführungszeichen geschrieben, wie etwa **'x'**. Der Wert einer Zeichenkonstanten ist der numerische Wert des Zeichens im Zeichensatz der Maschine. Beispielsweise hat die Zeichenkonstante **'0'** für die Ziffer Null im ASCII-Zeichensatz den Wert 48, was nichts mit dem numerischen Wert **0** zu tun hat. Schreibt man **'0'** anstelle eines numerischen Werts wie 48, der vom Zeichensatz abhängig ist, so ist das Programm unabhängig vom jeweiligen numerischen Wert und leichter zu lesen. Zeichenkonstanten können in numerischen Operationen genau wie andere Integer-Werte verwendet werden; sie werden jedoch am häufigsten zu Vergleichen mit anderen Zeichen verwendet.  
+
+> Gewisse Zeichen können in Zeichenkonstanten und in konstanten Zeichenketten mit Hilfe von Ersatzdarstellungen wie etwa **\\n** (Zeilentrenner) angegeben werden. **Diese Ersatzdarstellungen sehen zwar wie zwei Zeichen aus, stellen aber nur ein Zeichen dar.** 
+
+Darüber hinaus kann ein beliebiges, byte-großes Bit-Muster mit  
+`'\ooo'`  
+dargestellt werden, dabei ist *'ooo'* eine Folge von ein bis drei oktalen Ziffern (0...7), oder mit  
+`'\xhh`  
+dabei ist *hh* eine Folge von einer oder mehreren hexadezimalen Ziffern (0...9, a...f, A...F).  
+
+Somit könnte wir folgendes schreiben:  
+```
+#define VTAB '\013'   /* ASCII Vertikal-Tabulator */
+#define BELL '\007'   /* ASCII Klingelzeichen */
+```
+oder auch hexadezimal:  
+```
+#define VTAB '\xb'   /* ASCII Vertikal-Tabulator */
+#define BELL '\x7'   /* ASCII Klingelzeichen */
+```
+
+Liste aller Ersatzdarstellungen:  
+
+|Ersatzdarstellung|Beschreibung|  
+|:---:|---|  
+|**\\a**|Klingelzeichen|  
+|**\\b**|*backspace*|  
+|**\\f**|Seitenvorschub|  
+|**\\n**|Zeilentrenner|  
+|**\\r**|Wangenrücklauf|  
+|**\\t**|Tabulatorzeichen|  
+|**\\v**|Vertikal-Tabulator|  
+|**\\\\**|Gegenschrägstrich|  
+|**\\?**|Fragezeichen|  
+|**\\'**|Anführungszeichen|  
+|**\\"**|Doppelanführungszeichen|  
+|**\\ooo**|oktale Zahl|  
+|**\\xhh**|hexadezimale Zahl|  
+
+Die Zeichenkonstante **'\0'** steht für das Zeichen mit Wert 0, das sogenannte Nullzeichen (**NUL**). **'\0'** wird oft statt **0** geschrieben, um zu betonen, dass sich ein bestimmter Ausdruck mit Zeichen befasst, der numerische Wert ist aber trotzdem  Null.  
 
 &nbsp;
 

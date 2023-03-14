@@ -327,6 +327,45 @@ Button {
 
 &nbsp; 
 
+Best Use of ***Aliases***  
+
+> Refer to an item by *id*.
+
+You should make an alias from your object that want to be accessible like below:
+
+**Foo.qml**
+```js
+Item {
+    property alias _button: mybutton
+    /* ... */
+
+    Button {
+    id: mybutton
+
+    /* ... */
+    }
+}
+```
+
+then you can access it anywhere in your main.qml
+
+**main.qml**
+
+```js
+Window {
+   /* ... */
+
+   onSomething: _button.text = "foo"
+
+   Foo 
+   {
+      id: myfoo
+   }
+}
+```
+
+&nbsp;
+
 **Property Binding (to a JS variable)**  
 
 A property with a binding in QML is automatically updated as necessary (e.g. `width: height*2`).  

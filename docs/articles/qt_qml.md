@@ -355,7 +355,8 @@ then you can access it anywhere in your main.qml
 Window {
    /* ... */
 
-   onSomething: _button.text = "foo"
+   // change 'text' for the button in qml element 'Foo'
+   onSomething: myfoo._button.text = "foo"
 
    Foo 
    {

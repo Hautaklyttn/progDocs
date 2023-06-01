@@ -1279,6 +1279,7 @@ In diesem Beispiel prüft der C-Präprozessor, ob ihm ein Makro namens 'WIN32' b
 ... tbd ...
 
 &nbsp;
+
 <a name="ch1-18-4"></a>
 **make / cmake / qmake**  
   
@@ -1316,6 +1317,7 @@ In a nutshell, **a qmake specification is nothing more than a list of variable d
 
 
 &nbsp;
+
 <a name="ch1-18-5"></a>
 **gcc, g++, etc**  
 

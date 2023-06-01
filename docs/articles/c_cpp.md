@@ -37,6 +37,12 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.16 [c++] 'Forward Declaration'</font>](#ch1-16)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.17 Function 'Prototype' and Visibility in C</font>](#ch1-17)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18 Präprozessor/Compiler/Linker</font>](#ch1-18)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18.1 Basics + Compiler </font>](#ch1-18-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18.2 Präprozessor </font>](#ch1-18-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18.3 Linker </font>](#ch1-18-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18.4 make / cmake / qmake </font>](#ch1-18-4)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.18.5 gcc, g++, etc </font>](#ch1-18-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.19 'Name Mangling' (or 'Name decoration')</font>](#ch1-19)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.19 'Name Mangling' (or 'Name decoration')</font>](#ch1-19)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.20 Single quotes vs. double quotes</font>](#ch1-20)  
 
@@ -1194,7 +1200,8 @@ In practice, almost everyone tends to define functions without adding extra stor
 <a name="ch1-18"></a>
 ### 1.18 Präprozessor/Compiler/Linker in C/C++  
 
-**Basics**  
+<a name="ch1-18-1"></a>
+**Basics + Compiler**  
 &nbsp;  
 Die Quelldateien werden vom **Compiler** getrennt übersetzt - eine Quelldatei ist eine Übersetzungseinheit. Für jede Quelldatei wird eine *Object*-Datei mit Maschinencode erzeugt. Dieser Maschinencode ist nicht ablauffähig, zum einen, weil die Library-Funktionen noch fehen, zum anderen, weil die Adressen von Funktionen und Variablen anderer Dateien noch nicht bekannt sind.  
 
@@ -1203,6 +1210,28 @@ Die Aufgabe des **Linkers** ist es nun, die Querbezüge zwischen den Dateien her
 In diesem **virtuellem Adressraum** hat jede Funktion und jede globale Variable ihre eigene Adresse. Überschneidungen, dass mehrere Funktionen oder globale Variablen an derselben Adresse liegen, darf es nicht geben. Der Linker erzeugt das ausführbare Programm.  
 &nbsp;  
 
+- `CFLAGS`  
+  'CFLAGS' are the name of environment variables or of Makefile variables that can be set to **specify additional switches to be passed to a compiler** in the process of building computer software. These variables are usually set inside a Makefile and are **appended to the command line** when the compiler is invoked.  
+  &nbsp;  
+  So the line in the Makefile 
+  ```c
+  DEF_CFLAGS += -DWITH_FLEXRAY
+  ```
+  is the equivalent ot putting
+  ```c
+  #define WITH_FLEXRAY 1
+  ```
+  at the top of all .c and .h files in your project.  
+  Inside your code you can then tell the preprocessor (or precompiler) which code to forward to the compiler  
+  ```c
+  #ifdef (WITH_FLEXRAY)
+    ...
+  #endif
+  ```
+
+&nbsp;
+
+<a name="ch1-18-2"></a>
 **Präprozessor**  
 &nbsp;  
 Der Präprozessor gehört zum Compiler und verändert den Quelltext nach Anweisungen, welche im Quelltext (oder Makefile) festgelegt werden. Wie das Stichwort 'Prä' verrät, wird der Präprozessor <u>vor</u> der eigentlichen Kompilierung ausgeführt. D.h. der Präprozessor verändert vor dem Kompilieren den Quelltext, danach wird der neue Quelltext kompiliert.  
@@ -1243,24 +1272,72 @@ In diesem Beispiel prüft der C-Präprozessor, ob ihm ein Makro namens 'WIN32' b
 
 &nbsp;
 
-- `CFLAGS`  
-  'CFLAGS' are the name of environment variables or of Makefile variables that can be set to **specify additional switches to be passed to a compiler** in the process of building computer software. These variables are usually set inside a Makefile and are **appended to the command line** when the compiler is invoked.  
-  &nbsp;  
-  So the line in the Makefile 
-  ```c
-  DEF_CFLAGS += -DWITH_FLEXRAY
-  ```
-  is the equivalent ot putting
-  ```c
-  #define WITH_FLEXRAY 1
-  ```
-  at the top of all .c and .h files in your project.  
-  Inside your code you can then tell the preprocessor (or precompiler) which code to forward to the compiler  
-  ```c
-  #ifdef (WITH_FLEXRAY)
-    ...
-  #endif
-  ```
+<a name="ch1-18-3"></a>
+**Linker**  
+&nbsp;  
+
+... tbd ...
+
+&nbsp;
+<a name="ch1-18-4"></a>
+**make / cmake / qmake**  
+  
+The build process can be done manually, but it can become difficult as you start working on larger projects. This is where tools like `cmake` (or `qmake`) and `make` can help you automate the process. Both of these tools allow you to go from source code to executables.  
+
+*CMake* and *Make* are especially helpful when it comes to automation and save you time by putting all the commands required to build the program in either a `Makefile` or `CMakeLists.txt` file without having to type them out every time.
+
+*Make* is a tool that controls the generation of executables and other non–source files of a program from the program’s source files. It obtains the instructions on how to build the program from a file called the *Makefile*.
+
+On the other hand, *CMake* requires a `CMakeLists.txt` file and targets cross-platform builds. This means that the resulting files are made for a specific operating systems. It allows compiler-independent builds, testing, packaging, and installation of software. **It’s important to note that CMake produces build files (e.g. the *Makefile*) for other systems; however, it’s not a build system itself.** CMake can generate a Makefile, and then the generated Makefile can be used with Make in the platform being worked on:  
+
+![make](../assets/pics/cmakeNmake.png)  
+
+**Bevor es CMake gab, musste für jede Plattform und für jeden Compiler und Linker manuell ein eigenes Makefile geschrieben werden. CMake automatisiert diesen Prozess mittels plattformunabhängiger Bauanweisungen für Makefiles.** Das Werkzeug kann bequem über eine grafische Oberfläche bedient werden.  
+
+&nbsp;
+
+**qmake**  
+
+*qmake* is a build system tool shipped with *Qt library* that simplifies the build process across different platforms.  
+
+The qmake specification is written in `.pro` (“project”) files. This is an example of the simplest possible `.pro` file:
+
+```
+SOURCES = hello.cpp
+```
+
+By default, this will create a `Makefile` that would build an executable from the single source code file `hello.cpp`.
+
+To build the binary (executable in this case), you need to run qmake first to produce a Makefile and then `make` (or `nmake`, or `mingw32-make` depending on your toolchain) to build the target.
+
+In a nutshell, **a qmake specification is nothing more than a list of variable definitions mixed with optional control flow statements**. Each variable, in general, holds a list of strings. Control flow statements allow you to include other qmake specification files, control conditional sections, and even call functions.  
+
+![make](../assets/pics/qmakeNmake.png)  
+
+
+&nbsp;
+<a name="ch1-18-5"></a>
+**gcc, g++, etc**  
+
+*GCC (GNU Compiler Collection)* refers to all the different languages that are supported by the GNU compiler.  
+
+`gcc`: GNU C compiler
+`g++`: GNU C++ compiler
+
+The main differences:  
+1. `gcc` will compile: `*.c\*.cpp` files as C and C++ respectively.
+2. `g++` will compile: `*.c\*.cpp` files but they will all be treated as C++ files.
+3. Also if you use `g++` to link the object files it automatically links in the std C++ libraries (`gcc` does not do this).
+4. `gcc` compiling C files has fewer predefined macros.
+5. `gcc` compiling `*.cpp` and `g++` compiling `*.c\*.cpp` files has a few extra macros.
+
+`gcc` and `g++` are actually **compiler-drivers** of the *GNU Compiler Collection* (which was once upon a time just the GNU C Compiler).
+
+Even though they automatically determine which backends (`cc1`, `cc1plus`, ...) to call depending on the file-type, unless overridden with `-x language`, they have some differences.
+
+**The probably most important difference in their defaults is which libraries they link against automatically.**
+
+According to GCC's online documentation, `g++` is equivalent to `gcc -xc++ -lstdc++ -shared-libgcc` (the 1st is a compiler option, the 2nd two are linker options). This can be checked by running both with the `-v` option (it displays the backend toolchain commands being run).
 
 &nbsp;
 

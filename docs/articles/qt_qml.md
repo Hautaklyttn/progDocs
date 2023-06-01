@@ -776,6 +776,10 @@ Whenever you save a change to your *\*.pro* files, qmake will parse the file. If
 
 &nbsp; 
 
+![0x](../assets/pics/dependenciesQt.png)  
+
+&nbsp; 
+
 <a name="ch1-2-2"></a>
 ### 1.2.2 Including external Libraries  
 

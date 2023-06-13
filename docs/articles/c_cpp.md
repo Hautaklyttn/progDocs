@@ -109,6 +109,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.6 Datei Schreiben/Lesen in C</font>](#ch7-6)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.7 X-Macros in C</font>](#ch7-7)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.8 [c++] Embedded C++: Build process</font>](#ch7-8)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.9 Bit-Felder</font>](#ch7-9)  
 
 ### 8. Warnings and Errors  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 'Warning': no previous prototype for 'function'</font>](#ch8-1)  
@@ -363,6 +364,20 @@ Then put it all together to read:
 > "`next` is a pointer to a function returning a pointer to a const pointer-to-char"  
 
 and we are done.
+
+&nbsp;
+
+**Beispielausdrücke:**  
+
+|Ausdruck |Beschreibung |  
+|:---|:---|  
+|`char **argv`|*argv*: Zeiger auf Zeiger auf char.|
+|`int (*daytab)[13]`|*daytab*: Zeiger auf Vektor[13] mit int.|
+|`int *daytab[13]`|*daytab*: Vektor[13] mit Zeiger auf int.| 
+|`void *comb()`|*comp*: Funktion mit Resultat Zeiger auf void.|
+|`void (*comp)`|*comp*: Zeiger auf Funktion mit Resultat void.|
+|`char (*(*x())[])()`|*x*: Funktion mit Resultat Zeiger auf Vektor[] <br /> *m*:Zeiger auf Funktion mit Resultat char.|
+|`char (*(*x[3])())[5]`|*x*: Vektor[3] mit Zeiger auf Funktion mit Resultat Zeiger auf Vektor[5] mit char.|
 
 &nbsp;
 
@@ -917,6 +932,10 @@ struct node_tag  a,b;
 a.next = &b;
 a.next->next=NULL;
 ```
+
+&nbsp;
+
+**
 
 &nbsp;
 
@@ -1611,7 +1630,43 @@ n1 = *p1;  // reading access, i.e. n1 is now 5
 *p1 = 7;   // writing access, i.e. c1 is now 7
 ```
 
-> `*` is the dereference operator and can be read as `value pointed by`.
+> `*` is the dereference operator and can be read as `value pointed by`.  
+
+&nbsp;
+
+Die Definition des Zeigers **ip**
+
+```c
+int *ip;
+```
+
+soll als Muster verstanden werden; sie besagt, dass der Ausdruck **\*ip** ein **int**-Wert ist. Die Syntax einer Variablenvereinbarung imitiert die Syntax von Ausdrücken, in denen die Variable auftreten könnte.  
+
+Beachten Sie auch, dass daraus folgt, dass ein Zeiger jeweils nur auf eine bestimmte Art von Objekt zeigen darf: jeder Zeiger zeigt auf einen festgelegten Datentyp. (Es gibt eine Ausnahme: ein "Zeiger auf void" wird benutzt, um einen Zeiger beliebigen Typs anzunehmen, aber er darf nicht selbst zum Zugriff verwendet werden.)  
+
+Zeigt **\*ip** auf die **-int**-Variable x, dann darf **\*ip** überall stehen, wo **x** stehen dürfte:
+
+```c
+*ip = *ip + 10;
+```
+
+erhöht **\*ip** (also **x**) um 10.  
+
+Die unären Operatoren **\*** und **&** haben höheren Vorrang als arithmetische Operatoren, also holt die Zuweisung  
+
+```c
+y = *ip + 1;
+```
+
+den Wert auf den **ip** zeigt, addiert 1 und weist das Resultat an **y** zu; ebenso inkrementiert  
+
+```c
+*ip += 1;
+++*ip;
+(*ip)++;
+```
+
+den Wert, auf den **ip** zeigt. Im letzten Ausdruck sind die Klammern notwendig; ohne sie würde der Ausdruck den *Zeiger* **ip** inkrementieren und nicht das Objekt, auf das **ip** zeigt, da unäre Operatoren wie **\*** und **++** von rechts nach links zusammengefasst werden.  
 
 &nbsp;
 
@@ -1730,7 +1785,7 @@ for (i=0; y<zeile; i++) {
 
 &nbsp;
 
-- Äquivalenz zwischen Zeigern und mehrdimensionalen Arrays:
+- **Äquivalenz zwischen Zeigern und mehrdimensionalen Arrays**:
 
 |Zugriff auf|Möglichkeit 1|Möglichkeit 2|Möglichkeit 3|
 |:---:|:---:|:---:|:---:|
@@ -1746,6 +1801,21 @@ Wenn aber *matrix[0]* ein Array ist, stellt sich die Frage, ob *matrix[0]* selbs
 Folgende Regel gilt für n-dimensionale Arrays:
 - Der Array-Name gefolgt von n Klammernpaaren (wobei jedes Paar einen passenden Index einschließt) wird zu Array-Daten (genauer gesagt, zu den Daten aus dem spez. Array-Element) ausgewertet.
 - Der Array-Name gefolgt von weniger als n Klammernpaaren wird zu einem Zeiger auf ein Array-Element ausgewertet.
+
+&nbsp;
+
+- **Zeiger kontra mehrdimensionale Arrays**  
+
+Mit den Definitionen  
+
+```c
+int a[10][20];
+int *b[10];
+```
+
+sind sowohl **a[3][4]** als auch **b[3][4]** legitime Verweise auf einen einzelnen **int**-Wert. Aber **a** ist ein echter zweidimensionaler Vektor: für 200 **int**-Werte ist Speicher bereitgestellt worden, und die übliche Rechteckformel 20x*zeile* + *spalte* wird angewendet, um das Element **a[*zeile*][*spalte*]** aufzufinden. Für **b** reserviert die (lokale) Definition jedoch nur Speicher für 10 Zeiger und initialisiert sie nicht; die Initialisierung muss explizit erfolgen, entweder statisch oder durch Ausführung von Anweisungen.  
+
+Angenommen, jedes Element von **b** zeigt auf einen Vektor mit 20 Elementen, dann braucht man dazu Platz für 200 **int**-Werte und zusätzlich für 10 Zeiger. Der wichtige Vorteil des Zeigervektors ist, dass die Zeilen des Vektors verschieden lang sein können. Das heisst, nicht jedes Element von **b** muss auf einen Vektor mit 20 Elementen zeigen; manche Elemente könnten auf Vektoren mit 2 Elementen zeigen, andere auf Vektoren mit 50 und wieder andere überhaupt nicht auf Vektoren.  
 
 &nbsp;
 
@@ -5036,6 +5106,53 @@ This executable HEX-file file can be flashed into the microcontroller’s progra
 > **HEX** is a text representation of the image - it has addresses and checksums, so it can be "sparse". Intel HEX format is a file format that conveys binary information in ASCII text form. It is commonly used for programming microcontrollers, EEPROMs and other types of programmable logic devices and hardware emulators.
 
 **ELF files** are Executable Linkable Format which consists of a symbol look-ups and relocatable table, that is, <u>it can be loaded at any memory address by the kernel and automatically, all symbols used, are adjusted to the offset from that memory address</u> where it was loaded into. Usually ELF files have a number of sections, such as 'data', 'text', 'bss', to name but a few...it is within those sections where the run-time can calculate where to adjust the symbol's memory references dynamically at run-time.  
+
+&nbsp;
+  
+<a name="ch7-9"></a>
+### 7.9 Bit-Felder  
+
+Zur platzsparenden Abspeicherung von Daten werden in bestimmten Fällen mehrere Objekte in einem Maschinenwort zusammengefaßt. Ein Objekt ist dann durch ein oder mehrere Bits diese Maschinenwortes repräsentiert (Beispiele: Initialisierungwerte für peripere Bausteine, Tabelle der ASCII-Zeichen mit ihren Eigenschaften (alpha, digit, hexdigit, print, usw.)). Ganz kompakt kodiert man diese Informationen in einer Menge von Einzel-Bit-Werten in einer Variablen vom Datentyp **int** oder **char**.  
+
+Dies geschieht üblicherweise, indem man *Bit-Masken* definiert, die den relevanten Bit-Positionen entsprechen. Die Zahlen müssen dabei Potenzen von 2 sein. Zusätzlich stehen für die Verarbeitung solcher Daten stehen die Operatoren für die bitweisen logischen Verknüpfungen zur Verfügung.  
+
+```c
+#define ALPHA 01 
+#define DIGIT 02 
+#define HEX 04 
+
+int attr; 
+
+attr |= ALPHA | HEX;              /* setzt Bits ALPHA und HEX */
+attr &= ~(ALPHA | HEX);           /* löscht Bits ALPHA und HEX */ 
+if ((attr & (ALPHA|HEX)) == 0) {  /* genau dann wahr, wenn ALPHA und HEX gleich 0 sind */
+  ...
+}
+```
+
+Alternativ dazu bietet C die Möglichkeit, Bitwerte in Maschinenworten direkt zu definieren in sogenannten **Bit-Feldern**. Dazu wird die **struct**-Anweisung in abgewandelter Form verwendet:  
+
+```c
+struct {    
+  unsigned int is_alpha: 1;  /* Bit 0 */    
+  unsigned int is_digit: 1;  /* Bit 1 */    
+  unsigned int is_hex: 1;    /* Bit 2 */                       
+                     : 3;    /* 3 Bit freilassen */    
+  unsigned int zei_satz: 2;  /* Bits 6 und 7 */ 
+} attr;
+```
+
+Die Bitfeldvariable ist vom Typ **int**. Passen nicht alle Bitfelder in ein **int** Objekt, so wird dieses bis zur nächsten int Grenze erweitert. Die Zahl hinter dem **Doppelpunkt** ist die Anzahl der Bits dieser Komponente. Die Angabe nur eines Doppelpunktes ohne Komponentennamen ist erlaubt (namenlose Komponente) und kann als Platzhalter verwendet werden. Eine Bitbreite von 0 erzwingt die Fortsetzung des Bitfeldes auf der nächsten **int** Grenze.  
+
+Der Zugriff erfolgt wie bei Strukturen, die Komponenten sind hier kleine ganze Zahlen ohne Vorzeichen. Die 3 Bitmanipulationen mit bitweisen logischen Operatoren von oben kann man mit Bitfeldern so formulieren:  
+
+```c
+attr.is_alpha = attr.is_hex = 1; 
+attr.is_alpha = attr.is_hex = 0; 
+if ((attr.is_alpha==0) && (attr.is_hex == 0)) {
+  ...
+}
+```
   
 &nbsp;
 

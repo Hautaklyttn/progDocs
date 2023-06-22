@@ -27,9 +27,10 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10 `call-by-value` / `call-by-reference`</font>](#ch1-10)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.11 Variable Scope</font>](#ch1-11)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 'Best' Program Structure</font>](#ch1-12)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.1 `__init__.py` in every subfolder</font>](#ch1-12-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.2 `venv` — Creation of virtual environments</font>](#ch1-12-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.3 `ci` folder — Continous Integration</font>](#ch1-12-3)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.1 `ci` folder — Continous Integration</font>](#ch1-12-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.2 `__init__.py` in every subfolder</font>](#ch1-12-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.3 `venv` — Creation of virtual environments</font>](#ch1-12-3)  
+
 
 ### 2. Functions
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Basic Functions</font>](#ch2-1)  
@@ -576,9 +577,9 @@ Folder Layout
   
 **Core features**  
   - Development is always done in a virtual environment (`venv`) to make sure packages are used in specific versions (and are used in this versions also when on the global level the version changed!)
-  - Created .py files (==modules) are placed in the folder `utils` and its subfolders  
-  - `namespaces` are realised by importing files from subfolders (or from external packages) with `import <package/file> as <namespaceName>` or just `import <package/file>` (so the name of the *namespace* is preserved)  
-  - In a GUI project, the folder `utils/apps/gui` contains the `app.py` file with the startup code  
+  - Created .py files (==modules) are placed in the folder `<project_name>/utils` and its subfolders  
+  - `namespaces` are realised by importing files from subfolders (or from external packages) with `import <utils/package/file> as <namespaceName>` or just `import <utils/package/file>` (so the name of the *namespace* is preserved)  
+  - In a GUI project, the folder `<project_name>/utils/apps/gui` contains the `app.py` file with the startup code  
 
 &nbsp;
   
@@ -591,8 +592,26 @@ A *pip requirements file* should be placed at the root of the repository. It sho
 A *pip requirements development file* contains the pacakges/modules which are needed for the development environment, e.g. *pyInstaller*.
   
 &nbsp;
-  
+
 <a name="ch1-12-1"></a>
+#### `ci` **folder — Continous Integration**  
+
+**build_setup/scripts/build_gui_app.bat**  
+Contains the batch code for creating the .exe file from python script using *pyInstaller*.  
+Last command is the call for *pyInstaller* by using the *gui.spec* file from folder `build_setup/specs`.  
+
+**build_setup/specs/gui.spec**  
+*.spec* file for the *pyInstaller*. Used in `build_setup/scripts/build_gui_app.bat`. The *.spec* file tells PyInstaller how to process the script.  
+
+**build_setup/tc/build_environment_manual_no_proxy.bat**  
+Contains the batch code for creating 
+  - the virtual environment (`venv`) for this project, 
+  - the required project packages/modules (given in `requirements.txt`)
+  - the required development packages/modules (given in `requirements_develop.txt`, e.g. *pyInstaller*)
+
+&nbsp;
+  
+<a name="ch1-12-2"></a>
 #### `__init__.py` **in every subfolder**  
 The `__init__.py` files are required to make Python treat directories containing the file as packages (*include* paths in C language).  
 This prevents directories with a common name, such as `string`, unintentionally hiding valid modules that occur later on the module search path. In the simplest case, `__init__.py` can just be an empty file, but it can also execute initialization code for the package or set the `__all__` variable.  
@@ -623,7 +642,7 @@ see.echofilter(input, output, delay=0.7, atten=4)
   
 &nbsp;
   
-<a name="ch1-12-2"></a>
+<a name="ch1-12-3"></a>
 #### `venv` **— Creation of virtual environments**  
 The `venv` module supports creating lightweight “virtual environments”, each with their **own independent set of Python packages** installed in their `site` directories. A virtual environment is created on top of an existing Python installation, known as the virtual environment’s "base" Python, and may optionally be isolated from the packages in the base environment, so only those explicitly installed in the virtual environment are available.  
   
@@ -645,24 +664,6 @@ When a Python interpreter is running from a virtual environment, `sys.prefix` an
   
 &nbsp;
   
-<a name="ch1-12-3"></a>
-#### `ci` **folder — Continous Integration**  
-
-**build_setup/scripts/build_gui_app.bat**  
-Contains the batch code for creating the .exe file from python script using *pyInstaller*.  
-Last command is the call for *pyInstaller* by using the *gui.spec* file from folder `build_setup/specs`.  
-
-**build_setup/specs/gui.spec**  
-*.spec* file for the *pyInstaller*. Used in `build_setup/scripts/build_gui_app.bat`. The *.spec* file tells PyInstaller how to process the script.  
-
-**build_setup/tc/build_environment_manual_no_proxy.bat**  
-Contains the batch code for creating 
-  - the virtual environment (`venv`) for this project, 
-  - the required project packages/modules (given in `requirements.txt`)
-  - the required development packages/modules (given in `requirements_develop.txt`, e.g. *pyInstaller*)
-
-&nbsp;
-
 # Functions
 
 &nbsp;

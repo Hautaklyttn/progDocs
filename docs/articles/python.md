@@ -667,6 +667,12 @@ Running this command creates the target directory (creating any parent directori
 
 > Repeat step 4. every time you add a new package to `requirements.txt` or `requirements_develop.txt`!
 
+**Additionally...**  
+1. Copy folder `ci/build_setup` to the same place in new project
+2. Create project folder with same name as \<root_folder\> under \<root_folder\>
+3. Create files in \<root_folder\>/\<root_folder\>: `core.py`, `__init__.py`
+4. Create folder in \<root_folder\>/\<root_folder\>: `utils`
+
 &nbsp;
   
 **How venvs work**  

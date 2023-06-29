@@ -656,10 +656,20 @@ python3 -m venv /path/to/new/virtual/environment
 ```
   
 Running this command creates the target directory (creating any parent directories that don’t exist already) and places a `pyvenv.cfg` file in it with a `home` key pointing to the Python installation from which the command was run (a common name for the target directory is `.venv`).  
-  
+&nbsp;
+
+**Creation of virtual environment with .bat file from former project**  
+1. Create root folder with project name
+2. Copy file `ci/tc/build_environment_manual_no_proxy.bat`, `requirements.txt` and `requirements_develop.txt` to root folder (keeping path strucutre)
+3. Add additionally needed packages to `requirements.txt` and `requirements_develop.txt`
+4. Execute `ci/tc/build_environment_manual_no_proxy.bat`
+5. Done!
+
+> Repeat step 4. every time you add a new package to `requirements.txt` or `requirements_develop.txt`!
+
 &nbsp;
   
-How venvs work  
+**How venvs work**  
 When a Python interpreter is running from a virtual environment, `sys.prefix` and `sys.exec_prefix` point to the directories of the virtual environment, whereas `sys.base_prefix` and `sys.base_exec_prefix` point to those of the base Python used to create the environment. It is sufficient to check `sys.prefix == sys.base_prefix` to determine if the current interpreter is running from a virtual environment.
   
 &nbsp;

@@ -935,10 +935,6 @@ a.next->next=NULL;
 
 &nbsp;
 
-**
-
-&nbsp;
-
 <a name="ch1-10-4"></a>
 `union`  
 Bei einer 'Union' handelt es sich um ein Datenobjekt, dessen Speicherplatz von mehreren Variablen verschiedenen Typs genutzt werden kann.  

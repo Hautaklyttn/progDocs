@@ -58,3 +58,9 @@ projects / how to's
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Code Walkthrough: Diablo</font>](./articles/projects/code_walkthrough_diablo.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Code Walkthrough: Doom</font>](./articles/projects/code_walkthrough_doom.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Code Walkthrough: Wolfenstein 3D (tbd)</font>](./articles/projects/code_walkthrough_wolf3D.html)  
+
+&nbsp;
+
+learning  
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Learning Setup/Preparation (ChatGPT)</font>](./articles/projects/learning.html#l1-1)  

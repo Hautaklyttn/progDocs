@@ -14,11 +14,12 @@ layout: default
 <a name="l1-1"></a>
 ### Learning Setup/Preparation (ChatGPT)  
 
-[ChatGPT](https://chat.openai.com/) kann essentielle Aufgaben in der Planung und Fokussierung beim Erlernen eines neuen Themas übernehmen und dadurch den Lernfortschritt **massiv** beschleunigen. Außerdem kann es als Gesprächspartner fungieren, der (s. *ChatGPT prompt 7*) Feedback und Anregungen zu einem bestimmten Thema gibt.  
+[ChatGPT](https://chat.openai.com/) kann essentielle Aufgaben in der Planung und Fokussierung beim Erlernen eines neuen Themas übernehmen und dadurch den Lernfortschritt **massiv** beschleunigen.  
+Außerdem kann es als Gesprächspartner fungieren, der Feedback und Anregungen zu einem bestimmten Thema gibt (s. *ChatGPT prompt 7*).  
 
 &nbsp;
 
-<u>Beispiel hier: **Python erlernen.**</u>  
+<u>Beispiel hier:</u> **Python erlernen.**  
 
 *ChatGPT prompt 1:*
 > - I want to learn how to code in python. Can you use the **Pareto Principle**, which identifies the 20% of the topic that will yield 80% of the desired results, to create a focused learning plan for me?
@@ -37,6 +38,9 @@ Dieser Prompt ist anzupassen. ChatGPT kann aus den in 'Prompt 1' ermittelten The
 > - Suggest me various learning resources (like books, videos, podcasts, interactive exercises) for the above topics that cater to different learning styles.  
 
 Angepasst an die Vorlieben, kann ChatGPT Links auf Quellen erstellen.  
+
+&nbsp;
+
 &nbsp;
 
 <u>Weitere Beispiele:</u>

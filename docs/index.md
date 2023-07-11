@@ -63,4 +63,4 @@ projects / how to's
 
 learning  
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Learning Setup/Preparation (ChatGPT)</font>](./articles/projects/learning.html#l1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Learning Setup/Preparation (ChatGPT)</font>](./articles/learning.html#l1-1)  

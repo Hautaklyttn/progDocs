@@ -11,7 +11,7 @@ layout: default
 
 &nbsp;
 
-<a name="l1-1"></a>
+<a name="#l1-1"></a>
 ### Learning Setup/Preparation (ChatGPT)  
 
 [ChatGPT](https://chat.openai.com/) kann essentielle Aufgaben in der Planung und Fokussierung beim Erlernen eines neuen Themas übernehmen und dadurch den Lernfortschritt **massiv** beschleunigen. Außerdem kann es als Gesprächspartner fungieren, der (s. *ChatGPT prompt 7*) Feedback und Anregungen zu einem bestimmten Thema gibt.  

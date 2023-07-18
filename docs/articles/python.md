@@ -60,6 +60,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.3 Sockets</font>](#ch5-3)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.4 Code Quality Metrics</font>](#ch5-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.5 Access Windows Applications using COM</font>](#ch5-5)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.6 pyInstaller</font>](#ch5-6)  
 
 ### 6. User-Defined Classes (OOP)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Basics</font>](#ch6-1)  
@@ -1285,6 +1286,25 @@ ws_new.Cells(3,3).Interior.ColorIndex=#000000
 # Zellenwert auslesen
 value=ws_new.Cells(2,2).Value
 ```
+
+&nbsp;
+
+<a name="ch5-6"></a>
+## 5.6 pyInstaller  
+
+### Basics
+
+tbd
+
+### pyInstaller and *param.ini* files  
+
+When a single executable file (created by *PyInstaller*) is executed, what happens is that a directory structure of the required library modules (Python VM, libraries and packages, etc.) **is extracted from that single executable to a temporary directory, and then the application is started from there**.  
+
+> This means that `__file__` in your Python code is not going to be the path to the single executable file, so the application won't find the *params.ini* file lying in the same folder as the .exe.  
+
+Possibilities for parameter file access:
+- make path to `params.ini` hard coded (not always possible)
+- write app in a way, that it accepts the path as an argument (*command line argument*)
 
 &nbsp;
 

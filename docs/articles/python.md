@@ -1294,7 +1294,11 @@ value=ws_new.Cells(2,2).Value
 
 ### Basics
 
-tbd
+PyInstaller bundles a Python application and all its dependencies into a single package (.exe). The user can run the packaged app without installing a Python interpreter or any modules. PyInstaller supports Python 3.7 and newer.  
+
+The work process with *pyInstaller* is pre-defined in chapter 1.12 (*Best Program Structure*). Here we have a virtual environment with a working version of *pyInstaller* + a batch file (+gui.spec file) which performs the whole build process with one click.
+
+&nbsp;
 
 ### pyInstaller and *param.ini* files  
 

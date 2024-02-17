@@ -10,7 +10,7 @@ layout: default
 
 &nbsp;
 
-> Die hier aufgelisteten *To Do's* sollten über alle Programmiersprachen hinweg Anwendung finden und den Code in allen Belangen besser machen. 
+> Die hier aufgelisteten *To Do's* sollen über alle Programmiersprachen hinweg Anwendung finden und den Code in allen Belangen besser machen. 
 
 &nbsp;
 
@@ -27,7 +27,7 @@ zurückzukehren.
 
 ### *Return* als Pointer auf einen Fehler
 
-> Jeder andere `return` - Wert sollte bestenfalls eine Bedeutung haben, d.h. **der int-Wert der zurückgegeben wird, sollte implizit auf den Fehler hindeuten in dessen Zusammenhang er aufgetreten ist.**
+> Jeder andere `return` - Wert (außer *0*) sollte eine Bedeutung haben, d.h. **der int-Wert der zurückgegeben wird, sollte implizit auf den Fehler hindeuten in dessen Zusammenhang er aufgetreten ist.**
 
 &nbsp;
 
@@ -45,6 +45,6 @@ int function (...) {
 }
 ```
 
-Auf diese Weise kann man in die *Return* - Anweisung gleich eine Funktion zusätzlich implementieren, nämlich **eine Funktion die auf einen bestimmten Fehler hinweist.**  
+Auf diese Weise wird in die *Return* - Anweisung gleich eine **Debugger-Funktion** mitimplementiert.  
 
 

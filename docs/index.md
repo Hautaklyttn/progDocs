@@ -8,6 +8,12 @@
 layout: home
 ---
 
+coding  
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Allgemeine To Do's</font>](./articles/generics.html)  
+
+&nbsp;
+
 c / c++  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Language Description</font>](./articles/c_cpp.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Function Collection C</font>](./articles/c_funcCollect.html)  

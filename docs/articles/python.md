@@ -68,7 +68,11 @@ layout: default
 ### 7. GUI Development - *tkinter*  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.1 Basics</font>](#ch7-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2 Configuration Options</font>](#ch7-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2.1 Coupling Widget Variables</font>](#ch7-2-1) 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">7.2.1 Coupling Widget Variables</font>](#ch7-2-1)  
+
+### 8. Web Development  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 Basics</font>](#ch8-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.2 Flask</font>](#ch8-2)  
 
 &nbsp;
 
@@ -1509,6 +1513,22 @@ There are many useful subclasses of Variable already defined: `StringVar`, `IntV
          print("Hi. The current entry content is:", self.contents.get())
    ...
 ```
+
+&nbsp;
+
+# Web Development  
+
+&nbsp;
+
+<a name="ch8-1"></a>
+## 8.1 Basics  
+
+&nbsp;
+
+<a name="ch8-2"></a>
+## 8.2 Flask  
+
+
 
 &nbsp;
 

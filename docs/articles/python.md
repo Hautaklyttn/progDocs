@@ -26,10 +26,11 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.9 `import`</font>](#ch1-9)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.10 `call-by-value` / `call-by-reference`</font>](#ch1-10)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.11 Variable Scope</font>](#ch1-11)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 'Best' Program Structure</font>](#ch1-12)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12 'Best' Program Environment Structure</font>](#ch1-12)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.1 `ci` folder — Continous Integration</font>](#ch1-12-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.2 `__init__.py` in every subfolder</font>](#ch1-12-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.12.3 `venv` — Creation of virtual environments</font>](#ch1-12-3)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.13 Das `if __name__ == '__main__'` Idiom</font>](#ch1-13)  
 
 
 ### 2. Functions
@@ -527,7 +528,7 @@ Note that in the scope of `outer` the variable is unchanged. This is because the
 &nbsp;
 
 <a name="ch1-12"></a>
-### 1.12 'Best' Program Structure  
+### 1.12 'Best' Program Environment Structure  
 
 Folder Layout
   
@@ -684,13 +685,50 @@ Running this command creates the target directory (creating any parent directori
 When a Python interpreter is running from a virtual environment, `sys.prefix` and `sys.exec_prefix` point to the directories of the virtual environment, whereas `sys.base_prefix` and `sys.base_exec_prefix` point to those of the base Python used to create the environment. It is sufficient to check `sys.prefix == sys.base_prefix` to determine if the current interpreter is running from a virtual environment.
   
 &nbsp;
+
+<a name="ch1-13"></a>
+## 1.13 Das `if __name__ == '__main__'` Idiom  
+
+Es gibt zwei Möglichkeiten für die Nutzung eines Files mit Python-Code:
+- als **für sich stehendes Skript**, oder als
+- **Library, die später in ein anderes Skript eingebunden wird**.
+
+&nbsp;
+
+Es hat sich als *good practice* erwiesen, bei einem **für sich stehenden Skript**, das folgende Idiom zu nutzen:
+
+```python
+def main():
+   ...
+
+if __name__ == '__main__':
+   main()
+```
+
+Diese Art des Aufbaus zeigt einem User direkt, dass es sich um ein selbstständiges Skript handelt.
+
+&nbsp;
+
+#### Warum separate *main()* Funktion?
+
+```python
+# Schlechter Code ohne main() als eigene Funktion
+if __name__ == '__main__':
+   for i in range(7):
+      ... do sth with i...
+```
+An diesem Beispiel sieht man direkt, was schief geht, wenn man keine separate *main()*-Funktion hat: **Man erzeugt ungewollt eine globale Variable *i*.** 
+ Im schlimmsten Fall wird das File in ein anderes File importiert und es kann zu Fehlverhalten in einer anderen Funktion kommen.
+
+
+&nbsp;
   
 # Functions
 
 &nbsp;
 
 <a name="ch2-1"></a>
-## 2.1 Basic Functions  
+### 2.1 Basic Functions  
 
 <a name="ch2-1-1"></a>
 ### 2.1.1 Funktion *id()*  

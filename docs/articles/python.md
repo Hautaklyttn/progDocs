@@ -80,16 +80,18 @@ layout: default
 
 ---  
 
+&nbsp;
+
 # Basics
 
 &nbsp;
 
-<a name="ch1-1"></a>
- ### 1.1 'Pythonic' Do's and Don'ts
+<a name="ch1-1"></a>  
+### 1.1 'Pythonic' Do's and Don'ts  
 
 |Task|Don't|Better|  
 |:---|:---|:---| 
-|print|`print("Very well done, "+name+"!")`|Use f"-strings: <br>`f"Very well done {name}!"`|
+|print|`print("Very well done, "+name+"!")`|Always use f"-strings: <br>`f"Very well done {name}!"`|
 |Manually closing file|`f = open(filename, "w")`<br>`f.write("hello!\n")`<br>`f.close()`<br><br> Im Falle, dass der write() command eine Exception wirft, wird das nicht abgefangen!|`with open(filename) as f:`<br>`f.write("hello!\n")`|
 |Use *comprehensions*|`squares = {}`<br>`for i in range(10):`<br>`squares[i] = i * i`|`odd_squares = {i: i*i for i in range(10)}`<br><br> Aber nicht immer nutzen, Lesbarkeit!|
 |Check for *None*, *True* and *False*|`if x == None:`<br>`if x == True:`<br>`If x == False:`|`if x is None:`<br>`if x is True:`<br>`If x is False:` <br><br> Nicht auf Gleichheit sondern auf Identität prüfen.|
@@ -97,7 +99,7 @@ layout: default
 |Looping over keys of an dictionary|`d = {"a":1, "b":2, "c":3}`<br>`for key in d.keys():`|`d = {"a":1, "b":2, "c":3}`<br>`for key in d:`<br>|
 |Get value from key in dictionary|`d = {"a":1, "b":2, "c":3}`<br>`for key in d:`<br>`val=d[key]`|`d = {"a":1, "b":2, "c":3}`<br>`for key, val in d.items():`|
 |Creating index counter variable|`l = [1,2,3]`<br>`i = 0`<br>`for x in l:`<br>`...`<br>`i+=1`|`l = [1,2,3]`<br>`for i, x in enumerate(l):`|
-|Measure how much time code runs|`start = time.time()`<br>`time.sleep(1)`<br>`end = time.time()`<br>`runtime = end - start`|`start = time.perf_counter()`<br>`time.sleep(1)`<br>`end = time.perf_Counter()`<br>`runtime = end - start`|
+|Measure how much time code runs|`start = time.time()`<br>`time.sleep(1)`<br>`end=time.time()`<br>`runtime = end - start`|`start=time.perf_counter()`<br>`time.sleep(1)`<br>`end = time.perf_Counter()`<br>`runtime = end - start`|
 |...|||
 
 &nbsp;

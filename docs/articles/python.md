@@ -12,7 +12,7 @@ layout: default
 &nbsp;
 
 ### 1. Basics    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 'Pythonic' Do's and Don'ts</font>](#ch1-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 'Pythonic' - Do's and Don'ts</font>](#ch1-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Allgemeines</font>](#ch1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.1 Geschichte</font>](#ch1-2-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.2 Der Interpreter, eine interaktive Shell</font>](#ch1-2-2)  
@@ -87,19 +87,19 @@ layout: default
 &nbsp;
 
 <a name="ch1-1"></a>  
-### 1.1 'Pythonic' Do's and Don'ts  
+### 1.1 *Pythonic* - Do's and Don'ts  
 
 |Task|Don't|Better|  
 |:---|:---|:---| 
-|print|`print("Very well done, "+name+"!")`|Always use f"-strings: <br>`f"Very well done {name}!"`|
-|Manually closing file|`f = open(filename, "w")`<br>`f.write("hello!\n")`<br>`f.close()`<br><br> Im Falle, dass der write() command eine Exception wirft, wird das nicht abgefangen!|`with open(filename) as f:`<br>`f.write("hello!\n")`|
-|Use *comprehensions*|`squares = {}`<br>`for i in range(10):`<br>`squares[i] = i * i`|`odd_squares = {i: i*i for i in range(10)}`<br><br> Aber nicht immer nutzen, Lesbarkeit!|
-|Check for *None*, *True* and *False*|`if x == None:`<br>`if x == True:`<br>`If x == False:`|`if x is None:`<br>`if x is True:`<br>`If x is False:` <br><br> Nicht auf Gleichheit sondern auf Identität prüfen.|
-|Get values from container|`a = [1, 2, 3]`<br>`for i in range(len(a))`<br>`v = a[i]`|`a = [1, 2, 3]`<br>`for v in a:`<br>`...`<br><br>Direkt das Element rausziehen, nicht über den Index gehen.|
-|Looping over keys of an dictionary|`d = {"a":1, "b":2, "c":3}`<br>`for key in d.keys():`|`d = {"a":1, "b":2, "c":3}`<br>`for key in d:`<br>|
-|Get value from key in dictionary|`d = {"a":1, "b":2, "c":3}`<br>`for key in d:`<br>`val=d[key]`|`d = {"a":1, "b":2, "c":3}`<br>`for key, val in d.items():`|
-|Creating index counter variable|`l = [1,2,3]`<br>`i = 0`<br>`for x in l:`<br>`...`<br>`i+=1`|`l = [1,2,3]`<br>`for i, x in enumerate(l):`|
-|Measure how much time code runs|`start = time.time()`<br>`time.sleep(1)`<br>`end=time.time()`<br>`runtime = end - start`|`start=time.perf_counter()`<br>`time.sleep(1)`<br>`end = time.perf_Counter()`<br>`runtime = end - start`|
+|**print**|`print("Very well done, "+name+"!")`|Always use f"-strings: <br>`f"Very well done {name}!"`|
+|**Manually closing file**|`f = open(filename, "w")`<br>`f.write("hello!\n")`<br>`f.close()`<br><br> Im Falle, dass der write() command eine Exception wirft, wird das nicht abgefangen!|`with open(filename) as f:`<br>`f.write("hello!\n")`|
+|**Use *comprehensions***|`squares = {}`<br>`for i in range(10):`<br>`squares[i] = i * i`|`odd_squares = {i: i*i for i in range(10)}`<br><br> Aber nicht immer nutzen, Lesbarkeit!|
+|**Check for *None*, *True* and *False***|`if x == None:`<br>`if x == True:`<br>`If x == False:`|`if x is None:`<br>`if x is True:`<br>`If x is False:` <br><br> Nicht auf Gleichheit sondern auf Identität prüfen.|
+|**Get values from container**|`a = [1, 2, 3]`<br>`for i in range(len(a))`<br>`v = a[i]`|`a = [1, 2, 3]`<br>`for v in a:`<br>`...`<br><br>Direkt das Element rausziehen, nicht über den Index gehen.|
+|**Looping over keys of an dictionary**|`d = {"a":1, "b":2, "c":3}`<br>`for key in d.keys():`|`d = {"a":1, "b":2, "c":3}`<br>`for key in d:`<br>|
+|**Get value from key in dictionary**|`d = {"a":1, "b":2, "c":3}`<br>`for key in d:`<br>`val=d[key]`|`d = {"a":1, "b":2, "c":3}`<br>`for key, val in d.items():`|
+|**Creating index counter variable**|`l = [1,2,3]`<br>`i = 0`<br>`for x in l:`<br>`...`<br>`i+=1`|`l = [1,2,3]`<br>`for i, x in enumerate(l):`|
+|**Measure how much time code runs**|`start = time.time()`<br>`time.sleep(1)`<br>`end=time.time()`<br>`runtime = end - start`|`start=time.perf_counter()`<br>`time.sleep(1)`<br>`end = time.perf_Counter()`<br>`runtime = end - start`|
 |...|||
 
 &nbsp;

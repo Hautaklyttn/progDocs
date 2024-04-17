@@ -107,7 +107,36 @@ int ia = a - '0';
 
 ## Bit operation functions
 
+&nbsp;
 
+
+---
+
+&nbsp;
+
+## Masking functions
+
+### Bit masking
+
+... tbd ...
+
+&nbsp;
+
+### Integer masking
+
+To mask single or multiple integers in a integer string you use the modulo operation
+```c
+int dataString = 12345678
+int singleValue = (int)(dataString % 10)         // extract last integer: singleValue = 8
+int doubleValue = (int)((dataString/10) % 100)   // 1. division by 10 (= cut last integer)
+                                                 // 2. % 100: extract last two integers
+                                                 // ==> doubleValue = 67
+
+int firstTwoValues = (int)((dataString)/1000000) % 100)
+                                                 // 1. division by 1.000.000 (= cut last 6 integers)
+                                                 // 2. % 100: extract last two integers
+                                                 // ==> firstTwoValues = 12
+```
 &nbsp;  
 
 &nbsp;

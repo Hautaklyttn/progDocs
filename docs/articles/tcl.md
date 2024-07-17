@@ -18,6 +18,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.4 `VARIANT` data type</font>](#ch1-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.5 Tcl modules (.tm files)</font>](#ch1-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.6 Variable Aliases</font>](#ch1-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.7 Compare variable to multiple values ('in' & 'ni')</font>](#ch1-6)  
 
 ### 2. Tcl - Tk
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">2.1 Fenster aufsetzen</font>](#ch2-1)  
@@ -207,6 +208,23 @@ set v 123
 upvar 0 v a
 
 puts $a    // Output: "123"
+```
+
+&nbsp;
+
+<a name="ch1-7"></a>
+### 1.7 Compare variable to multiple values ('in' & 'ni')
+
+You can use the `in` and `ni` operators to check for membership (or non-membership) in a list.
+
+```c
+if {$org ni {"t8405" "t9405" "t7805" "t8605" "t8705"}} {
+    puts "it wasn't in there!"
+}
+
+if {$org in {"t800" "t1000"}} {
+    puts "it wasn't in there!"
+}
 ```
 
 &nbsp;

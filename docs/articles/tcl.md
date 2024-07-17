@@ -223,7 +223,7 @@ if {$org ni {"t8405" "t9405" "t7805" "t8605" "t8705"}} {
 }
 
 if {$org in {"t800" "t1000"}} {
-    puts "it wasn't in there!"
+    puts "it was in there!"
 }
 ```
 

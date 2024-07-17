@@ -79,6 +79,14 @@ static void Dec2Hex(const int decimal, char* hexContainer) {
 }
 ```
 
+```c
+#include <stdio.h>
+
+static unsigned int Dec2Bin(unsigned int k) {
+    return (k == 0 || k == 1 ? k : ((k % 2) + 10 * int_to_bit(k / 2)));
+}
+```
+
 &nbsp;
 
 ### ASCII-To-Int  

@@ -20,6 +20,7 @@ coding
 
 c / c++  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Language Description</font>](./articles/c_cpp.html)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Best To Do's in C</font>](./articles/c_bestToDo.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Function Collection C</font>](./articles/c_funcCollect.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Function Collection C++</font>](./articles/cpp_funcCollect.html)  
 

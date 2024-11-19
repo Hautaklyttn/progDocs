@@ -47,6 +47,16 @@ git
 
 &nbsp;
 
+svn  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Basics</font>](./articles/svn_basics.html)  
+
+&nbsp;
+
+labview  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Basics</font>](./articles/lv_basics.html)  
+
+&nbsp;
+
 linux  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Basics</font>](./articles/linux.html)  
 

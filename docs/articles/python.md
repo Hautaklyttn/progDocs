@@ -12,6 +12,7 @@ layout: default
 &nbsp;
 
 ### 1. Basics    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.0 Schnellster Einstieg in Python Projekt ('venv' in VS Code)</font>](#ch1-0)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.1 'Pythonic' - Do's and Don'ts</font>](#ch1-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2 Allgemeines</font>](#ch1-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">1.2.1 Geschichte</font>](#ch1-2-1)  
@@ -83,6 +84,25 @@ layout: default
 &nbsp;
 
 # Basics
+
+&nbsp;
+
+<a name="ch1-0"></a>  
+### 1.0 Schnellster Einstieg in Python Projekt ('venv' in VS Code)
+
+In **VS Code**  
+
+1. Projektordner erstellen
+2. In *VS Code* im erstellten Projektordner eine *virtuelle Umgebung* erstellen mit `python -m venv env` (damit wird eine virt. Umgebung im Unterordner *env* erstellt)
+3. Virtuelle Umgebung aktivieren
+	- `F1` drücken
+	- `Python: Select Interpreter` eingeben 
+	- Dann .../env Pfad auswählen oder mit *Find* suchen
+4. Virtuelle Umgebung im Terminal aktivieren
+	- Im unteren Fenster im *Terminal* einen *Command Prompt* öffnen (mit `+` Zeichen)
+	- Jetzt sollte vor dem Eingabepfad ein `env` stehenden
+	- Alle hier installierten Module (mit `pip install ...`) werden jetzt in der virt. Umgebung installiert
+5. `main.py` in Überordner erstellen und Implementierung starten
 
 &nbsp;
 

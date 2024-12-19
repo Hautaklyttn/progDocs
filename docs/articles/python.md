@@ -1457,7 +1457,7 @@ Mit Typanmerkungen in Python können Sie den erwarteten Typ einer Variablen, ein
 def greeting(name: str) -> str:
     return "Hello, " + name
 	
-variable_name: type 
+# variable_name: type 
 my_string: str = "My string value"
 
 def my_function(first_arg: int) -> string:

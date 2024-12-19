@@ -24,13 +24,13 @@ c / c++
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Function Collection C</font>](./articles/c_funcCollect.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Function Collection C++</font>](./articles/cpp_funcCollect.html)  
 
-[tcl](./articles/tcl.html)
-
 python  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Language Description</font>](./articles/python.html)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Function Collection</font>](./articles/py_funcCollect.html)  
 
-[javascript](./articles/js.html)
+[tcl](./articles/tcl.html)  
+
+[javascript](./articles/js.html)  
 
 [qt and qml](./articles/qt_qml.html)  
 

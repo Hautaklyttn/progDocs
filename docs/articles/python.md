@@ -50,8 +50,6 @@ layout: default
 ### 3. Listen
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.1 Basics</font>](#ch3-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.2 List Functions</font>](#ch3-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.3 ...</font>](#ch3-3)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 ...</font>](#ch3-4)  
 
 ### 4. Dictionaries   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Basics</font>](#ch4-1)  
@@ -1004,6 +1002,16 @@ list2[1:5]: [2,3,4,5]
      >>> b.split(':')
      ['aa', 'bb', 'cc']
      ```
+  - Wert zu Unterliste hinzufügen  
+     ```python
+     index = 1
+     # Liste anlegen
+     masterList = [[], [], []]
+     # Unterliste extrahieren
+     sublist = masterList[index]
+     # Neuen Wert in Unterliste hinzufügen     
+     sublist.append(newVal)
+     ```  
 
 &nbsp;
 
@@ -1013,36 +1021,36 @@ list2[1:5]: [2,3,4,5]
 ## 4.1 Basics
 
 Ein 'Dictionary' besteht aus Schlüssel-Objekt-Paaren, zu einem bestimmten Schlüssel gehört immer ein Objekt.  
-```
->>> mydict = {}                          ;# leeres Dictionary
->>> mydict = {"key_01":"value_01"}       ;# Wert setzen
->>> mydict = {"key_x":"val_x", "key_y":"val_y"}
+```python
+mydict = {}                          ;# leeres Dictionary
+mydict = {"key_01":"value_01"}       ;# Wert setzen
+mydict = {"key_x":"val_x", "key_y":"val_y"}
 
->>> len(mydict)                          ;# Anzahl der Schlüssel-Wert-Paaren
->>> del mydict[key_01]                   ;# Löschen Schlüssel+Objekt
->>> "k" in mydict                        ;# Prüfen auf Schlüssel
->>> "k" not in mydict
+len(mydict)                          ;# Anzahl der Schlüssel-Wert-Paaren
+del mydict[key_01]                   ;# Löschen Schlüssel+Objekt
+"k" in mydict                        ;# Prüfen auf Schlüssel
+"k" not in mydict
 
->>> mydict.clear()                       ;# Entfernt alle Elemente im dictionary
->>> mydict.get(key)                      ;# Gibt den 'Value' für 'key zurück
->>> mydict.has_key(key)                  ;# Gibt 'true' zurück falls 'key' vorhanden
->>> mydict.items()                       ;# Gibt Liste mit (key, value)-Paaren zurück
->>> mydict.keys()                        ;# Gibt Liste aller key's zurück
->>> mydict.values()                      ;# Gibt Liste aller value's zurück
+mydict.clear()                       ;# Entfernt alle Elemente im dictionary
+mydict.get(key)                      ;# Gibt den 'Value' für 'key zurück
+mydict.has_key(key)                  ;# Gibt 'true' zurück falls 'key' vorhanden
+mydict.items()                       ;# Gibt Liste mit (key, value)-Paaren zurück
+mydict.keys()                        ;# Gibt Liste aller key's zurück
+mydict.values()                      ;# Gibt Liste aller value's zurück
 ```
 &nbsp;
 
 Iteration über ein Dictionary
-```
->>> for key in mydict
-        print mydict[key]
+```python
+for key in mydict
+    print mydict[key]
 ```
 &nbsp;
 
 ### Alternativer Weg ('defaultdict')
 
 **Defaultdict** ist eine Unterklasse der in Python integrierten *dict*-Klasse.  
-Sie überschreibt die Methode **__missing__** , um einen Standardwert für fehlende Schlüssel bereitzustellen und so *KeyError* zu verhindern.  
+Sie überschreibt die Methode **__missing__** , um einen Standardwert für fehlende Schlüssel bereitzustellen und so *KeyError* zu verhindern.
 Wenn ein Schlüssel nicht im Wörterbuch gefunden wird, fügt *defaultdict* ihn automatisch mit einem Standardwert ein.
 
 ```python
@@ -1064,28 +1072,29 @@ for i in L:
 
 <a name="ch4-2"></a>
 ## 4.2 Verschachtelte Dictionaries
-```
+```python
 # Anlegen:
->>> d = {}
->>> d['dict1'] = {}
->>> d['dict1']['innerkey'] = 'value'
-oder
->>> d['key1']['innerkey'].append('value')
+d = {}
+d['dict1'] = {}
+d['dict1']['innerkey'] = 'value'
+# oder
+d['key1']['innerkey'].append('value')
 
 # Auslesen:
->>> d = {'dict1' : {'innerkey' : 'value'}}
->>> d = {'dict1' : {'inkey1': val, 'inkey2' : val2}}
-oder
->>> d.get('key1', {}).get('innerkey')
+d = {'dict1' : {'innerkey' : 'value'}}
+d = {'dict1' : {'inkey1': val, 'inkey2' : val2}}
+# oder
+d.get('key1', {}).get('innerkey')
 # Sicherer, da bei Fehlen eines der 'keys' kein Fehler geworfen wird, sondern
 # 'None' zurückgegeben wird.
-
 ```
+
+&nbsp;
 
 ### Alternativer Weg ('defaultdict')
 
 **Defaultdict** ist eine Unterklasse der in Python integrierten *dict*-Klasse.  
-Sie überschreibt die Methode **__missing__** , um einen Standardwert für fehlende Schlüssel bereitzustellen und so *KeyError* zu verhindern.  
+Sie überschreibt die Methode **__missing__** , um einen Standardwert für fehlende Schlüssel bereitzustellen und so *KeyError* zu verhindern.
 Wenn ein Schlüssel nicht im Wörterbuch gefunden wird, fügt *defaultdict* ihn automatisch mit einem Standardwert ein.
 
 ```python

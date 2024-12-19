@@ -64,6 +64,7 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.4 Code Quality Metrics</font>](#ch5-4)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.5 Access Windows Applications using COM</font>](#ch5-5)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.6 pyInstaller</font>](#ch5-6)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.7 Typsicherheit in Python</font>](#ch5-7)  
 
 ### 6. User-Defined Classes (OOP)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">6.1 Basics</font>](#ch6-1)  
@@ -112,7 +113,7 @@ In **VS Code**
 |Task|Don't|Better|  
 |:---|:---|:---| 
 |**print**|`print("Very well done, "+name+"!")`|Always use f"-strings: <br>`f"Very well done {name}!"`|
-|**Manually closing file**|`f = open(filename, "w")`<br>`f.write("hello!\n")`<br>`f.close()`<br><br> Im Falle, dass der write() command eine Exception wirft, wird das nicht abgefangen!|`with open(filename) as f:`<br>`f.write("hello!\n")`|
+|**Manually closing file**|`f = open(filename, "w")`<br>`f.write("hello!\n")`<br>`f.close()`<br><br> Im Falle, dass der write() command<br> eine Exception wirft, wird das nicht<br> abgefangen!|`with open(filename) as f:`<br>`f.write("hello!\n")`|
 |**Use *comprehensions***|`squares = {}`<br>`for i in range(10):`<br>`squares[i] = i * i`|`odd_squares = {i: i*i for i in range(10)}`<br><br> Aber nicht immer nutzen, Lesbarkeit!|
 |**Check for *None*, *True* and *False***|`if x == None:`<br>`if x == True:`<br>`If x == False:`|`if x is None:`<br>`if x is True:`<br>`If x is False:` <br><br> Nicht auf Gleichheit sondern auf Identität prüfen.|
 |**Get values from container**|`a = [1, 2, 3]`<br>`for i in range(len(a))`<br>`v = a[i]`|`a = [1, 2, 3]`<br>`for v in a:`<br>`...`<br><br>Direkt das Element rausziehen, nicht über den Index gehen.|
@@ -120,6 +121,7 @@ In **VS Code**
 |**Get value from key in dictionary**|`d = {"a":1, "b":2, "c":3}`<br>`for key in d:`<br>`val=d[key]`|`d = {"a":1, "b":2, "c":3}`<br>`for key, val in d.items():`|
 |**Creating index counter variable**|`l = [1,2,3]`<br>`i = 0`<br>`for x in l:`<br>`...`<br>`i+=1`|`l = [1,2,3]`<br>`for i, x in enumerate(l):`|
 |**Measure how much time code runs**|`start = time.time()`<br>`time.sleep(1)`<br>`end=time.time()`<br>`runtime = end - start`|`start=time.perf_counter()`<br>`time.sleep(1)`<br>`end = time.perf_Counter()`<br>`runtime = end - start`|
+|**if-else in one line**|-|`currBitValue = 1 if bitPos & self.currBitmuster == 1 else 0`|
 |...|||
 
 &nbsp;
@@ -1443,6 +1445,24 @@ When a single executable file (created by *PyInstaller*) is executed, what happe
 Possibilities for parameter file access:
 - make path to `params.ini` hard coded (not always possible)
 - write app in a way, that it accepts the path as an argument (*command line argument*)
+
+&nbsp;
+
+<a name="ch5-7"></a>
+## 5.7 Typsicherheit in Python
+
+Mit Typanmerkungen in Python können Sie den erwarteten Typ einer Variablen, eines Funktionsarguments oder eines Rückgabewerts angeben. Sie sind optional, können Ihren Code jedoch leichter verständlich und wartbar machen.  
+
+```python
+def greeting(name: str) -> str:
+    return "Hello, " + name
+	
+variable_name: type 
+my_string: str = "My string value"
+
+def my_function(first_arg: int) -> string:
+    # do stuff here
+```
 
 &nbsp;
 

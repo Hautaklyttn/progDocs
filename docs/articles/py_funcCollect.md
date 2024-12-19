@@ -8,7 +8,7 @@ layout: default
 
 &nbsp;
 
-# Function Collection Python
+# Function Collection: Python
 ---  
 
 &nbsp;
@@ -17,9 +17,9 @@ layout: default
 
 ### string-To-Binary
 
-'''python
+```python
 self.lastBitmuster = bin(int(self.currBitmuster,2))
-'''
+```
 
 ---
 
@@ -29,34 +29,34 @@ self.lastBitmuster = bin(int(self.currBitmuster,2))
 
 ### setBit
 
-'''python
+```python
 def setBit(self, bit):
     self.resultsInBits = self.resultsInBits | (1<<bit)
-'''
+```
 
 ### getBit
 
-'''python
+```python
 def getBit(self, bit):
     return (self.resultsInBits >> bit) & 1
-'''
+```
 
 ### clearBit
 
-'''python
+```python
 def clearBit(self, bit):
     self.resultsInBits = self.resultsInBits & ~(1<<bit)
-'''
+```
 
 ### bit position in string zurückgeben
 
-'''python
+```python
 def Log2n(self, n):
 	if (n > 1):
 		return (1 + self.Log2n(n / 2))
 	else:
 		return 0
-'''
+```
 
 ---
 
@@ -65,7 +65,7 @@ def Log2n(self, n):
 ## Misc functions  
 
 ### Quersumme bilden
-'''python
+```python
 bitPos = 000100
 sum([int(i) for i in str(bitPos)])
-'''
+```

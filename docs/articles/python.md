@@ -54,6 +54,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">3.4 ...</font>](#ch3-4)  
 
 ### 4. Dictionaries   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.1 Basics</font>](#ch4-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">4.2 Verschachtelte Dictionaries</font>](#ch4-2)  
 
 ### 5. HowTo's
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">5.1 File handling</font>](#ch5-1)  
@@ -1007,6 +1009,9 @@ list2[1:5]: [2,3,4,5]
 
 # Dictionaries
 
+<a name="ch4-1"></a>
+## 4.1 Basics
+
 Ein 'Dictionary' besteht aus Schlüssel-Objekt-Paaren, zu einem bestimmten Schlüssel gehört immer ein Objekt.  
 ```
 >>> mydict = {}                          ;# leeres Dictionary
@@ -1034,25 +1039,64 @@ Iteration über ein Dictionary
 ```
 &nbsp;
 
-Verschachtelte Dictionaries
+### Alternativer Weg ('defaultdict')
+
+**Defaultdict** ist eine Unterklasse der in Python integrierten *dict*-Klasse.  
+Sie überschreibt die Methode **__missing__** , um einen Standardwert für fehlende Schlüssel bereitzustellen und so *KeyError* zu verhindern.  
+Wenn ein Schlüssel nicht im Wörterbuch gefunden wird, fügt *defaultdict* ihn automatisch mit einem Standardwert ein.
+
+```python
+from collections import defaultdict 
+
+# als dict of lists anlegen 
+d = defaultdict(list)
+for i in range(5):
+    d[i].append(i)
+
+# als dict of int anlegen
+d = defaultdict(int)
+L = [1, 2, 3, 4, 2, 4, 1, 2]
+for i in L:
+    d[i] += 1
 ```
+
+&nbsp;
+
+<a name="ch4-2"></a>
+## 4.2 Verschachtelte Dictionaries
+```
+# Anlegen:
 >>> d = {}
 >>> d['dict1'] = {}
 >>> d['dict1']['innerkey'] = 'value'
-
->>> d = {'dict1' : {'innerkey' : 'value'}}
->>> d = {'dict1' : {'inkey1': val, 'inkey2' : val2}}
-
-# Besserer bzw. sicherer Weg
-# Anlegen:
->>> d['key1'] = {}
->>> d['key1']['innerkey'] = []
+oder
 >>> d['key1']['innerkey'].append('value')
 
 # Auslesen:
+>>> d = {'dict1' : {'innerkey' : 'value'}}
+>>> d = {'dict1' : {'inkey1': val, 'inkey2' : val2}}
+oder
 >>> d.get('key1', {}).get('innerkey')
 # Sicherer, da bei Fehlen eines der 'keys' kein Fehler geworfen wird, sondern
 # 'None' zurückgegeben wird.
+
+```
+
+### Alternativer Weg ('defaultdict')
+
+**Defaultdict** ist eine Unterklasse der in Python integrierten *dict*-Klasse.  
+Sie überschreibt die Methode **__missing__** , um einen Standardwert für fehlende Schlüssel bereitzustellen und so *KeyError* zu verhindern.  
+Wenn ein Schlüssel nicht im Wörterbuch gefunden wird, fügt *defaultdict* ihn automatisch mit einem Standardwert ein.
+
+```python
+from collections import defaultdict 
+
+# als dict of int of dict anlegen
+d = defaultdict(lambda : defaultdict(int))
+>>> print d[0]
+defaultdict(<type 'int'>, {})
+>>> print d[0]["x"]
+0
 ```
 
 &nbsp;

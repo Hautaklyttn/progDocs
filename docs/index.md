@@ -26,7 +26,9 @@ c / c++
 
 [tcl](./articles/tcl.html)
 
-[python](./articles/python.html)
+python  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Language Description</font>](./articles/python.html)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">Function Collection</font>](./articles/py_funcCollect.html)  
 
 [javascript](./articles/js.html)
 

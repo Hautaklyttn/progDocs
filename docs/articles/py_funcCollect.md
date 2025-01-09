@@ -18,7 +18,7 @@ layout: default
 ### string-To-Binary
 
 ```python
-self.lastBitmuster = bin(int(self.currBitmuster,2))
+binBitmuster = bin(int(strBitmuster,2))
 ```
 
 ---
@@ -30,28 +30,28 @@ self.lastBitmuster = bin(int(self.currBitmuster,2))
 ### setBit
 
 ```python
-def setBit(self, bit):
-    self.resultsInBits = self.resultsInBits | (1<<bit)
+def setBit(bitString:int, bit:int):
+    return (bitString | (1<<bit))
 ```
 
 ### getBit
 
 ```python
-def getBit(self, bit):
-    return (self.resultsInBits >> bit) & 1
+def getBit(bitString:int, bit:int):
+    return (bitString >> bit) & 1
 ```
 
 ### clearBit
 
 ```python
-def clearBit(self, bit):
-    self.resultsInBits = self.resultsInBits & ~(1<<bit)
+def clearBit(bitString:int, bit:int):
+    return (bitString & ~(1<<bit))
 ```
 
 ### bit position in string zurückgeben
 
 ```python
-def Log2n(self, n):
+def Log2n(n:int):
 	if (n > 1):
 		return (1 + self.Log2n(n / 2))
 	else:

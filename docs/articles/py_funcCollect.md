@@ -147,7 +147,7 @@ for item in some_list[1:]:
   # do something
 ```
 
-# Datentyp für alle Elemente einer Liste umwandeln
+### Datentyp für alle Elemente einer Liste umwandeln
 
 ```python
 results = ['1', '2', '3']
@@ -186,7 +186,7 @@ d.get('one', {}).get(1)
 
 &nbsp;
 
-## File and Pfad 
+## File und Pfad 
 
 ### Pfad ohne Filenamen
 ```python

@@ -184,7 +184,7 @@ num_lines = sum(1 for _ in open('myfile.txt'))
 
 ### Ordner erstellen (und vorher prüfen)
 ```python
-if os.oath.isdir(<path>):
+if not os.path.isdir(<path>):
   os.makedirs(<path>)
 ```
 

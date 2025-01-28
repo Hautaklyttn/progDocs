@@ -134,6 +134,27 @@ if mylist.count(mylist[0]) == len(mylist):
   # do something
 ```
 
+### Mehrere Elemente an Liste anhängen
+
+```python
+list.extend([elem1, elem2, ...])
+```
+
+### Liste in for-loop an bestimmtem Index beginnen
+
+```python
+for item in some_list[1:]:
+  # do something
+```
+
+# Datentyp für alle Elemente einer Liste umwandeln
+
+```python
+results = ['1', '2', '3']
+# Use 'map' then 'list' to obtain a list of integers:
+list(map(int, results))
+```
+
 ---
 
 &nbsp;
@@ -188,6 +209,12 @@ if not os.path.isdir(<path>):
   os.makedirs(<path>)
 ```
 
+### Alle Files in Ordner zurückgeben
+```python
+import os
+all_files = [f for f in Path(<pfad>).iterdir() if f.is_file()]
+```
+
 ---
 
 &nbsp;
@@ -225,3 +252,33 @@ x = 2 if y == 0 else 1
 ```
 **Aber:** Nicht immer möglich! Funktioniert z.B. nicht für: ```n+=1 if exp > 2 else 0```
 
+### Abbrechen von while-loop durch Tastendruck
+
+```python
+try:
+  while True:
+    # do something
+except KeyboardInterrupt:
+  pass
+```
+
+### Optionale Argumente an Funktion
+
+```python
+def example_function(param1, param2, param3=None, param4=None):
+  pass
+
+# Doesn't work, param2 missing
+example_function("hello")
+
+# Works
+example_function("hello", "bye")
+
+# Works. Both the same
+example_function("hello", "bye", "hey")
+example_function("hello", "bye", param3="hey")
+
+# Works. Both the same
+example_function("hello", "bye", "hey", "foo")
+example_function("hello", "bye", param3="hey", param4="foo")
+```

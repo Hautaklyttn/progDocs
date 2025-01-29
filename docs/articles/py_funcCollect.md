@@ -254,6 +254,28 @@ all_files = [f for f in Path(<pfad>).iterdir() if f.is_file()]
 
 &nbsp;
 
+## Multiprocessing
+
+### Ausgabe der aktuellen 'worker' process id
+```python
+print(multiprocessing.current_process())
+```
+
+### Dauer der Codeabarbeitung über alle Subprozesse hinweg loggen
+```python
+import time
+
+start = time.time()
+
+# ... Aufruf der Subprozesse ...
+
+print(time.time() - start) 
+```
+
+---
+
+&nbsp;
+
 ## Misc functions  
 
 ### Quersumme bilden

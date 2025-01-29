@@ -1725,7 +1725,7 @@ Weitere Features:
 ### Einsatzfeld  
 **multiprocessing** ist ein Paket, das das Starten von Prozessen mithilfe einer API ähnlich dem *threading*-Modul unterstützt. Das multiprocessing-Paket bietet sowohl lokale als auch Remote-Parallelität und umgeht effektiv die globale Interpretersperre, indem Unterprozesse anstelle von Threads verwendet werden. 
 
->> **Das Modul ermöglicht es dem Programmierer, mehrere Prozessoren auf seiner Maschine auszunutzen (Multi-Core-Funktionalität).**
+> **Das Modul ermöglicht es dem Programmierer, mehrere Prozessoren auf seiner Maschine auszunutzen (Multi-Core-Funktionalität).**
 
 Wenn Sie viel Zeit damit verbringen, darauf zu warten, dass Ihr Code ausgeführt wird, und Sie alle einfacheren Dinge ausprobiert haben, können Sie ihn manchmal erheblich beschleunigen, indem Sie ihn parallelisieren –
 ihn in Blöcke aufteilen und jeden Block einzeln ausführen. Laptops haben normalerweise mindestens zwei Kerne, viele sogar vier. Desktop-Rechner können bis zu 32 haben. Python ist jedoch ein Single-Thread-System. Standardmäßig wird es immer nur auf einem Kern ausgeführt. Das Multiprocessing-Paket hilft uns, so viele Kerne zu verwenden, wie wir möchten. Hier ist ein minimales Beispiel, das Sie kopieren und einfügen können, um loszulegen.

@@ -1709,7 +1709,7 @@ Weitere Features:
 
 &nbsp;
 
-### Besonderheiten  
+### Best Use  
 
 - Nie leere Dataframes erstellen und dann füllen. Besser Listen erstellen, füllen und anschließend in einen Dataframe konvertieren:
   ```python

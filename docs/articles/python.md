@@ -78,6 +78,10 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.1 Basics</font>](#ch8-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.2 Flask</font>](#ch8-2)  
 
+### 9. Module  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">9.1 *Pandas*</font>](#ch9-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">9.2 *Multiprocessing*</font>](#ch9-2)  
+
 &nbsp;
 
 ---  
@@ -1678,7 +1682,94 @@ There are many useful subclasses of Variable already defined: `StringVar`, `IntV
 <a name="ch8-2"></a>
 ## 8.2 Flask  
 
+&nbsp;
 
+# Module  
+
+&nbsp;
+
+<a name="ch9-1"></a>
+## 9.1 *Pandas*  
+
+Pandas ist ein schnelles, leistungsstarkes, flexibles und benutzerfreundliches Open-Source-Tool zur Datenanalyse und -bearbeitung. 
+
+### Einsatzfeld  
+Pandas stellt spezielle Funktionen und Datenstrukturen zur Verfügung für die Manipulation von numerischen Tabellen und Zeit-Serien. Pandas baut auf Numpy auf, d.h. Numpy ist für Pandas Voraussetzung.
+
+Möglichkeiten, z.B. mit Daten in einer Liste:
+- Berechnung von Standardabweichung
+- Berechnung von Maximum/Minimum
+- Berechnung von Mittelwert
+- Berechnung auf alle Elemente in Liste anwenden
+- ...
+
+Weitere Features:
+- Matrix aufsetzen mit beliebigen Indizes (nicht unbedingt int) möglich
+- ...
+
+### Besonderheiten  
+
+- Nie leere Dataframes erstellen und dann füllen. Besser Listen erstellen, füllen und anschließend in einen Dataframe konvertieren:
+  ```python
+  data=[] ... df = pd.DataFrame(data)
+  ```
+- ...
+
+&nbsp;
+
+<a name="ch9-2"></a>
+## 9.2 *Multiprocessing*  
+
+### Einsatzfeld  
+**multiprocessing** ist ein Paket, das das Starten von Prozessen mithilfe einer API ähnlich dem *threading*-Modul unterstützt. Das multiprocessing-Paket bietet sowohl lokale als auch Remote-Parallelität und umgeht effektiv die globale Interpretersperre, indem Unterprozesse anstelle von Threads verwendet werden. 
+
+>> **Das Modul ermöglicht es dem Programmierer, mehrere Prozessoren auf seiner Maschine auszunutzen (Multi-Core-Funktionalität).**
+
+Wenn Sie viel Zeit damit verbringen, darauf zu warten, dass Ihr Code ausgeführt wird, und Sie alle einfacheren Dinge ausprobiert haben, können Sie ihn manchmal erheblich beschleunigen, indem Sie ihn parallelisieren –
+ihn in Blöcke aufteilen und jeden Block einzeln ausführen. Laptops haben normalerweise mindestens zwei Kerne, viele sogar vier. Desktop-Rechner können bis zu 32 haben. Python ist jedoch ein Single-Thread-System. Standardmäßig wird es immer nur auf einem Kern ausgeführt. Das Multiprocessing-Paket hilft uns, so viele Kerne zu verwenden, wie wir möchten. Hier ist ein minimales Beispiel, das Sie kopieren und einfügen können, um loszulegen.
+```python
+from multiprocessing import Pool
+import os
+import numpy as np
+
+def f(n):
+  return np.var(np.random.sample((n, n)))
+
+result_objs = []
+n = 1000
+with Pool(processes=os.cpu_count() - 1) as pool:
+  for _ in range(n):
+    result = pool.apply_async(f, (n,))
+    result_objs.append(result)
+
+  for res in result_objs: res.wait()
+  results = [result.get() for result in result_objs]
+  print(len(results), np.mean(results), np.var(results))
+```
+
+**Pool** ist eine Sammlung von Worker-Prozessen. Beim Initialisieren eines Pools wählt das Schlüsselwortargument „processes“ aus, wie viele Worker erstellt werden sollen.
+Es ist nicht sinnvoll, mehr Worker zu erstellen, als Sie Prozessoren haben. `os.cpu_count()` sagt Ihnen genau, wie viele das sind. Wenn Sie einen Prozessor frei lassen, können Sie trotzdem Firefox ausführen und Spotify hören, während Ihr Code ausgeführt wird.
+
+`Pool.apply_async()` weist Ihrem Worker-Pool einen Job zu, wartet aber nicht auf das Ergebnis. Stattdessen gibt es einen Platzhalter zurück.
+Wir können den Platzhalter verwenden, um das tatsächliche Ergebnis zu erhalten, indem wir `result_placeholder.get()` aufrufen.
+*Pool.apply_async()* verwendet eine Funktion als erstes Argument und ein Tupel von Argumenten für diese Funktion als zweites Argument.
+Da wir möchten, dass jeder Worker f(n) ausführt, übergeben wir *apply_async(f, (n,))*.
+
+Wenn Sie `get()` sofort auf dem Ergebnisplatzhalter von `apply_async()` aufrufen würden, würde dies die for-Schleife anhalten, während sie auf das Ergebnis wartet.
+In der Terminologie der Parallelisierung blockiert es alle anderen Arbeiter, neue Jobs zu bekommen. In diesem Fall hätten Sie zwar immer noch mehrere Arbeiter, aber jeder würde abwechselnd einen Job erledigen, während die anderen herumstehen und warten. Besser ist es, alle Ergebnisplatzhalter zu sammeln und die Ergebnisse einzusammeln, wenn die Arbeiter ihre Arbeit erledigt haben.
+
+<a href="[url](https://www.brandonrohrer.com/multiprocessing)">Gute Info Page</a>
+
+
+### Besonderheiten  
+Auf *nix-Systemen ist die Standardmethode zum Erstellen eines neuen Prozesses die Verwendung von *Fork*. Das ist großartig, weil es „Copy-on-Write“ verwendet, um dem neuen Kindprozess Zugriff auf eine Kopie des Arbeitsspeichers des übergeordneten Prozesses zu geben. Es ist schnell und effizient, hat aber einen erheblichen Nachteil, wenn Sie gleichzeitig Multithreading verwenden. Es wird nicht alles tatsächlich kopiert, und einige Dinge können in einem ungültigen Zustand kopiert werden (Threads, Mutexe, Dateihandles usw.). Dies kann eine ganze Reihe von Problemen verursachen, wenn es nicht richtig gehandhabt wird, und um diese zu umgehen, kann Python stattdessen *Spaw*n verwenden (außerdem hat Windows kein „Fork“ und muss „Spawn“ verwenden).
+
+*Spawn* startet im Grunde einen neuen Interpreter von Grund auf und kopiert den Speicher des übergeordneten Prozesses in keiner Weise. Es muss jedoch ein Mechanismus verwendet werden, um dem Kind Zugriff auf Funktionen und Daten zu geben, die vor seiner Erstellung definiert wurden, und Python tut dies, indem dieser neue Prozess im Grunde `import *` aus der „.py“-Datei durchführt, aus der er erstellt wurde. Dies ist im interaktiven Modus problematisch, da es nicht wirklich eine „.py“-Datei zum Importieren gibt, und ist die Hauptursache für „Multiprocessing mag keine Interaktivität“ - Probleme. Das Einfügen Ihres MP-Codes in eine Bibliothek, die Sie dann importieren und ausführen, funktioniert im interaktiven Modus, da er aus einer „.py“-Datei importiert werden kann. Aus diesem Grund verwenden wir auch die Zeile `if __name__ == „__main__“:`, um Code zu trennen, der beim Import nicht erneut im untergeordneten Prozess ausgeführt werden soll. Wenn Sie ohne diese Zeile einen neuen Prozess erzeugen würden, könnte dieser rekursiv weiterhin untergeordnete Prozesse erzeugen (obwohl es technisch gesehen einen integrierten Schutz für diesen speziellen Fall gibt). 
+
+Dann kommuniziert bei beiden Startmethoden das übergeordnete Element mit dem untergeordneten Element über eine Pipe (unter Verwendung von Pickle zum Austausch von Python-Objekten) und teilt ihm mit, welche Funktion aufgerufen werden soll und was die Argumente sind. Aus diesem Grund müssen Argumente *picklable* sein. Manche Dinge können nicht *pickled* werden, was eine weitere häufige Fehlerquelle beim Multiprocessing ist.
+
+### Best Use
+- Es hat sich gezeigt, dass es immer Probleme gibt bei dem Versuch **den Zugriff auf Behälter (wie *Listen* oder *Dicts*) über mehrere Subprozesse zu teilen** (mit zusätzlichen Modulen wie *Manager*). Besser ist immer der Ansatz, die Subprozesse ihre Berechnungen durchführen zu lassen und anschließend ihre Ergebnisse an den Hauptprozess zurückzugeben. Dort können die Daten dann zusammengeführt und abgelegt werden.
 
 &nbsp;
 

@@ -97,6 +97,12 @@ print(s[start:end])
    >> '1234'
 ```
 
+### Substring in String:
+```python
+if "substring" in someString:
+  # do something
+```
+
 ---
 
 &nbsp;
@@ -153,6 +159,20 @@ for item in some_list[1:]:
 results = ['1', '2', '3']
 # Use 'map' then 'list' to obtain a list of integers:
 list(map(int, results))
+```
+
+### Maximaler/Minimaler Wert aus Liste
+
+```python
+maxWert = max(<liste>)
+minWert = min(<liste>)
+```
+
+### Werte in Liste Variablen zuweisen
+
+```python
+fruits = ["apple", "banana", "cherry"]
+x, y, z = fruits
 ```
 
 ---
@@ -282,3 +302,20 @@ example_function("hello", "bye", param3="hey")
 example_function("hello", "bye", "hey", "foo")
 example_function("hello", "bye", param3="hey", param4="foo")
 ```
+
+### Mehrere Werte mehreren Variablen zuweisen
+```python	
+x, y, z = "Orange", "Banana", "Cherry"
+```
+
+### Ein Wert mehreren Variablen zuweisen
+```python	
+x = x = z = "Orange"
+```
+
+### 'NUL' character erfassen
+```python	
+if '\x00' in someString:
+  # do something
+```
+

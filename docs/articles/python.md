@@ -79,8 +79,8 @@ layout: default
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">8.2 Flask</font>](#ch8-2)  
 
 ### 9. Module  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">9.1 *Pandas*</font>](#ch9-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">9.2 *Multiprocessing*</font>](#ch9-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">9.1 'Pandas'</font>](#ch9-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">9.2 'Multiprocessing'</font>](#ch9-2)  
 
 &nbsp;
 
@@ -1691,7 +1691,7 @@ There are many useful subclasses of Variable already defined: `StringVar`, `IntV
 <a name="ch9-1"></a>
 ## 9.1 *Pandas*  
 
-Pandas ist ein schnelles, leistungsstarkes, flexibles und benutzerfreundliches Open-Source-Tool zur Datenanalyse und -bearbeitung. 
+**Pandas** ist ein schnelles, leistungsstarkes, flexibles und benutzerfreundliches Tool zur Datenanalyse und -bearbeitung. 
 
 ### Einsatzfeld  
 Pandas stellt spezielle Funktionen und Datenstrukturen zur Verfügung für die Manipulation von numerischen Tabellen und Zeit-Serien. Pandas baut auf Numpy auf, d.h. Numpy ist für Pandas Voraussetzung.
@@ -1706,6 +1706,8 @@ Möglichkeiten, z.B. mit Daten in einer Liste:
 Weitere Features:
 - Matrix aufsetzen mit beliebigen Indizes (nicht unbedingt int) möglich
 - ...
+
+&nbsp;
 
 ### Besonderheiten  
 
@@ -1760,6 +1762,7 @@ In der Terminologie der Parallelisierung blockiert es alle anderen Arbeiter, neu
 
 <a href="[url](https://www.brandonrohrer.com/multiprocessing)">Gute Info Page</a>
 
+&nbsp;
 
 ### Besonderheiten  
 Auf *nix-Systemen ist die Standardmethode zum Erstellen eines neuen Prozesses die Verwendung von *Fork*. Das ist großartig, weil es „Copy-on-Write“ verwendet, um dem neuen Kindprozess Zugriff auf eine Kopie des Arbeitsspeichers des übergeordneten Prozesses zu geben. Es ist schnell und effizient, hat aber einen erheblichen Nachteil, wenn Sie gleichzeitig Multithreading verwenden. Es wird nicht alles tatsächlich kopiert, und einige Dinge können in einem ungültigen Zustand kopiert werden (Threads, Mutexe, Dateihandles usw.). Dies kann eine ganze Reihe von Problemen verursachen, wenn es nicht richtig gehandhabt wird, und um diese zu umgehen, kann Python stattdessen *Spaw*n verwenden (außerdem hat Windows kein „Fork“ und muss „Spawn“ verwenden).
@@ -1767,6 +1770,8 @@ Auf *nix-Systemen ist die Standardmethode zum Erstellen eines neuen Prozesses di
 *Spawn* startet im Grunde einen neuen Interpreter von Grund auf und kopiert den Speicher des übergeordneten Prozesses in keiner Weise. Es muss jedoch ein Mechanismus verwendet werden, um dem Kind Zugriff auf Funktionen und Daten zu geben, die vor seiner Erstellung definiert wurden, und Python tut dies, indem dieser neue Prozess im Grunde `import *` aus der „.py“-Datei durchführt, aus der er erstellt wurde. Dies ist im interaktiven Modus problematisch, da es nicht wirklich eine „.py“-Datei zum Importieren gibt, und ist die Hauptursache für „Multiprocessing mag keine Interaktivität“ - Probleme. Das Einfügen Ihres MP-Codes in eine Bibliothek, die Sie dann importieren und ausführen, funktioniert im interaktiven Modus, da er aus einer „.py“-Datei importiert werden kann. Aus diesem Grund verwenden wir auch die Zeile `if __name__ == „__main__“:`, um Code zu trennen, der beim Import nicht erneut im untergeordneten Prozess ausgeführt werden soll. Wenn Sie ohne diese Zeile einen neuen Prozess erzeugen würden, könnte dieser rekursiv weiterhin untergeordnete Prozesse erzeugen (obwohl es technisch gesehen einen integrierten Schutz für diesen speziellen Fall gibt). 
 
 Dann kommuniziert bei beiden Startmethoden das übergeordnete Element mit dem untergeordneten Element über eine Pipe (unter Verwendung von Pickle zum Austausch von Python-Objekten) und teilt ihm mit, welche Funktion aufgerufen werden soll und was die Argumente sind. Aus diesem Grund müssen Argumente *picklable* sein. Manche Dinge können nicht *pickled* werden, was eine weitere häufige Fehlerquelle beim Multiprocessing ist.
+
+&nbsp;
 
 ### Best Use
 - Es hat sich gezeigt, dass es immer Probleme gibt bei dem Versuch **den Zugriff auf Behälter (wie *Listen* oder *Dicts*) über mehrere Subprozesse zu teilen** (mit zusätzlichen Modulen wie *Manager*). Besser ist immer der Ansatz, die Subprozesse ihre Berechnungen durchführen zu lassen und anschließend ihre Ergebnisse an den Hauptprozess zurückzugeben. Dort können die Daten dann zusammengeführt und abgelegt werden.

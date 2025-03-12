@@ -175,6 +175,41 @@ fruits = ["apple", "banana", "cherry"]
 x, y, z = fruits
 ```
 
+### Neue Liste mit jedem x-ten Element aus alter Liste
+
+```python
+xs = list(range(165))
+xs[0::10]
+# Output: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160]
+```
+
+### Liste von 0 bis n-1 mit ansteigenden Werten
+
+```python
+list(range(0, n))
+```
+
+### Liste von Nullen erstellen
+
+```python
+listofzeros = [0] * n
+```
+
+### Alle Listenelemente die Substring enthalten zurückgeben
+
+```python
+xs = ['abc-123', 'def-456', 'ghi-789', 'abc-456']
+matching = [s for s in xs if "abc" in s]
+```
+
+### String in Substring in Liste finden
+
+```python
+xs = ['abc-123', 'def-456', 'ghi-789', 'abc-456']
+if any("abc" in s for s in xs):
+	...
+```
+
 ---
 
 &nbsp;
@@ -276,6 +311,65 @@ print(time.time() - start)
 
 &nbsp;
 
+## tkinter  
+
+### Widgets referenzieren (auch untergeordnete)
+```python
+# You can give widgets names when you create them
+note = Notebook(root, name="George")
+tab2 = Frame(note, name="Tabby")
+
+# And find widgets by name using nametowidget
+tab2 = root.nametowidget("George.Tabby")
+```
+
+### Frame Breite dynamisch ändern
+```python
+frame.config(width=100)
+```
+
+### Widgets visuell nach vorne bringen
+```python
+widget.lift()
+```
+
+---
+
+&nbsp;
+
+## print-Ausgabe, Debugging  
+
+### print-Ausgabe ohne newline am Ende
+```python
+print("some string", end="", flush=True)
+```
+
+### print-Ausgabe in Farbe
+```python
+import os
+os.system("")
+
+# Class of different styles
+class style():
+   BLACK = '\033[30m'
+   RED = '\033[31m'
+   GREEN = '\033[32m'
+   YELLOW = '\033[33m'
+   BLUE = '\033[34m'
+   MAGENTA = '\033[35m'
+   CYAN = '\033[36m'
+   WHITE = '\033[37m'
+   UNDERLINE = '\033[4m'
+   RESET = '\033[0m'
+   
+print(f"{style.GREEN} some_text ")
+```
+
+
+---
+
+&nbsp;
+
 ## Misc functions  
 
 ### Quersumme bilden
@@ -340,4 +434,25 @@ x = x = z = "Orange"
 if '\x00' in someString:
   # do something
 ```
+
+### 'Moving Average'
+```python	
+new_average = (old_average * (n-1) + newVal) / n
+```
+
+### Auf leere Zeile prüfen
+```python	
+if len(line.strip()) == 0:
+  # do sth
+```
+
+### Dynamisch Variablen ansprechen
+```python	
+c = {"one": 1, "two": 2}
+for k, v in c.items():
+  exec(f"{k} = {v}")
+```
+
+
+
 

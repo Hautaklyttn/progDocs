@@ -33,6 +33,19 @@ dec = int(hexWert, 16)
 bin = bin(int(hexWert, 16))
 ```
 
+### binary-to-hex
+
+```python
+hex = hex(int(binString, 2))
+```
+
+### Cast to boolean
+
+```python
+def str2bool(v):
+  return str(v).lower() in ("yes", "true", "t", "1")
+```
+
 ---
 
 &nbsp;
@@ -74,12 +87,36 @@ def Log2n(n:int):
 
 &nbsp;
 
+## Objektorientierung
+
+### Check ob zwei Instanzen von Klasse identisch
+```python
+# id(object) returns a unique number (identity) that adapts the philosophy of C-style pointer
+x is y 
+# oder
+id(x) == id(y)
+```
+
+---
+
+&nbsp;
+
 ## Integer und Float
 
 ### *float* auf Nachkommastellen runden
 ```python
 inputNumber = 4.56782
 print("Rounding 4.56782 upto 2 decimal places:", format(inputNumber,".2f"))
+```
+
+### *int* auf 100, 1000, usw. runden
+```python
+var = 560
+rounded = round(var, -2)
+# output: 600
+var = 5400
+rounded = round(var, -3)
+# output: 5000
 ```
 
 ---
@@ -97,10 +134,16 @@ print(s[start:end])
    >> '1234'
 ```
 
-### Substring in String:
+### Substring in String
 ```python
 if "substring" in someString:
   # do something
+```
+
+### String mit Kommas in Liste umwandeln
+```python
+my_string = 'A,B,C,D,E'
+my_list = my_string.split(",")
 ```
 
 ---
@@ -123,6 +166,13 @@ if any(len(lst) != length for lst in [list2, list3, list4, list5, list6]):
 
 ```python
 list1, list2, list3 = [], [], []
+```
+
+### Initialisierung list-of-lists
+
+```python
+# To make a list of 3 different lists, do this:
+x = [[] for i in range(3)]
 ```
 
 ### Durch Liste iterieren und Elemente löschen
@@ -210,6 +260,14 @@ if any("abc" in s for s in xs):
 	...
 ```
 
+### Liste in String umwandeln
+
+```python
+_list = [1,2,3]
+_str = ''.join(str(i) for i in _list)
+# output: '123'
+```
+
 ---
 
 &nbsp;
@@ -268,6 +326,28 @@ if not os.path.isdir(<path>):
 ```python
 import os
 all_files = [f for f in Path(<pfad>).iterdir() if f.is_file()]
+```
+
+### Check ob File existiert
+```python
+import os
+os.path.isfile(fname)
+```
+
+### File-Größe ermitteln
+```python
+import os
+os.path.getsize("/path/to/file")
+# Output in bytes: 2071611
+```
+
+### Erstellungs/Modifikations-Datum für Files
+```python
+# 'Creation' time
+os.path.getctime(path_to_file)
+
+# 'Modification' time
+os.stat(path_to_file)
 ```
 
 ---
@@ -365,6 +445,10 @@ class style():
 print(f"{style.GREEN} some_text ")
 ```
 
+### Auf Konsole ausgeben obwohl stdout umgeleitet auf File/Widget
+```python
+print("start_TriggerErroreingang gestartet...", file=sys.__stdout__, flush=True)
+```
 
 ---
 

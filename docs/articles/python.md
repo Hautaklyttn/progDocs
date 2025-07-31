@@ -81,6 +81,7 @@ layout: default
 ### 9. Module  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">9.1 'Pandas'</font>](#ch9-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">9.2 'Multiprocessing'</font>](#ch9-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [<font size="-1">9.3 'Annotations'</font>](#ch9-3)  
 
 &nbsp;
 
@@ -1713,9 +1714,44 @@ Weitere Features:
 
 - Nie leere Dataframes erstellen und dann füllen. Besser Listen erstellen, füllen und anschließend in einen Dataframe konvertieren:
   ```python
-  data=[] ... df = pd.DataFrame(data)
+  data=[]
+  ...
+  df = pd.DataFrame(data)
   ```
-- ...
+- Zelleninhalt durch Index/Spaltenname erhalten
+  ```python
+  df.loc[<index>, <column_name>]
+  ```  
+
+&nbsp;
+
+### 'Vektorisierung'
+In der Mathematik ist ein Vektor ein Objekt mit Betrag und Richtung. In der Programmierung und Informatik bezeichnet Vektorisierung die Anwendung von Operationen auf einen ganzen Wertesatz gleichzeitig.
+		
+Die Performance jedes Datentyps hängt maßgeblich von der Art des Zugriffs ab. Panda Dataframes sind für vektorisierte Operationen optimiert. Operationen sind jedoch nur vektorisierbar, wenn die Vektoren 
+alle die gleiche Dimension haben. Wenn Ihre verschiedenen Dataframes also alle unterschiedliche Dimensionen haben, gehen die Performancegewinne verloren, da Sie versuchen, eine einheitliche Größe 
+für die Größenanpassung aller Dataframes zu finden. Unter diesen Umständen stellte ich fest, dass die Verwendung des einfachen Listentyps schneller ist.
+Mein Problem mit Dataframes ist meist, dass sie spaltenorientiert sind, ich aber fast immer zeilenorientierte Daten habe. Beispielsweise beim Abfragen einer Reihe von Instrumenten oder beim Zugriff auf eine Datenbank.
+
+Obwohl die For-Schleife in Python flexibel und äußerst nützlich ist, stellt jede Iteration über ein Element im Wesentlichen einen einzelnen Schritt auf dem Weg durch alle Elemente des Containerobjekts dar. 
+Diese schrittweise Verarbeitung ist nützlich, wenn die Reihenfolge der Operationen wichtig ist (z. B. um das erste Element einer Liste zurückzugeben, das eine bestimmte Bedingung erfüllt).
+Die vektorisierte Verarbeitung kann dagegen angewendet werden, wenn die Reihenfolge der Verarbeitung nicht wichtig ist. Vektorisierung ist fast immer schneller, da die Ausführungszeit entweder konstant ist oder mit 
+zunehmender Anzahl von Elementen deutlich langsamer ansteigt.
+		
+Parallele Verarbeitung: In NumPy und Pandas werden einzelne Array-Segmente von allen Prozessorkernen Ihres Computers verarbeitet. NumPy und Pandas verarbeiten ihre Arrays und Serien parallel, wobei ein Segment jedes 
+Arrays von einem anderen Prozessorkern Ihres Computers bearbeitet wird.
+
+NumPy-Arrays sind auf einen einzigen Datentyp festgelegt. Ähnlich verhält es sich mit Reihen in Pandas – jede Spalte ist vom Typ int, float, str oder datetime. Dies ermöglicht eine Optimierung der Datenverarbeitung, 
+da die Inhalte dieser Container sicher auf ähnliche Weise bearbeitet werden können. Dies ist bei den in Python integrierten Container-Datentypen wie Listen, Sets und Wörterbüchern nicht der Fall. Diese Typen ermöglichen die 
+gleichzeitige Speicherung verschiedener Typen.
+
+NumPy speichert Ihre Array-Matrix in einem Speicherbereich. Lokale Inhalte ermöglichen eine schnellere Bearbeitung. Im Gegensatz dazu können die Inhalte von Python-Listen räumlich getrennt voneinander im Speicher abgelegt sein.
+
+SISD (Single Instruction, Single Data): Dies ist die Struktur für die Verarbeitung von Python-For-Schleifen – eine Anweisung pro Datenelement und Zeitpunkt, um ein Ergebnis zu erzeugen. Das Besondere daran ist die 
+Flexibilität – Sie können jede beliebige Operation auf Ihre Daten anwenden. Der Nachteil ist, dass es nicht optimal für die Verarbeitung großer Datenmengen ist.
+
+SIMD (Single Instruction, Multiple Data): Dies ist die Struktur für die Verarbeitung von NumPy- und Pandas- Vektorisierungen – eine Anweisung pro beliebiger Anzahl von Datenelementen zu einem bestimmten Zeitpunkt, um 
+mehrere Ergebnisse zu erzeugen. Moderne CPUs verfügen über eine Komponente zur Verarbeitung von SIMD-Operationen in jedem ihrer Kerne, was eine parallele Verarbeitung ermöglicht.
 
 &nbsp;
 
@@ -1775,6 +1811,38 @@ Dann kommuniziert bei beiden Startmethoden das übergeordnete Element mit dem un
 
 ### Best Use
 - Es hat sich gezeigt, dass es immer Probleme gibt bei dem Versuch **den Zugriff auf Behälter (wie *Listen* oder *Dicts*) über mehrere Subprozesse zu teilen** (mit zusätzlichen Modulen wie *Manager*). Besser ist immer der Ansatz, die Subprozesse ihre Berechnungen durchführen zu lassen und anschließend ihre Ergebnisse an den Hauptprozess zurückzugeben. Dort können die Daten dann zusammengeführt und abgelegt werden.
+
+&nbsp;
+
+<a name="ch9-3"></a>
+## 9.3 *Annotations*
+Ziel ist es, den Datentyp von Variablen hervorzuheben, so dass Typisierungsfehler vor der Laufzeit erkannt werden können.  
+
+Direkte Annotation des Typs mit einer Zuweisung, z.B
+
+```python
+primes: List[int] = []
+
+#Ist gleichwertig zu
+primes = []
+```
+
+```python
+>>> from typing import List, get_type_hints
+>>> primes: List[int] = []
+>>> captain: str
+>>> import __main__
+>>> get_type_hints(__main__)
+{'primes': typing.List<~T>[int]}
+```
+
+Mit statischen type checker wie 'mypy' können dann eventuelle Typfehler angezeigt werden:
+
+```python
+$ mypy division.py
+division.py:7: error: Argument 1 to "division" has incompatible type "float"; expected "int"
+Found 1 error in 1 file (checked 1 source file)
+```
 
 &nbsp;
 
